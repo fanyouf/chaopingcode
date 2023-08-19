@@ -50,6 +50,11 @@
               />
               <vab-icon
                 class="icon"
+                icon="eye-line"
+                @click="emit('view-container', item)"
+              />
+              <vab-icon
+                class="icon"
                 icon="delete-bin-line"
                 @click="hDel(item)"
               />
@@ -62,7 +67,11 @@
               />
             </span>
           </template>
-          <slot :item="item">默认内容</slot>
+          <slot :item="item">
+            <div class="section-item-body">
+              {{ item.title }}
+            </div>
+          </slot>
         </vab-card>
       </el-col>
     </el-row>
@@ -127,6 +136,9 @@
 
     .section-item {
       height: 200px;
+    }
+    .section-item-body {
+      padding: 20px;
     }
   }
   .header-ops {

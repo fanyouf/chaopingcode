@@ -2,34 +2,24 @@
   <div>
     <myPage
       :list="state.list"
-      item-type="知识点"
-      @add-container="hAddKnowledgeGroup"
-      @add-item="hAddKnowledge"
-      @edit-container="hEditKnowledgeGroup"
+      title="添加指令分类"
+      item-type="指令"
+      has-op
+      @view-container="hViewDirectiveGroup"
+      @add-container="hAddDirectiveGroup"
+      @add-item="hAddDirective"
+      @edit-container="hEditDirectiveGroup"
     >
       <template #header>
         <h3>选择科目，当前科目是{{ curCourse }}</h3>
         <my-course v-model="curCourse" />
       </template>
-      <template #default="{ item }">
-        <div class="knowledge-group">
-          <el-tag
-            v-for="it in item.children"
-            :key="it.id"
-            class="knowledge-group-item"
-            closable
-            @close="hDelKnowledge(it)"
-          >
-            <span
-              title="点击查看"
-              style="cursor: pointer"
-              @click="hEditKnowledge(it)"
-            >
-              {{ it.title }}
-            </span>
-          </el-tag>
+      <!-- <template #default="{ item }">
+        <div class="course">
+          <h3 class="course-title">{{ item.title }}</h3>
+          <p class="course-info">{{ item.intro }}</p>
         </div>
-      </template>
+      </template> -->
     </myPage>
     <my-dialog ref="editRef" @fetch-data="fetchData" />
   </div>
@@ -38,7 +28,7 @@
 <script setup lang="ts">
   // import { OPObject } from '../../types/data'
   defineOptions({
-    name: 'KnowledgeIndex',
+    name: 'DirectiveIndex',
   })
   import myPage from '~/src/components/my-page.vue'
   import myCourse from '~/src/components/my-course.vue'
@@ -47,7 +37,7 @@
 
   import { getList } from '@/api/knowledge'
   import myDialog from '@/components/my-dialog.vue'
-
+  const router = useRouter()
   const curCourse = ref('Python')
   // const $baseConfirm = inject('$baseConfirm')
   // const $baseMessage = inject('$baseMessage')
@@ -69,22 +59,26 @@
     state.list = res.data.list
     state.listLoading = false
   }
-  const hAddKnowledgeGroup = () => {
+  const hAddDirectiveGroup = () => {
     editRef.value.showDialog('目录', '添加', null)
   }
-  const hAddKnowledge = (knowledgeGroup) => {
+  const hAddDirective = (knowledgeGroup) => {
     editRef.value.showDialog('知识点', '添加', knowledgeGroup)
   }
-  const hEditKnowledge = (knowledge) => {
+
+  const hViewDirectiveGroup = (directiveGroup) => {
+    router.push(`/directive/${directiveGroup.id}`)
+  }
+  const hEditDirective = (knowledge) => {
     editRef.value.showDialog('知识点', '修改', knowledge)
   }
 
-  const hDelKnowledge = (knowledge) => {
+  const hDelDirective = (knowledge) => {
     alert(1)
     console.log('knowledge')
   }
 
-  const hEditKnowledgeGroup = (knowledgeGroup) => {
+  const hEditDirectiveGroup = (knowledgeGroup) => {
     editRef.value.showDialog('目录', '修改', knowledgeGroup)
   }
   // const hDel = (typeName, row) => {
@@ -120,15 +114,15 @@
     padding: 10px 5px;
     background-color: $base-color-background;
   }
-  .knowledge-group {
+  .directive-group {
     background-color: #fff;
     border-radius: 5px;
     padding: 15px;
   }
-  .knowledge-group-item {
+  .directive-group-item {
     margin: 5px !important;
   }
-  .knowledge-group.empty {
+  .directive-group.empty {
     cursor: pointer;
     padding: 0;
     display: flex;

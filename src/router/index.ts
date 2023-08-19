@@ -166,6 +166,40 @@ export const asyncRoutes: VabRouteRecord[] = [
     ],
   },
   {
+    path: '/directive',
+    name: 'Directive',
+    component: Layout,
+    meta: {
+      title: '指令管理',
+      icon: 'apps-line',
+      levelHidden: true,
+      guard: ['Admin'],
+    },
+    children: [
+      {
+        path: '',
+        name: 'directiveIndex',
+        component: () => import('@/views/directive/index.vue'),
+        meta: {
+          title: '指令管理',
+          icon: 'shopping-cart-line',
+          // badge: 'Hot',
+        },
+      },
+      {
+        path: '/directive/:id',
+        name: 'DirectiveDetail',
+        component: () => import('@/views/directive/detail.vue'),
+        meta: {
+          hidden: true,
+          title: '指令列表',
+          // meta: { title: 'Params id=1' },
+          dynamicNewTab: true,
+        },
+      },
+    ],
+  },
+  {
     path: '/vab',
     name: 'Vab',
     component: Layout,
