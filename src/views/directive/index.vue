@@ -14,12 +14,6 @@
         <h3>选择科目，当前科目是{{ curCourse }}</h3>
         <my-course v-model="curCourse" />
       </template>
-      <!-- <template #default="{ item }">
-        <div class="course">
-          <h3 class="course-title">{{ item.title }}</h3>
-          <p class="course-info">{{ item.intro }}</p>
-        </div>
-      </template> -->
     </myPage>
     <my-dialog ref="editRef" @fetch-data="fetchData" />
   </div>
@@ -97,13 +91,6 @@
     },
     { immediate: true }
   )
-
-  // onActivated(() => {
-  //   console.log('onActived')
-  //   // 调用时机为首次挂载
-  //   // 以及每次从缓存中被重新插入时
-  //   fetchData()
-  // })
 </script>
 <style lang="scss">
   .section {

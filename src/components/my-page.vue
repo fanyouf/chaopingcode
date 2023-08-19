@@ -16,7 +16,11 @@
           <div class="emptybox">
             <div class="empty" @click="emit('add-container')">
               <!-- <el-button type="primary" @click="hAdd()">+</el-button> -->
-              <vab-icon icon="add-circle-line" />
+              <vab-icon
+                style="width: 45px; height: 45px"
+                is-custom-svg
+                icon="big-add"
+              />
               <p>{{ title }}</p>
             </div>
           </div>
@@ -45,17 +49,20 @@
               />
               <vab-icon
                 class="icon"
-                icon="edit-box-line"
+                is-custom-svg
+                icon="edit"
                 @click="emit('edit-container')"
               />
               <vab-icon
                 class="icon"
-                icon="eye-line"
+                is-custom-svg
+                icon="view"
                 @click="emit('view-container', item)"
               />
               <vab-icon
+                is-custom-svg
                 class="icon"
-                icon="delete-bin-line"
+                icon="del"
                 @click="hDel(item)"
               />
             </div>
