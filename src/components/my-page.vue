@@ -8,7 +8,11 @@
       </el-col>
 
       <el-col :lg="8" :md="8" :sm="8" :xl="6" :xs="24">
-        <vab-card :body-style="{ padding: '0px' }" shadow="never">
+        <vab-card
+          class="section-item"
+          :body-style="{ padding: '0px' }"
+          shadow="never"
+        >
           <div class="emptybox">
             <div class="empty" @click="emit('add-container')">
               <!-- <el-button type="primary" @click="hAdd()">+</el-button> -->
@@ -27,7 +31,11 @@
         :xl="6"
         :xs="24"
       >
-        <vab-card :body-style="{ padding: '0px' }" shadow="never">
+        <vab-card
+          class="section-item"
+          :body-style="{ padding: '0px' }"
+          shadow="never"
+        >
           <template #header>
             <div v-if="hasOp" class="header-ops">
               <vab-icon
@@ -107,6 +115,7 @@
     min-height: 100px;
     display: flex;
     cursor: pointer;
+    margin-top: 62px;
   }
   .empty {
     margin: auto;
@@ -115,6 +124,10 @@
   .section {
     background: $base-color-background !important;
     padding: 0;
+
+    .section-item {
+      height: 200px;
+    }
   }
   .header-ops {
     float: right;
