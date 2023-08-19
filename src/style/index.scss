@@ -1,0 +1,27 @@
+// .flex3 {
+//   display: flex;
+//   justify-content: space-between;
+//   flex-wrap: wrap;
+
+//   .flex_item {
+//     flex-basis: 32%;
+//   }
+
+//   &::after {
+//     content: '';
+//     flex: auto;
+//     /* 或者flex: 1 */
+//   }
+// }
+
+.flex3 {
+  display: grid;
+  justify-content: space-between;
+  grid-template-columns: repeat(auto-fill, 32%);
+  grid-gap: 10px;
+}
+
+.flex_item {
+  // width: 30%;
+  margin-top: 5px;
+}
