@@ -107,30 +107,6 @@ export const asyncRoutes: VabRouteRecord[] = [
       },
     ],
   },
-  {
-    path: '/knowledge',
-    name: 'Knowledge',
-    component: Layout,
-    meta: {
-      title: '知识点',
-      icon: 'apps-line',
-      levelHidden: true,
-      guard: ['Admin'],
-    },
-    children: [
-      {
-        path: '',
-        name: 'KnowledgeIndex',
-        component: () => import('@/views/knowledge/index.vue'),
-        meta: {
-          title: '知识点管理',
-          icon: 'shopping-cart-line',
-          badge: 'Hot',
-        },
-      },
-    ],
-  },
-
   // 新增router
   {
     path: '/course',
@@ -166,7 +142,29 @@ export const asyncRoutes: VabRouteRecord[] = [
       },
     ],
   },
-
+  {
+    path: '/knowledge',
+    name: 'Knowledge',
+    component: Layout,
+    meta: {
+      title: '知识点',
+      icon: 'apps-line',
+      levelHidden: true,
+      guard: ['Admin'],
+    },
+    children: [
+      {
+        path: '',
+        name: 'KnowledgeIndex',
+        component: () => import('@/views/knowledge/index.vue'),
+        meta: {
+          title: '知识点管理',
+          icon: 'shopping-cart-line',
+          badge: 'Hot',
+        },
+      },
+    ],
+  },
   {
     path: '/vab',
     name: 'Vab',
