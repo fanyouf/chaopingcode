@@ -41,11 +41,6 @@
 
 <script setup lang="ts">
   import { doAdd as doAddCourse } from '@/api/course'
-
-  // export default defineComponent({
-  //   name: 'PythonEdit',
-  // emits: ['fetch-data'],
-  // setup(props, { emit }) {
   const $baseMessage = inject('$baseMessage')
 
   const emit = defineEmits(['fetch-data'])
@@ -61,8 +56,7 @@
     state: true, // boolean
   })
   const rules = {
-    dircName: [{ required: true, trigger: 'blur', message: '请输入标题' }],
-    knowName: [{ required: true, trigger: 'blur', message: '请输入标题' }],
+    title: [{ required: true, trigger: 'blur', message: '请输入标题' }],
   }
   const formRef = ref(null)
   const visible = ref(false)
@@ -113,17 +107,5 @@
       }
     })
   }
-
-  
-
   defineExpose({ showDialog })
-
-  //     return {
-  //       ...toRefs(state),
-  //       showDialog,
-  //       close,
-  //       save,
-  //     }
-  //   },
-  // })
 </script>
