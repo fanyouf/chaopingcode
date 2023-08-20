@@ -100,7 +100,6 @@
     if (state.objectName === '科目' && state.opName === '添加') {
       await doAddCourse(data)
     }
-
     $baseMessage('添加成功', 'success', 'vab-hey-message-success')
     emit('fetch-data')
   }
@@ -114,6 +113,8 @@
       }
     })
   }
+
+  
 
   defineExpose({ showDialog })
 

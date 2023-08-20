@@ -30,30 +30,6 @@
         </div>
       </template>
     </my-page>
-    <!-- <vab-card shadow="never" @addCourse="hAdd()">
-      <div class="flex">
-        <label>课程列表</label>
-        <p v-if="true">当前一共6个科目</p>
-        <p v-else>暂时还没有科目</p>
-      </div>
-    </vab-card>
-    <div class="flex3 courses">
-      <div class="flex_item course empty">
-        <div>
-          <el-button type="primary" @click="hAdd()">+</el-button>
-          <p class="course-info">添加科目</p>
-        </div>
-      </div>
-      <div v-for="item in state.list" :key="item.id" class="flex_item course">
-        <img src="./course1.jpg" class="logo" />
-        <h3 class="course-title">{{ item.title }}</h3>
-        <p class="course-info">{{ item.intro }}</p>
-        <div class="course-ops">
-          <el-button type="primary" @click="hEdit(item)">编辑</el-button>
-          <el-button type="primary" @click="hDetail(item)">查看详情</el-button>
-        </div>
-      </div>
-    </div> -->
     <my-dialog ref="editRef" @fetch-data="fetchData" />
   </div>
 </template>
@@ -69,10 +45,10 @@
   })
 
   const router = useRouter()
-  const type = ref('目录')
+
   const $baseConfirm = inject('$baseConfirm')
   const $baseMessage = inject('$baseMessage')
-  const subject = ref('c++')
+
   const editRef = ref<InstanceType<typeof myDialog>>(null)
   const hAddCourse = () => {
     editRef.value.showDialog('科目', '添加', null)
