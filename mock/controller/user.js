@@ -4,6 +4,7 @@ const tokens = {
   editor: `editor-token-${Random.guid()}-${new Date().getTime()}`,
   test: `test-token-${Random.guid()}-${new Date().getTime()}`,
 }
+console.log(tokens)
 const username2role = {
   admin: ['Admin'],
   editor: ['Editor'],
@@ -49,6 +50,14 @@ module.exports = [
       }
     },
   },
+
+  // {
+  //   code: 200,
+  //   msg: 'success',
+  //   data: { token:'admin-token-4819720c-782D-8DEB-6BB2-36f7fB5c62D4-1692508940631' },
+  // }
+  // // 1692508940631 是一个时间戳
+
   {
     url: '/socialLogin',
     type: 'post',

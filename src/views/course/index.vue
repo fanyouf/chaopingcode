@@ -59,7 +59,7 @@
 </template>
 
 <script setup lang="ts">
-  import { getList, doDelete } from '@/api/knowledge'
+  import { getList } from '@/api/course'
   import myDialog from '@/components/my-dialog.vue'
   import { stat } from 'fs'
   import MyPage from '~/src/components/my-page.vue'
@@ -83,10 +83,7 @@
   const hEdit = (item: Subject) => {
     console.log(item)
   }
-  watch(subject, () => {
-    console.log(subject)
-    fetchData()
-  })
+
   const state = reactive({
     list: [
       {
@@ -169,10 +166,8 @@
 
   const fetchData = async () => {
     state.listLoading = true
-    // const {
-    //   data: { list, total },
-    // } = await getList(state.queryForm)
-
+    const { data } = await getList()
+    state.list = data.list
     state.listLoading = false
   }
   onMounted(() => {

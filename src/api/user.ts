@@ -26,6 +26,7 @@ export async function socialLogin(data: any) {
 
 export function getUserInfo() {
   return request({
+    // url: 'http://localhost:15001/vab-mock-server/userInfo',
     url: '/userInfo',
     method: 'get',
   })

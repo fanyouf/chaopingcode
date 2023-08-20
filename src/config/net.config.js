@@ -1,6 +1,8 @@
 /**
  * @description 导出网络配置
  **/
+
+console.log(process.env.VUE_APP_BASE_URL)
 module.exports = {
   // 默认的接口地址，开发环境和生产环境都会走/vab-mock-server
   // 正式项目可以选择自己配置成需要的接口地址，如"https://api.xxx.com"

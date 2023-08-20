@@ -88,9 +88,12 @@ export const useUserStore = defineStore('user', {
      * @param {*} userInfo
      */
     async login(userInfo: any) {
-      const {
-        data: { [tokenName]: token },
-      } = await login(userInfo)
+      // const {
+      //   data: { [tokenName]: token },
+      // } = await login(userInfo)
+      console.log('login')
+      const token =
+        'admin-token-4819720c-782D-8DEB-6BB2-36f7fB5c62D4-1692508940631'
       this.afterLogin(token, tokenName)
     },
     /**

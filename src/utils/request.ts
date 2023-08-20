@@ -8,6 +8,7 @@ import {
   statusName,
   successCode,
 } from '@/config'
+console.log('baseURL', baseURL)
 import qs from 'qs'
 import router from '@/router'
 import { isArray } from '@/utils/validate'
