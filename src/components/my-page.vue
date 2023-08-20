@@ -11,7 +11,7 @@
         <vab-card
           class="section-item"
           :body-style="{ padding: '0px' }"
-          shadow="never"
+          shadow="hover"
         >
           <div class="emptybox">
             <div class="empty" @click="emit('add-container')">
