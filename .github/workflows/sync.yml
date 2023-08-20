@@ -1,9 +1,16 @@
 name: Github 同步到 Gitee
 
 on:
-  push:
-    branches: [gh-pages]
-  workflow_dispatch:
+  workflow_run:
+    worflows: [CI Github Pages]
+    types:
+      - completed
+# on:
+#   deployment
+# on:
+#   push:
+#     branches: [gh-pages]
+#   workflow_dispatch:
 
 jobs:
   build:
