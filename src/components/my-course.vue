@@ -23,7 +23,7 @@
     emit('update:modelValue', courseList.value[e.index].title)
   }
   // const activeName = ref('Scratch')
-  const courseList = useCourse()
+  const { list: courseList, isLoading } = useCourse()
 </script>
 <style scoped lang="scss">
   .courseList {

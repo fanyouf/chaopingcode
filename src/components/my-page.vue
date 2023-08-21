@@ -7,7 +7,94 @@
         </vab-card>
       </el-col>
 
-      <el-col :lg="8" :md="8" :sm="8" :xl="6" :xs="24">
+      <el-col
+        v-for="item in list"
+        :key="item.id"
+        :lg="6"
+        :md="8"
+        :sm="8"
+        :xl="6"
+        :xs="24"
+      >
+        <vab-card
+          class="section-item"
+          :body-style="{ padding: '0px' }"
+          shadow="hover"
+        >
+          <template #header>
+            <div>
+              <div v-if="!hasOp" style="float: right" class="header-ops">
+                <vab-icon
+                  class="icon"
+                  icon="add-box-fill"
+                  style="color: rgb(54, 203, 203)"
+                  @click="emit('add-item', item)"
+                />
+                <vab-icon
+                  class="icon"
+                  icon="edit-box-fill"
+                  style="color: rgb(151, 95, 229)"
+                  @click="emit('edit-container')"
+                />
+                <vab-icon
+                  class="icon"
+                  icon="eye-fill"
+                  style="color: rgb(251, 212, 55)"
+                  @click="emit('view-container', item)"
+                />
+                <vab-icon
+                  icon="delete-bin-5-line"
+                  style="color: rgb(24, 144, 255)"
+                  class="icon"
+                  @click="hDel(item)"
+                />
+              </div>
+              <h3 class="section-item-title">
+                {{ item.title }}
+                <el-badge
+                  class="badge"
+                  :value="item.children ? item.children.length : ''"
+                />
+              </h3>
+            </div>
+          </template>
+          <slot :item="item">
+            <div class="section-item-body">
+              <img style="width: 100%; height: 186px" :src="item.logo" />
+              <p class="section-item-body-intro">{{ item.intro }}</p>
+
+              <div v-if="hasOp" class="header-ops">
+                <vab-icon
+                  class="icon"
+                  icon="add-box-fill"
+                  style="color: rgb(54, 203, 203)"
+                  @click="emit('add-item', item)"
+                />
+                <vab-icon
+                  class="icon"
+                  icon="edit-box-fill"
+                  style="color: rgb(151, 95, 229)"
+                  @click="emit('edit-container')"
+                />
+                <vab-icon
+                  class="icon"
+                  icon="eye-fill"
+                  style="color: rgb(251, 212, 55)"
+                  @click="emit('view-container', item)"
+                />
+                <vab-icon
+                  icon="delete-bin-5-line"
+                  style="color: rgb(24, 144, 255)"
+                  class="icon"
+                  @click="hDel(item)"
+                />
+              </div>
+            </div>
+          </slot>
+        </vab-card>
+      </el-col>
+
+      <el-col :lg="6" :md="8" :sm="8" :xl="6" :xs="24">
         <vab-card
           class="section-item"
           :body-style="{ padding: '0px' }"
@@ -24,68 +111,6 @@
               <p>{{ title }}</p>
             </div>
           </div>
-        </vab-card>
-      </el-col>
-      <el-col
-        v-for="item in list"
-        :key="item.id"
-        :lg="8"
-        :md="8"
-        :sm="8"
-        :xl="6"
-        :xs="24"
-      >
-        <vab-card
-          class="section-item"
-          :body-style="{ padding: '0px' }"
-          shadow="hover"
-        >
-          <template #header>
-            <div v-if="hasOp" class="header-ops">
-              <vab-icon
-                class="icon"
-                icon="add-box-fill"
-                style="color: rgb(54, 203, 203)"
-                @click="emit('add-item', item)"
-              />
-              <!-- is-custom-svg
-              icon="edit" -->
-              <vab-icon
-                class="icon"
-                icon="edit-box-fill"
-                style="color: rgb(151, 95, 229)"
-                @click="emit('edit-container')"
-              />
-              <!-- is-custom-svg
-              icon="view" -->
-              <vab-icon
-                class="icon"
-                icon="eye-fill"
-                style="color: rgb(251, 212, 55)"
-                @click="emit('view-container', item)"
-              />
-              <!-- is-custom-svg
-              icon="del" -->
-              <vab-icon
-                icon="delete-bin-5-line"
-                style="color: rgb(24, 144, 255)"
-                class="icon"
-                @click="hDel(item)"
-              />
-            </div>
-            <span>
-              {{ item.title }}
-              <el-badge
-                class="badge"
-                :value="item.children ? item.children.length : ''"
-              />
-            </span>
-          </template>
-          <slot :item="item">
-            <div class="section-item-body">
-              {{ item.title }}
-            </div>
-          </slot>
         </vab-card>
       </el-col>
     </el-row>
@@ -149,17 +174,26 @@
     padding: 0;
 
     .section-item {
-      height: 200px;
+      // height: 200px;
+    }
+    .section-item-title {
+      margin: 0;
     }
     .section-item-body {
-      padding: 20px;
+      // padding: 20px;
+    }
+    .section-item-body-intro {
+      height: 3em;
+      overflow: hidden;
+      padding: 10px;
     }
   }
   .header-ops {
-    float: right;
+    padding: 0 10px 10px;
+    text-align: right;
     .icon {
       // color: #ccc;
-      font-size: 20px;
+      font-size: 24px;
       margin-left: 3px;
       cursor: pointer;
       &:hover {

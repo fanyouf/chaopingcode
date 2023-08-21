@@ -3,7 +3,6 @@
     <my-page
       :list="state.list"
       item-type="知识点"
-      :has-op="false"
       @add-container="hAddKnowledgeGroup"
       @add-item="hAddKnowledge"
       @edit-container="hEditKnowledgeGroup"

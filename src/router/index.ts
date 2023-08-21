@@ -109,11 +109,11 @@ export const asyncRoutes: VabRouteRecord[] = [
   },
   // 新增router
   {
-    path: '/course',
-    name: 'Course',
+    path: '/subject',
+    name: 'Subject',
     component: Layout,
     meta: {
-      title: '科目管理',
+      title: '科目',
       icon: 'apps-line',
       levelHidden: true,
       guard: ['Admin'],
@@ -121,10 +121,54 @@ export const asyncRoutes: VabRouteRecord[] = [
     children: [
       {
         path: '',
-        name: 'CourseIndex',
-        component: () => import('@/views/course/index.vue'),
+        name: 'SubjectIndex',
+        component: () => import('@/views/subject/index.vue'),
         meta: {
           title: '科目管理',
+          icon: 'shopping-cart-line',
+          badge: 'Hot',
+        },
+      },
+      {
+        path: '/subject/:id',
+        name: 'SubjectDetail',
+        component: () => import('@/views/subject/detail.vue'),
+        meta: {
+          hidden: true,
+          title: '课程详情',
+          // meta: { title: 'Params id=1' },
+          dynamicNewTab: true,
+        },
+      },
+    ],
+  },
+  {
+    path: '/competition',
+    name: 'Competition',
+    component: Layout,
+    meta: {
+      title: '赛事',
+      icon: 'apps-line',
+      levelHidden: true,
+      guard: ['Admin'],
+    },
+    children: [
+      {
+        path: '',
+        name: 'CompetitionIndex',
+        component: () => import('@/views/competition/index.vue'),
+        meta: {
+          title: '赛事管理',
+          icon: 'shopping-cart-line',
+          badge: 'Hot',
+        },
+      },
+      {
+        path: 'add',
+        name: 'CompetitionAddIndex',
+        component: () => import('@/views/competition/add.vue'),
+        meta: {
+          title: '赛事添加',
           icon: 'shopping-cart-line',
           badge: 'Hot',
         },
@@ -170,7 +214,7 @@ export const asyncRoutes: VabRouteRecord[] = [
     name: 'Directive',
     component: Layout,
     meta: {
-      title: '指令管理',
+      title: '指令库',
       icon: 'apps-line',
       levelHidden: true,
       guard: ['Admin'],
@@ -181,7 +225,177 @@ export const asyncRoutes: VabRouteRecord[] = [
         name: 'directiveIndex',
         component: () => import('@/views/directive/index.vue'),
         meta: {
-          title: '指令管理',
+          title: '指令',
+          icon: 'shopping-cart-line',
+          // badge: 'Hot',
+        },
+      },
+      {
+        path: '/directive/:id',
+        name: 'DirectiveDetail',
+        component: () => import('@/views/directive/detail.vue'),
+        meta: {
+          hidden: true,
+          title: '指令列表',
+          // meta: { title: 'Params id=1' },
+          dynamicNewTab: true,
+        },
+      },
+    ],
+  },
+  {
+    path: '/exercises',
+    name: 'Exercises',
+    component: Layout,
+    meta: {
+      title: '习题库',
+      icon: 'apps-line',
+      levelHidden: true,
+      guard: ['Admin'],
+    },
+    children: [
+      {
+        path: '',
+        name: 'ExercisesIndex',
+        component: () => import('@/views/exercises/index.vue'),
+        meta: {
+          title: '习题库',
+          icon: 'shopping-cart-line',
+          // badge: 'Hot',
+        },
+      },
+      {
+        path: '/directive/:id',
+        name: 'DirectiveDetail',
+        component: () => import('@/views/directive/detail.vue'),
+        meta: {
+          hidden: true,
+          title: '指令列表',
+          // meta: { title: 'Params id=1' },
+          dynamicNewTab: true,
+        },
+      },
+    ],
+  },
+  {
+    path: '/work',
+    name: 'Work',
+    component: Layout,
+    meta: {
+      title: '作品库',
+      icon: 'apps-line',
+      levelHidden: true,
+      guard: ['Admin'],
+    },
+    children: [
+      {
+        path: '',
+        name: 'WorkIndex',
+        component: () => import('@/views/work/index.vue'),
+        meta: {
+          title: '作品库',
+          icon: 'shopping-cart-line',
+          // badge: 'Hot',
+        },
+      },
+      {
+        path: '/directive/:id',
+        name: 'DirectiveDetail',
+        component: () => import('@/views/directive/detail.vue'),
+        meta: {
+          hidden: true,
+          title: '指令列表',
+          // meta: { title: 'Params id=1' },
+          dynamicNewTab: true,
+        },
+      },
+    ],
+  },
+  {
+    path: '/paper',
+    name: 'Paper',
+    component: Layout,
+    meta: {
+      title: '试卷库',
+      icon: 'apps-line',
+      levelHidden: true,
+      guard: ['Admin'],
+    },
+    children: [
+      {
+        path: '',
+        name: 'PaperIndex',
+        component: () => import('@/views/paper/index.vue'),
+        meta: {
+          title: '试卷库管理',
+          icon: 'shopping-cart-line',
+          // badge: 'Hot',
+        },
+      },
+      {
+        path: '/directive/:id',
+        name: 'DirectiveDetail',
+        component: () => import('@/views/directive/detail.vue'),
+        meta: {
+          hidden: true,
+          title: '指令列表',
+          // meta: { title: 'Params id=1' },
+          dynamicNewTab: true,
+        },
+      },
+    ],
+  },
+  {
+    path: '/lession',
+    name: 'Lession',
+    component: Layout,
+    meta: {
+      title: '教学单元',
+      icon: 'apps-line',
+      levelHidden: true,
+      guard: ['Admin'],
+    },
+    children: [
+      {
+        path: '',
+        name: 'LessionIndex',
+        component: () => import('@/views/lession/index.vue'),
+        meta: {
+          title: '教学单元管理',
+          icon: 'shopping-cart-line',
+          // badge: 'Hot',
+        },
+      },
+      {
+        path: '/directive/:id',
+        name: 'DirectiveDetail',
+        component: () => import('@/views/directive/detail.vue'),
+        meta: {
+          hidden: true,
+          title: '指令列表',
+          // meta: { title: 'Params id=1' },
+          dynamicNewTab: true,
+        },
+      },
+    ],
+  },
+  {
+    path: '/course',
+    name: 'Course',
+    component: Layout,
+    meta: {
+      title: '课程库',
+      icon: 'apps-line',
+      levelHidden: true,
+      guard: ['Admin'],
+    },
+    children: [
+      {
+        path: '',
+        name: 'CourseIndex',
+        component: () => import('@/views/course/index.vue'),
+        meta: {
+          title: '课程库管理',
           icon: 'shopping-cart-line',
           // badge: 'Hot',
         },
