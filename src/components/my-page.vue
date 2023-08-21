@@ -38,31 +38,38 @@
         <vab-card
           class="section-item"
           :body-style="{ padding: '0px' }"
-          shadow="never"
+          shadow="hover"
         >
           <template #header>
             <div v-if="hasOp" class="header-ops">
               <vab-icon
                 class="icon"
-                icon="add-box-line"
+                icon="add-box-fill"
+                style="color: rgb(54, 203, 203)"
                 @click="emit('add-item', item)"
               />
+              <!-- is-custom-svg
+              icon="edit" -->
               <vab-icon
                 class="icon"
-                is-custom-svg
-                icon="edit"
+                icon="edit-box-fill"
+                style="color: rgb(151, 95, 229)"
                 @click="emit('edit-container')"
               />
+              <!-- is-custom-svg
+              icon="view" -->
               <vab-icon
                 class="icon"
-                is-custom-svg
-                icon="view"
+                icon="eye-fill"
+                style="color: rgb(251, 212, 55)"
                 @click="emit('view-container', item)"
               />
+              <!-- is-custom-svg
+              icon="del" -->
               <vab-icon
-                is-custom-svg
+                icon="delete-bin-5-line"
+                style="color: rgb(24, 144, 255)"
                 class="icon"
-                icon="del"
                 @click="hDel(item)"
               />
             </div>
@@ -151,12 +158,12 @@
   .header-ops {
     float: right;
     .icon {
-      color: #ccc;
+      // color: #ccc;
       font-size: 20px;
       margin-left: 3px;
       cursor: pointer;
       &:hover {
-        color: #000;
+        // color: #000;
       }
     }
   }
