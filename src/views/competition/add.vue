@@ -1,30 +1,45 @@
 <template>
   <section class="competition-add-container">
-    <el-form ref="formRef" :model="data" :rules="rules">
+    <el-form ref="formRef" label-width="80px" :model="data" :rules="rules">
       <el-form-item :label="state.objectName + '名称'" prop="name">
-        <el-input v-model="data.title" aria-placeholder="请输入" />
+        <el-input
+          v-model="data.title"
+          style="width: 500px"
+          aria-placeholder="请输入"
+        />
       </el-form-item>
       <el-form-item :label="state.objectName + '描述'" prop="intro">
-        <el-input v-model="data.intro" aria-placeholder="请输入" />
+        <el-input
+          v-model="data.intro"
+          style="width: 500px"
+          aria-placeholder="请输入"
+        />
       </el-form-item>
       <el-form-item :label="state.objectName + '图片'" prop="name">
         <my-upload-image v-model="data.logo" />
       </el-form-item>
       <el-form-item label="官网地址" prop="netpage">
-        <el-input v-model.number="data.netpage" type="number" />
+        <el-input
+          v-model.number="data.netpage"
+          style="width: 500px"
+          type="number"
+        />
       </el-form-item>
       <el-form-item label="显示排序" prop="order">
-        <el-input v-model.number="data.order" type="number" />
+        <el-input
+          v-model.number="data.order"
+          style="width: 100px"
+          type="number"
+        />
       </el-form-item>
       <el-form-item :label="state.objectName + '备注'" prop="remark">
         <my-wang-editor v-model="data.remark" />
       </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="save">确 定</el-button>
+        <el-button @click="close">取 消</el-button>
+      </el-form-item>
     </el-form>
-
-    <footer>
-      <el-button type="primary" @click="save">确 定</el-button>
-      <el-button @click="close">取 消</el-button>
-    </footer>
   </section>
 </template>
 
@@ -103,9 +118,9 @@
 
 <style lang="scss" scoped>
   footer {
-    padding-left: 66px;
+    // padding-left: 66px;
   }
   .competition-add-container {
-    padding: 1em 2em;
+    padding: 1em 0;
   }
 </style>

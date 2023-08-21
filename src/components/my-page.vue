@@ -60,7 +60,11 @@
           </template>
           <slot :item="item">
             <div class="section-item-body">
-              <img style="width: 100%; height: 186px" :src="item.logo" />
+              <img
+                v-if="item.logo"
+                style="width: 100%; height: 186px"
+                :src="item.logo"
+              />
               <p class="section-item-body-intro">{{ item.intro }}</p>
 
               <div v-if="hasOp" class="header-ops">
