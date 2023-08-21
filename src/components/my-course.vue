@@ -3,12 +3,14 @@
     <el-tab-pane
       v-for="item in courseList"
       :key="item.id"
-      :label="item.name"
-      :name="item.name"
+      :label="item.title"
+      :name="item.title"
     />
   </el-tabs>
 </template>
 <script setup>
+  import useCourse from '@/hooks/useCourse'
+
   defineProps({
     modelValue: {
       type: String,
@@ -18,27 +20,10 @@
   const emit = defineEmits(['update:modelValue'])
   const click = (e) => {
     console.log(e.index)
-    emit('update:modelValue', courseList.value[e.index].name)
+    emit('update:modelValue', courseList.value[e.index].title)
   }
   // const activeName = ref('Scratch')
-  const courseList = ref([
-    {
-      id: 1,
-      name: 'Scratch',
-    },
-    {
-      id: 2,
-      name: 'Python',
-    },
-    {
-      id: 3,
-      name: 'C++',
-    },
-    {
-      id: 4,
-      name: '数学',
-    },
-  ])
+  const courseList = useCourse()
 </script>
 <style scoped lang="scss">
   .courseList {

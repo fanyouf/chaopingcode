@@ -1,19 +1,19 @@
 <template>
   <div>
     <my-page
-      :list="state.list"
+      :list="list"
       title="添加科目"
       :has-op="false"
       @add-container="hAddCourse"
     >
       <template #header>
         <h3>科目列表</h3>
-        <p>当前一共有{{ state.list.length }}个科目</p>
+        <p>当前一共有{{ list.length }}个科目</p>
       </template>
 
       <template #default="{ item }">
         <div class="course">
-          <img src="./course1.jpg" class="logo" />
+          <img :src="item.logo || defaultImage" class="logo" />
           <h3 class="course-title">{{ item.title }}</h3>
           <p class="course-info">{{ item.intro }}</p>
           <div class="course-ops">
@@ -35,21 +35,22 @@
 </template>
 
 <script setup lang="ts">
-  import { getList } from '@/api/course'
-  import myDialog from '@/components/my-dialog.vue'
   import { stat } from 'fs'
-  import MyPage from '~/src/components/my-page.vue'
+  import useCourse from '@/hooks/useCourse'
+  import { doDelete, getList } from '@/api/course'
+  import MyDialog from '~/src/components/my-dialog.vue'
 
   defineOptions({
     name: 'CourseIndex',
   })
-
+  const defaultImage =
+    'http://8.142.32.7:8888/assets/d1/57/d1576663f29233e326553db584e5520c.jpg'
   const router = useRouter()
 
   const $baseConfirm = inject('$baseConfirm')
   const $baseMessage = inject('$baseMessage')
 
-  const editRef = ref<InstanceType<typeof myDialog>>(null)
+  const editRef = ref<InstanceType<typeof MyDialog>>(null)
   const hAddCourse = () => {
     editRef.value.showDialog('科目', '添加', null)
   }
@@ -62,68 +63,68 @@
 
   const state = reactive({
     list: [
-      {
-        title: 'Scratch图形化',
-        intro: '在咋必成大器谢谢大地方方法学才',
-        logo: './xxx',
-        remark: ',',
-        order: 1,
-        type: 'string',
-        id: 1,
-        create_at: 1,
-        update_at: 23,
-        deleted_at: 3,
-      },
-      {
-        title: 'Scratch图形化',
-        intro: '在咋必成大器谢谢大地方方法学才',
-        logo: './xxx',
-        remark: ',',
-        order: 1,
-        type: 'string',
-        id: 2,
-        create_at: 1,
-        update_at: 23,
-        deleted_at: 3,
-      },
-      {
-        title: 'Scratch图形化',
-        intro: '在咋必成大器谢谢大地方方法学才',
-        logo: './xxx',
-        remark: ',',
-        order: 1,
-        type: 'string',
-        id: 3,
-        create_at: 1,
-        update_at: 23,
-        deleted_at: 3,
-      },
-      {
-        title: 'Scratch图形化',
-        intro: '在咋必成大器谢谢大地方方法学才',
-        logo: './xxx',
-        remark: ',',
-        order: 1,
-        type: 'string',
-        id: 4,
-        create_at: 1,
-        update_at: 23,
-        deleted_at: 3,
-      },
-      {
-        title: 'Scratch图形化',
-        intro: '在咋必成大器谢谢大地方方法学才',
-        logo: './xxx',
-        remark: ',',
-        order: 1,
-        type: 'string',
-        id: 5,
-        create_at: 1,
-        update_at: 23,
-        deleted_at: 3,
-      },
+      // {
+      //   title: 'Scratch图形化',
+      //   intro: '在咋必成大器谢谢大地方方法学才',
+      //   logo: './xxx',
+      //   remark: ',',
+      //   order: 1,
+      //   type: 'string',
+      //   id: 1,
+      //   create_at: 1,
+      //   update_at: 23,
+      //   deleted_at: 3,
+      // },
+      // {
+      //   title: 'Scratch图形化',
+      //   intro: '在咋必成大器谢谢大地方方法学才',
+      //   logo: './xxx',
+      //   remark: ',',
+      //   order: 1,
+      //   type: 'string',
+      //   id: 2,
+      //   create_at: 1,
+      //   update_at: 23,
+      //   deleted_at: 3,
+      // },
+      // {
+      //   title: 'Scratch图形化',
+      //   intro: '在咋必成大器谢谢大地方方法学才',
+      //   logo: './xxx',
+      //   remark: ',',
+      //   order: 1,
+      //   type: 'string',
+      //   id: 3,
+      //   create_at: 1,
+      //   update_at: 23,
+      //   deleted_at: 3,
+      // },
+      // {
+      //   title: 'Scratch图形化',
+      //   intro: '在咋必成大器谢谢大地方方法学才',
+      //   logo: './xxx',
+      //   remark: ',',
+      //   order: 1,
+      //   type: 'string',
+      //   id: 4,
+      //   create_at: 1,
+      //   update_at: 23,
+      //   deleted_at: 3,
+      // },
+      // {
+      //   title: 'Scratch图形化',
+      //   intro: '在咋必成大器谢谢大地方方法学才',
+      //   logo: './xxx',
+      //   remark: ',',
+      //   order: 1,
+      //   type: 'string',
+      //   id: 5,
+      //   create_at: 1,
+      //   update_at: 23,
+      //   deleted_at: 3,
+      // },
     ] as Subject[],
-    listLoading: true,
+    isLoading: ref(false),
     layout: 'total, sizes, prev, pager, next, jumper',
     total: 0,
     selectRows: '',
@@ -132,23 +133,22 @@
   // const hShowDialog = (typeName, opName, row = null) => {
   //   editRef.value.showDialog(typeName, opName, row)
   // }
-  // const hDel = (typeName, row) => {
-  //   $baseConfirm('你确定要删除当前项吗', null, async () => {
-  //     const { msg } = await doDelete({ ids: row.id })
-  //     $baseMessage(msg, 'success', 'vab-hey-message-success')
-  //     await fetchData()
-  //   })
-  // }
+  const hDel = (row) => {
+    $baseConfirm('你确定要删除当前项吗', null, async () => {
+      await doDelete(row.id)
+      $baseMessage('OK', 'success', 'vab-hey-message-success')
+      fetchData()
+    })
+  }
+
+  const { list, isLoading } = useCourse()
 
   const fetchData = async () => {
-    state.listLoading = true
+    isLoading.value = true
     const { data } = await getList()
-    state.list = data.list
-    state.listLoading = false
+    list.value = data.list
+    isLoading.value = false
   }
-  onMounted(() => {
-    fetchData()
-  })
 </script>
 <style scoped lang="scss">
   .section {

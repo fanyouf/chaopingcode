@@ -8,22 +8,7 @@
         <el-input v-model="data.intro" aria-placeholder="请输入" />
       </el-form-item>
       <el-form-item :label="state.objectName + '图片'" prop="name">
-        <el-upload
-          class="upload-demo"
-          action="https://jsonplaceholder.typicode.com/posts/"
-        >
-          <!-- :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :before-remove="beforeRemove"
-          :on-exceed="handleExceed"
-          :file-list="fileList" -->
-          <el-button size="small" type="primary">点击上传</el-button>
-          <template #tip>
-            <div class="el-upload__tip">
-              只能上传 jpg/png 文件，且不超过 500kb
-            </div>
-          </template>
-        </el-upload>
+        <my-upload-image v-model="data.logo" />
       </el-form-item>
       <el-form-item label="显示排序" prop="order">
         <el-input v-model.number="data.order" type="number" />
@@ -40,6 +25,7 @@
 </template>
 
 <script setup lang="ts">
+  import MyUploadImge from './my-upload-imge.vue'
   import { doAdd as doAddCourse } from '@/api/course'
   const $baseMessage = inject('$baseMessage')
 
@@ -107,5 +93,6 @@
       }
     })
   }
+
   defineExpose({ showDialog })
 </script>

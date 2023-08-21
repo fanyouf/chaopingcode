@@ -24,10 +24,9 @@ export function doEdit(data: any) {
   })
 }
 
-export function doDelete(data: any) {
+export function doDelete(id: any) {
   return request({
-    url: '/area/doDelete',
-    method: 'post',
-    data,
+    url: `http://8.142.32.7:8888/subject?id=${id}`,
+    method: 'delete',
   })
 }

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <myPage
+    <my-page
       :list="state.list"
       item-type="知识点"
       @add-container="hAddKnowledgeGroup"
@@ -30,7 +30,7 @@
           </el-tag>
         </div>
       </template>
-    </myPage>
+    </my-page>
     <my-dialog ref="editRef" @fetch-data="fetchData" />
   </div>
 </template>
@@ -40,13 +40,13 @@
   defineOptions({
     name: 'KnowledgeIndex',
   })
-  import myPage from '~/src/components/my-page.vue'
-  import myCourse from '~/src/components/my-course.vue'
+  // import myPage from '~/src/components/my-page.vue'
+  // import myCourse from '~/src/components/my-course.vue'
   // import { onActivated, onDeactivated } from 'vue'
   // import { Plus } from '@element-plus/icons-vue'
 
   import { getList } from '@/api/knowledge'
-  import myDialog from '@/components/my-dialog.vue'
+  // import myDialog from '@/components/my-dialog.vue'
 
   const curCourse = ref('Python')
   // const $baseConfirm = inject('$baseConfirm')
