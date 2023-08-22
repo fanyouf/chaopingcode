@@ -230,6 +230,7 @@ export const asyncRoutes: VabRouteRecord[] = [
           // badge: 'Hot',
         },
       },
+
       {
         path: '/directive/:id',
         name: 'DirectiveDetail',

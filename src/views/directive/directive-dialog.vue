@@ -1,18 +1,44 @@
 <template>
   <el-dialog v-model="visible" :title="cTitle" width="500px" @close="close">
     <el-form ref="formRef" :model="data" :rules="rules" label-position="top">
+      <el-form-item
+        v-if="state.objectName === '指令分类'"
+        label="选择科目"
+        prop="subject"
+      >
+        <el-select v-model="data.subjectId" placeholder="请选择">
+          <el-option
+            v-for="item in subjects"
+            :key="item.id"
+            :value="item.id"
+            :label="item.title"
+          >
+            {{ item.title }}
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item :label="state.objectName + '名称'" prop="name">
-        <el-input v-model="data.title" aria-placeholder="请输入" />
+        <el-input v-model="data.name" aria-placeholder="请输入" />
       </el-form-item>
       <el-form-item :label="state.objectName + '描述'" prop="intro">
-        <el-input v-model="data.intro" aria-placeholder="请输入" />
+        <el-input
+          v-model="data.intro"
+          type="textarea"
+          aria-placeholder="请输入"
+        />
+      </el-form-item>
+      <el-form-item :label="state.objectName + '图片'" prop="intro">
+        <MyUploadImge v-model="data.image" />
       </el-form-item>
       <el-form-item
-        v-if="state.objectName !== '知识点'"
-        :label="state.objectName + '图片'"
-        prop="name"
+        v-if="state.objectName === '指令分类'"
+        :label="state.objectName + '类型'"
+        prop="intro"
       >
-        <my-upload-image v-model="data.logo" />
+        <el-radio-group v-model="data.type">
+          <el-radio label="图片">图片</el-radio>
+          <el-radio label="文字">文字</el-radio>
+        </el-radio-group>
       </el-form-item>
       <el-form-item label="显示排序" prop="order">
         <el-input v-model.number="data.order" type="number" />
@@ -29,22 +55,26 @@
 </template>
 
 <script setup lang="ts">
-  import MyUploadImge from './my-upload-imge.vue'
+  import useSubject from '~/src/hooks/useSubject'
+  // import MyUploadImge from './my-upload-imge.vue'
   import { doAdd as doAddCourse } from '@/api/course'
   const $baseMessage = inject('$baseMessage')
 
   const emit = defineEmits(['fetch-data'])
 
+  const { list: subjects } = useSubject()
+
   const data = reactive({
     // id: '',
-    title: '测试标题', // 标题
+    subjectId: -1,
+    name: '测试标题', // 标题
     intro: '', // 介绍
-    logo: '', //
-    remark: '', // 备注
-    type: '',
+    type: '图片',
+    image: '', // 指令的图片
     order: 1,
-    state: true, // boolean
+    remark: '备注', // 备注
   })
+
   const rules = {
     title: [{ required: true, trigger: 'blur', message: '请输入标题' }],
   }
@@ -60,18 +90,20 @@
   const showDialog = (
     objectName: OPObject = '目录',
     opName: OPType = '添加',
+    subjectId = -1,
     row = null
   ) => {
     state.objectName = objectName
     state.opName = opName
+    data.subjectId = subjectId
     if (row) {
       // data.id = row.id
       data.order = row.order || 1
-      data.title = row.title
+      // data.title = row.title
     }
 
     if (opName === '添加') {
-      data.title = ''
+      // data.title = ''
     }
 
     visible.value = true

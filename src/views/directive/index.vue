@@ -1,6 +1,6 @@
 <template>
   <div>
-    <myPage
+    <my-page
       :list="state.list"
       title="添加指令分类"
       item-type="指令"
@@ -11,28 +11,28 @@
       @edit-container="hEditDirectiveGroup"
     >
       <template #header>
-        <h3>选择科目，当前科目是{{ curCourse }}</h3>
+        <h3>选择科目，当前科目是{{ curCourse.title }}</h3>
         <my-course v-model="curCourse" />
       </template>
-    </myPage>
-    <my-dialog ref="editRef" @fetch-data="fetchData" />
+    </my-page>
+    <my-dialog
+      ref="editRef"
+      :subject-id="curCourse.id"
+      @fetch-data="fetchData"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-  // import { OPObject } from '../../types/data'
+  import { useRouter } from 'vue-router'
   defineOptions({
     name: 'DirectiveIndex',
   })
-  import myPage from '~/src/components/my-page.vue'
-  import myCourse from '~/src/components/my-course.vue'
-  // import { onActivated, onDeactivated } from 'vue'
-  // import { Plus } from '@element-plus/icons-vue'
 
   import { getList } from '@/api/knowledge'
-  import myDialog from '@/components/my-dialog.vue'
+  import myDialog from './directive-dialog.vue'
   const router = useRouter()
-  const curCourse = ref('Python')
+  const curCourse = ref({ id: -1, title: '' })
   // const $baseConfirm = inject('$baseConfirm')
   // const $baseMessage = inject('$baseMessage')
   const subject = ref('c++')
@@ -54,17 +54,17 @@
     state.listLoading = false
   }
   const hAddDirectiveGroup = () => {
-    editRef.value.showDialog('目录', '添加', null)
+    editRef.value.showDialog('指令分类', '添加', curCourse.value.id, null)
   }
   const hAddDirective = (knowledgeGroup) => {
-    editRef.value.showDialog('知识点', '添加', knowledgeGroup)
+    editRef.value.showDialog('指令', '添加', curCourse.value.id, knowledgeGroup)
   }
 
   const hViewDirectiveGroup = (directiveGroup) => {
     router.push(`/directive/${directiveGroup.id}`)
   }
   const hEditDirective = (knowledge) => {
-    editRef.value.showDialog('知识点', '修改', knowledge)
+    editRef.value.showDialog('指令', '修改', curCourse.value.id, knowledge)
   }
 
   const hDelDirective = (knowledge) => {

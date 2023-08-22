@@ -52,5 +52,5 @@ interface Knowledge extends DateTime {
 //   '修改' = '修改',
 // }
 
-type OPObject = '知识点' | '目录' | '科目' | '赛事'
+type OPObject = '知识点' | '目录' | '科目' | '赛事' | '指令' | '指令分类'
 type OPType = '添加' | '删除' | '修改'
