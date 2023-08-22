@@ -1,7 +1,7 @@
 <template>
   <section class="competition-add-container">
     <h3>添加习题</h3>
-    <el-form ref="formRef" label-width="80px" :model="data" :rules="rules">
+    <el-form ref="formRef" label-width="66px" :model="data" :rules="rules">
       <el-form-item label="习题编号" prop="code">
         <el-input
           v-model="data.code"
@@ -19,6 +19,7 @@
       <el-form-item label="习题简介" prop="intro">
         <el-input
           v-model="data.intro"
+          type="textarea"
           style="width: 500px"
           aria-placeholder="请输入习题简介"
         />
@@ -50,13 +51,31 @@
       <el-form-item label="答案选项" prop="subjectContent">
         <ExercisesAnsArea v-model="data.ans" />
       </el-form-item>
+      <el-form-item label="单选答案" prop="diff">
+        <el-radio-group v-model="data.ans">
+          <el-radio label="A">A</el-radio>
+          <el-radio label="B">B</el-radio>
+          <el-radio label="C">C</el-radio>
+          <el-radio label="D">D</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="多选答案" prop="diff">
+        <el-checkbox-group v-model="data.anss">
+          <el-checkbox label="A" name="A" />
+          <el-checkbox label="B" name="B" />
+          <el-checkbox label="C" name="C" />
+          <el-checkbox label="D" name="D" />
+          <el-checkbox label="E" name="E" />
+        </el-checkbox-group>
+      </el-form-item>
 
-      <el-form-item label="相关知识点" prop="knowledges">
+      <el-form-item label="相关知识" prop="knowledges">
         <ExercisesKnowledges />
       </el-form-item>
 
       <el-form-item label="相关指令" prop="directives">
-        <el-input v-model="data.directives" style="width: 500px" />
+        <!-- <el-input v-model="data.directives" style="width: 500px" /> -->
+        <ExercisesKnowledges />
       </el-form-item>
 
       <el-form-item label="文本讲解" prop="remark">
@@ -116,6 +135,7 @@
     competition: {},
     type: '',
     ans: '',
+    anss: [],
     knowledges: '',
     directives: '',
     netpage: 'www.baidu.com',

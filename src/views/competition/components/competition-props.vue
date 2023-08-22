@@ -7,7 +7,7 @@
           <el-input v-model="scope.row.key" />
         </template>
       </el-table-column>
-      <el-table-column label="属性值" width="180">
+      <el-table-column label="属性值" width="300">
         <template #default="scope">
           <el-input v-model="scope.row.value" />
         </template>
@@ -21,8 +21,7 @@
       </el-table-column>
     </el-table>
     <div style="margin-top: 10px">
-      <el-button type="success" @click="hAdd">新增</el-button>
-      <el-button type="primary" @click="handleDelete">批量导入</el-button>
+      <el-button type="success" @click="hAdd">+</el-button>
     </div>
   </div>
 </template>

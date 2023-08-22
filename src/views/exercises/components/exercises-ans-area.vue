@@ -7,16 +7,14 @@
         :name="item.code"
       >
         <template #title>
-          {{ String.fromCharCode(65 + idx) }}
-          <el-button style="margin-left: auto" @click="hDel(idx)">
-            del
-          </el-button>
+          {{ String.fromCharCode(65 + idx) }}. {{ item.content }}
+          <el-button style="margin-left: auto" @click="hDel(idx)">-</el-button>
         </template>
         <my-wang-editor v-model="item.content" />
       </el-collapse-item>
     </el-collapse>
 
-    <el-button type="success" @click="hAdd">新增选项</el-button>
+    <el-button type="success" @click="hAdd">+</el-button>
   </div>
 </template>
 

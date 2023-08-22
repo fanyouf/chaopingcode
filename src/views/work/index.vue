@@ -10,7 +10,7 @@
       @edit-container="hEditKnowledgeGroup"
     >
       <template #header>
-        <h3>选择科目，当前科目是{{ curCourse.title }}</h3>
+        <h3>选择科目，当前科目是:{{ curCourse.title }}</h3>
         <my-course v-model="curCourse" />
       </template>
       <template #default="{ item }">

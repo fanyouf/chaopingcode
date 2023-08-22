@@ -1,7 +1,7 @@
 <template>
   <section class="competition-add-container">
     <h3>添加竞赛</h3>
-    <el-form ref="formRef" label-width="80px" :model="data" :rules="rules">
+    <el-form ref="formRef" label-width="66px" :model="data" :rules="rules">
       <el-form-item :label="state.objectName + '名称'" prop="name">
         <el-input
           v-model="data.title"
@@ -20,14 +20,17 @@
         <my-upload-image v-model="data.logo" />
       </el-form-item>
       <el-form-item label="官网地址" prop="netpage">
-        <el-input v-model="data.netpage" style="width: 500px" type="number" />
-      </el-form-item>
-      <el-form-item label="显示排序" prop="order">
         <el-input
-          v-model.number="data.order"
-          style="width: 100px"
-          type="number"
-        />
+          v-model="data.netpage"
+          placeholder="官网地址"
+          style="width: 500px"
+        >
+          <template #prepend>Http://</template>
+        </el-input>
+      </el-form-item>
+
+      <el-form-item label="显示排序" prop="order">
+        <el-input-number v-model="data.order" :step="1" />
       </el-form-item>
       <el-form-item label="赛事属性" prop="order">
         <competition-props />

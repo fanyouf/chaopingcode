@@ -8,22 +8,26 @@
       :close-on-press-escape="false"
     >
       <el-form>
-        <el-form-item label="提交人">
-          <el-input />
-        </el-form-item>
-        <el-form-item>
-          <el-button>查询</el-button>
+        <el-form-item label="知识点">
+          <el-input v-model.trim="name" style="width: 300px" />
+          &nbsp;&nbsp;&nbsp;
+          <el-button type="success">查询</el-button>
         </el-form-item>
       </el-form>
 
       <el-table
         :data="dataList"
-        style="width: 100%"
+        style="width: 100%; margin-top: 20px"
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="title" label="姓名" width="120" />
-        <el-table-column prop="intro" label="介绍" show-overflow-tooltip />
+        <el-table-column prop="title" label="科目名称" width="120" />
+        <el-table-column prop="title" label="知识点名称" width="120" />
+        <el-table-column
+          prop="intro"
+          label="知识点介绍"
+          show-overflow-tooltip
+        />
       </el-table>
 
       <template #footer>
@@ -44,6 +48,7 @@
   const props = defineProps<{
     modelValue: string
   }>()
+  const name = ref('')
 
   const emit = defineEmits(['update:modelValue'])
   const dataList = ref([

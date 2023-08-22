@@ -3,13 +3,13 @@
     <my-page
       :list="state.list"
       item-type="知识点"
-      :has-op="false"
+      has-op-top
       @add-container="hAddKnowledgeGroup"
       @add-item="hAddKnowledge"
       @edit-container="hEditKnowledgeGroup"
     >
       <template #header>
-        <h3>选择科目，当前科目是{{ curCourse }}</h3>
+        <h3>选择科目，当前科目是:{{ curCourse.title }}</h3>
         <my-course v-model="curCourse" />
       </template>
       <template #default="{ item }">

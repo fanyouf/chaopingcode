@@ -8,14 +8,14 @@
         <el-input v-model="data.intro" aria-placeholder="请输入" />
       </el-form-item>
       <el-form-item
-        v-if="state.objectName !== '知识点'"
+        v-if="cHasImage"
         :label="state.objectName + '图片'"
         prop="name"
       >
         <my-upload-image v-model="data.logo" />
       </el-form-item>
       <el-form-item label="显示排序" prop="order">
-        <el-input v-model.number="data.order" type="number" />
+        <el-input-number v-model="data.order" :step="1" />
       </el-form-item>
       <el-form-item :label="state.objectName + '备注'" prop="remark">
         <el-input v-model="data.remark" type="textarea" />
@@ -57,6 +57,10 @@
   const cTitle = computed(() => {
     return `${state.objectName}-${state.opName}`
   })
+  const cHasImage = computed(() => {
+    return ['科目', '赛事'].includes(state.objectName)
+  })
+
   const showDialog = (
     objectName: OPObject = '目录',
     opName: OPType = '添加',

@@ -41,7 +41,7 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="显示排序" prop="order">
-        <el-input v-model.number="data.order" type="number" />
+        <el-input-number v-model="data.order" :step="1" />
       </el-form-item>
       <el-form-item :label="state.objectName + '备注'" prop="remark">
         <el-input v-model="data.remark" type="textarea" />
