@@ -12,6 +12,7 @@
       style="height: 300px"
       @on-created="handleCreated"
       @on-change="hChange"
+      @on-blur="hBlur"
     />
   </div>
 </template>
@@ -25,7 +26,7 @@
     modelValue: string
   }>()
 
-  const emit = defineEmits(['update:modelValue'])
+  const emit = defineEmits(['update:modelValue', 'blur'])
 
   defineOptions({
     name: 'WangEditor',
@@ -106,6 +107,10 @@
     // console.log(editor)
     // console.log('change', editor.getHtml())
     emit('update:modelValue', editor.getHtml())
+  }
+  const hBlur = () => {
+    console.log('失去焦点')
+    emit('blur')
   }
 </script>
 
