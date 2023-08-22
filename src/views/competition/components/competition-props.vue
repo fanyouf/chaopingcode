@@ -27,7 +27,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
   const tableData = ref([
     {
       key: '年份',

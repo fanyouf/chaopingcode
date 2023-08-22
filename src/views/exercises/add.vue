@@ -41,7 +41,7 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="选择赛事" prop="netpage">
-        <el-input v-model="data.netpage" style="width: 500px" type="number" />
+        <ExercisesCompetitionSelect v-model="data.competition" />
       </el-form-item>
 
       <el-form-item label="题干部分" prop="subjectContent">
@@ -51,8 +51,8 @@
         <ExercisesAnsArea v-model="data.ans" />
       </el-form-item>
 
-      <el-form-item label="知识点" prop="knowledges">
-        <el-input v-model="data.knowledges" style="width: 500px" />
+      <el-form-item label="相关知识点" prop="knowledges">
+        <ExercisesKnowledges />
       </el-form-item>
 
       <el-form-item label="相关指令" prop="directives">
@@ -63,17 +63,25 @@
         <el-input
           v-model="data.intro"
           style="width: 500px"
+          type="textarea"
           aria-placeholder="请输入文本讲解"
         />
       </el-form-item>
 
       <el-form-item label="视频讲解" prop="netpage">
-        <el-input v-model="data.netpage" style="width: 500px" type="number" />
+        <el-input
+          v-model="data.netpage"
+          placeholder="请输入视频讲解的url地址"
+          style="width: 500px"
+        >
+          <template #prepend>Http://</template>
+        </el-input>
       </el-form-item>
 
       <el-form-item label="习题备注" prop="remark">
         <el-input
           v-model="data.intro"
+          type="textarea"
           style="width: 500px"
           aria-placeholder="请输入习题备注"
         />
@@ -90,6 +98,8 @@
 <script setup lang="ts">
   import ExercisesInput from './components/exercises-input.vue'
   import ExercisesAnsArea from './components/exercises-ans-area.vue'
+  import ExercisesKnowledges from './components/exercises-knowledges.vue'
+  import ExercisesCompetitionSelect from './components/exercises-competition-select.vue'
   import { doAdd as doAddCourse } from '@/api/course'
   const $baseMessage = inject('$baseMessage')
 
@@ -103,6 +113,7 @@
     intro: '', // 介绍
     logo: '', //
     remark: '备注', // 备注
+    competition: {},
     type: '',
     ans: '',
     knowledges: '',

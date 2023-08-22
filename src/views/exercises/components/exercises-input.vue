@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 500px">
+  <div>
     <el-input v-if="!isEdit" :model-value="html" @focus="hFocus" />
     <my-wang-editor v-else v-model="html" @blur="isEdit = false" />
   </div>
