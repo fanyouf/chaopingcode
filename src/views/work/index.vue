@@ -11,7 +11,7 @@
     >
       <template #header>
         <h3>选择科目，当前科目是:{{ curCourse.title }}</h3>
-        <my-course v-model="curCourse" />
+        <my-subject v-model="curCourse" />
       </template>
       <template #default="{ item }">
         <div class="knowledge-group">

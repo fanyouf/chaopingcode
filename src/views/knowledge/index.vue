@@ -10,7 +10,7 @@
     >
       <template #header>
         <h3>选择科目，当前科目是:{{ curCourse.title }}</h3>
-        <my-course v-model="curCourse" />
+        <my-subject v-model="curCourse" />
       </template>
       <template #default="{ item }">
         <div class="knowledge-group">
@@ -37,19 +37,14 @@
 </template>
 
 <script setup lang="ts">
-  // import { OPObject } from '../../types/data'
   defineOptions({
     name: 'KnowledgeIndex',
   })
-  // import myPage from '~/src/components/my-page.vue'
-  // import myCourse from '~/src/components/my-course.vue'
-  // import { onActivated, onDeactivated } from 'vue'
-  // import { Plus } from '@element-plus/icons-vue'
 
   import { getList } from '@/api/knowledge'
   import MyDialog from '@/components/my-dialog.vue'
 
-  const curCourse = ref('Python')
+  const curCourse = ref<{ title?: string }>({})
   // const $baseConfirm = inject('$baseConfirm')
   // const $baseMessage = inject('$baseMessage')
   const subject = ref('c++')
@@ -104,13 +99,6 @@
     },
     { immediate: true }
   )
-
-  // onActivated(() => {
-  //   console.log('onActived')
-  //   // 调用时机为首次挂载
-  //   // 以及每次从缓存中被重新插入时
-  //   fetchData()
-  // })
 </script>
 <style lang="scss">
   .section {

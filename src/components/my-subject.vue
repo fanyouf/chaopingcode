@@ -13,8 +13,7 @@
   </el-tabs>
 </template>
 <script setup>
-  import useCourse from '@/hooks/useCourse'
-
+  import { getList } from '@/api/subject'
   defineProps({
     modelValue: {
       type: Object,
@@ -26,8 +25,15 @@
     console.log(e.index)
     emit('update:modelValue', courseList.value[e.index])
   }
-  // const activeName = ref('Scratch')
-  const { list: courseList, isLoading } = useCourse()
+  const courseList = ref([])
+  onMounted(async () => {
+    const { data } = await getList()
+    courseList.value = data.list
+    // isLoading.value = false
+    if (data.list.length) {
+      emit('update:modelValue', courseList.value[0])
+    }
+  })
 </script>
 <style scoped lang="scss">
   .courseList {
