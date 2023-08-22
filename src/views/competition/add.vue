@@ -1,5 +1,6 @@
 <template>
   <section class="competition-add-container">
+    <h3>添加竞赛</h3>
     <el-form ref="formRef" label-width="80px" :model="data" :rules="rules">
       <el-form-item :label="state.objectName + '名称'" prop="name">
         <el-input
@@ -19,11 +20,7 @@
         <my-upload-image v-model="data.logo" />
       </el-form-item>
       <el-form-item label="官网地址" prop="netpage">
-        <el-input
-          v-model.number="data.netpage"
-          style="width: 500px"
-          type="number"
-        />
+        <el-input v-model="data.netpage" style="width: 500px" type="number" />
       </el-form-item>
       <el-form-item label="显示排序" prop="order">
         <el-input
@@ -32,7 +29,10 @@
           type="number"
         />
       </el-form-item>
-      <el-form-item :label="state.objectName + '备注'" prop="remark">
+      <el-form-item label="赛事属性" prop="order">
+        <competition-props />
+      </el-form-item>
+      <el-form-item label="详细介绍" prop="remark">
         <my-wang-editor v-model="data.remark" />
       </el-form-item>
       <el-form-item>
@@ -44,6 +44,7 @@
 </template>
 
 <script setup lang="ts">
+  import CompetitionProps from './components/competition-props.vue'
   import { doAdd as doAddCourse } from '@/api/course'
   const $baseMessage = inject('$baseMessage')
 
@@ -54,12 +55,17 @@
     title: '测试标题', // 标题
     intro: '', // 介绍
     logo: '', //
-    remark: '', // 备注
+    remark: '备注', // 备注
     type: '',
     order: 1,
     netpage: 'www.baidu.com',
     state: true, // boolean
   })
+
+  setTimeout(() => {
+    data.remark = 'ajax数据'
+    console.log('ajax数据')
+  }, 5000)
   const rules = {
     title: [{ required: true, trigger: 'blur', message: '请输入标题' }],
   }

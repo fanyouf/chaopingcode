@@ -1,64 +1,112 @@
 <template>
   <div class="wang-editor-container">
-    <Toolbar :editor="editorRef" style="border-bottom: 1px solid #e8e8e8" />
+    <Toolbar
+      :default-config="toolbarConfig"
+      :editor="editorRef"
+      style="border-bottom: 1px solid #e8e8e8"
+    />
     <Editor
-      v-model="html"
+      :model-value="modelValue"
       class="wang-editor-content"
       :default-config="editorConfig"
       style="height: 300px"
       @on-created="handleCreated"
+      @on-change="hChange"
     />
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
   import '@wangeditor/editor/dist/css/style.css'
-  import { IDomEditor } from '@wangeditor/editor'
+  import { IDomEditor, DomEditor, IToolbarConfig } from '@wangeditor/editor'
   import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 
-  export default defineComponent({
+  const props = defineProps<{
+    modelValue: string
+  }>()
+
+  const emit = defineEmits(['update:modelValue'])
+
+  defineOptions({
     name: 'WangEditor',
-    components: { Editor, Toolbar },
-    setup() {
-      const $baseMessage: any = inject('$baseMessage')
-      const $baseAlert: any = inject('$baseAlert')
-      const editorRef = shallowRef<IDomEditor | undefined>(undefined)
-      const html = ref('<h1>一级标题</h1>')
-      const editorConfig = ref({
-        placeholder: '请输入内容...',
-        MENU_CONF: {
-          uploadImage: {
-            server: '', // 你的服务器地址，注意：当前接口格式特殊与其他vab接口不同，请查看vip文档
-            fieldName: 'vab-file-name',
-            allowedFileTypes: ['image/*'],
-            headers: {}, // 如需传递token请写到在这里
-          },
-        },
-      })
+  })
+  const $baseMessage: any = inject('$baseMessage')
+  const $baseAlert: any = inject('$baseAlert')
+  const editorRef = shallowRef<IDomEditor | undefined>(undefined)
 
-      const handleCreated = (editor: IDomEditor) => {
-        editorRef.value = editor
-      }
-      onBeforeUnmount(() => {
-        const editor = editorRef.value
-        if (editor == null) return
-        editor.destroy()
-      })
+  const html = ref('')
 
-      const onSubmit = () => {
-        $baseAlert(html.value)
-        $baseMessage('模拟保存成功', 'success', 'vab-hey-message-success')
-      }
+  // onMounted(() => {
+  //   setTimeout(() => {
+  //     html.value = props.modelValue
+  //     setTimeout(() => {
+  //       editorRef.value.insertText('')
+  //     })
+  //     // console.log('初始值', editorRef.value, props.modelValue, html.value)
+  //   }, 100)
+  // })
 
-      return {
-        editorRef,
-        html,
-        editorConfig,
-        handleCreated,
-        onSubmit,
-      }
+  const toolbarConfig = {
+    // toolbarKeys: [
+    //   // // 菜单 key
+    //   // 'headerSelect',
+    //   // // 分割线
+    //   // '|',
+    //   // // 菜单 key
+    //   // 'bold',
+    //   // ,
+    //   // // 菜单组，包含多个菜单
+    //   // {
+    //   //   key: 'group-more-style', // 必填，要以 group 开头
+    //   //   title: '更多样式', // 必填
+    //   //   iconSvg: '<svg>....</svg>', // 可选
+    //   //   menuKeys: ['through', 'code', 'clearStyle'], // 下级菜单 key ，必填
+    //   // },
+    //   // // 继续配置其他菜单...
+    // ],
+    excludeKeys: [
+      'fontFamily',
+      'italic',
+      'group-more-style',
+      /* 隐藏哪些菜单 */
+    ],
+  }
+
+  const editorConfig = ref({
+    placeholder: '请输入内容...',
+    MENU_CONF: {
+      uploadImage: {
+        server: '', // 你的服务器地址，注意：当前接口格式特殊与其他vab接口不同，请查看vip文档
+        fieldName: 'vab-file-name',
+        allowedFileTypes: ['image/*'],
+        headers: {}, // 如需传递token请写到在这里
+      },
     },
   })
+
+  const handleCreated = (editor: IDomEditor) => {
+    editorRef.value = editor
+    // setTimeout(() => {
+    // const toolbar = DomEditor.getToolbar(editor)
+    // console.log(editor, toolbar.getConfig())
+    // })
+  }
+  onBeforeUnmount(() => {
+    const editor = editorRef.value
+    if (editor == null) return
+    editor.destroy()
+  })
+
+  // const onSubmit = () => {
+  //   $baseAlert(html.value)
+  //   $baseMessage('模拟保存成功', 'success', 'vab-hey-message-success')
+  // }
+
+  const hChange = (editor: IDomEditor) => {
+    // console.log(editor)
+    // console.log('change', editor.getHtml())
+    emit('update:modelValue', editor.getHtml())
+  }
 </script>
 
 <style scoped lang="scss">
