@@ -310,6 +310,16 @@ export const asyncRoutes: VabRouteRecord[] = [
         },
       },
       {
+        path: 'add',
+        name: 'WorkAddIndex',
+        component: () => import('@/views/work/add.vue'),
+        meta: {
+          title: '作品添加',
+          // icon: 'shopping-cart-line',
+          // badge: 'Hot',
+        },
+      },
+      {
         path: '/directive/:id',
         name: 'DirectiveDetail',
         component: () => import('@/views/directive/detail.vue'),

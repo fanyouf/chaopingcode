@@ -1,5 +1,9 @@
 <template>
-  <el-tabs class="courseList" :model-value="modelValue" @tab-click="click">
+  <el-tabs
+    class="courseList"
+    :model-value="modelValue.title"
+    @tab-click="click"
+  >
     <el-tab-pane
       v-for="item in courseList"
       :key="item.id"

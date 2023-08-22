@@ -1,14 +1,16 @@
 <template>
   <div>
     <my-page
+      title="作品分类"
+      has-op-top
       :list="state.list"
-      item-type="知识点"
+      item-type="作品"
       @add-container="hAddKnowledgeGroup"
       @add-item="hAddKnowledge"
       @edit-container="hEditKnowledgeGroup"
     >
       <template #header>
-        <h3>选择科目，当前科目是{{ curCourse }}</h3>
+        <h3>选择科目，当前科目是{{ curCourse.title }}</h3>
         <my-course v-model="curCourse" />
       </template>
       <template #default="{ item }">
@@ -40,19 +42,16 @@
   defineOptions({
     name: 'KnowledgeIndex',
   })
-  // import myPage from '~/src/components/my-page.vue'
-  // import myCourse from '~/src/components/my-course.vue'
-  // import { onActivated, onDeactivated } from 'vue'
-  // import { Plus } from '@element-plus/icons-vue'
 
   import { getList } from '@/api/knowledge'
-  import MyDialog from '@/components/my-dialog.vue'
+  import myDialog from './directive-dialog.vue'
+  import router from '~/src/router'
 
-  const curCourse = ref('Python')
+  const curCourse = ref({ id: -1, title: '' })
   // const $baseConfirm = inject('$baseConfirm')
   // const $baseMessage = inject('$baseMessage')
   const subject = ref('c++')
-  const editRef = ref<InstanceType<typeof MyDialog>>(null)
+  const editRef = ref<InstanceType<typeof myDialog>>(null)
   // const hChangeCourse = () => {}
   const state = reactive({
     list: [],
@@ -70,13 +69,13 @@
     state.listLoading = false
   }
   const hAddKnowledgeGroup = () => {
-    editRef.value.showDialog('目录', '添加', null)
+    editRef.value.showDialog('作品分类', '添加', null)
   }
   const hAddKnowledge = (knowledgeGroup) => {
-    editRef.value.showDialog('知识点', '添加', knowledgeGroup)
+    router.push('/work/add')
   }
   const hEditKnowledge = (knowledge) => {
-    editRef.value.showDialog('知识点', '修改', knowledge)
+    editRef.value.showDialog('作品', '修改', knowledge)
   }
 
   const hDelKnowledge = (knowledge) => {

@@ -23,7 +23,7 @@
         >
           <template #header>
             <div>
-              <div v-if="!hasOp" style="float: right" class="header-ops">
+              <div v-if="hasOpTop" style="float: right" class="header-ops">
                 <vab-icon
                   class="icon"
                   icon="add-box-fill"
@@ -125,6 +125,10 @@
   const $baseMessage = inject('$baseMessage')
 
   defineProps({
+    hasOpTop: {
+      type: Boolean,
+      default: false,
+    },
     hasOp: {
       type: Boolean,
       default: true,
