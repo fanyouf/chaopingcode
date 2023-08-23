@@ -28,7 +28,7 @@
         />
       </el-form-item>
       <el-form-item :label="state.objectName + '图片'" prop="intro">
-        <MyUploadImge v-model="data.image" />
+        <my-upload-imge v-model="data.image" />
       </el-form-item>
       <el-form-item
         v-if="state.objectName === '指令分类'"
@@ -56,7 +56,6 @@
 
 <script setup lang="ts">
   import useSubject from '~/src/hooks/useSubject'
-  // import MyUploadImge from './my-upload-imge.vue'
   import { doAdd as doAddCourse } from '@/api/course'
   const $baseMessage = inject('$baseMessage')
 

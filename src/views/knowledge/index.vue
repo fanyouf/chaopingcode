@@ -5,12 +5,13 @@
       item-type="知识点"
       has-op-top
       @add-container="hAddKnowledgeGroup"
+      @del-container="hDelKnowledgeGroup"
       @add-item="hAddKnowledge"
       @edit-container="hEditKnowledgeGroup"
     >
       <template #header>
-        <h3>选择科目，当前科目是:{{ curCourse.title }}</h3>
-        <my-subject v-model="curCourse" />
+        <h3>选择科目，当前科目是:{{ curSubject.title }}</h3>
+        <my-subject v-model="curSubject" />
       </template>
       <template #default="{ item }">
         <div class="knowledge-group">
@@ -41,13 +42,12 @@
     name: 'KnowledgeIndex',
   })
 
-  import { getList } from '@/api/knowledge'
+  import { getList, doDelete } from '@/api/knowledgeGroup'
   import MyDialog from '@/components/my-dialog.vue'
 
-  const curCourse = ref<{ title?: string }>({})
+  const curSubject = ref<Subject>({} as Subject)
   // const $baseConfirm = inject('$baseConfirm')
   // const $baseMessage = inject('$baseMessage')
-  const subject = ref('c++')
   const editRef = ref<InstanceType<typeof MyDialog>>(null)
   // const hChangeCourse = () => {}
   const state = reactive({
@@ -60,13 +60,13 @@
 
   const fetchData = async () => {
     state.listLoading = true
-    const res = await getList({})
+    const res = await getList({ subject_id: curSubject.value.id })
     console.log(res)
     state.list = res.data.list
     state.listLoading = false
   }
   const hAddKnowledgeGroup = () => {
-    editRef.value.showDialog('目录', '添加', null)
+    editRef.value.showDialog('目录', '添加', curSubject.value)
   }
   const hAddKnowledge = (knowledgeGroup) => {
     editRef.value.showDialog('知识点', '添加', knowledgeGroup)
@@ -80,7 +80,14 @@
     console.log('knowledge')
   }
 
+  const hDelKnowledgeGroup = async (obj) => {
+    console.log('knowledgeGroup', obj)
+    await doDelete(obj.id)
+    fetchData()
+  }
+
   const hEditKnowledgeGroup = (knowledgeGroup) => {
+    console.log(knowledgeGroup)
     editRef.value.showDialog('目录', '修改', knowledgeGroup)
   }
   // const hDel = (typeName, row) => {
@@ -92,12 +99,12 @@
   // }
 
   watch(
-    subject,
+    curSubject,
     () => {
-      console.log('1', subject)
+      console.log('1', curSubject)
       fetchData()
-    },
-    { immediate: true }
+    }
+    // { immediate: true }
   )
 </script>
 <style lang="scss">

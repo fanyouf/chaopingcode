@@ -40,6 +40,16 @@ interface Knowledge extends DateTime {
   id: number
 }
 
+interface KnowledgeGroup {
+  title: string
+  intro: string
+  logo: string
+  remark: string
+  order: number
+  state: boolean
+  suject_id: number
+}
+
 // declare enum OPObject {
 //   '知识点' = '知识点',
 //   '目录' = '目录',

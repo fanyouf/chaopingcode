@@ -29,14 +29,19 @@
 </template>
 
 <script setup lang="ts">
-  import MyUploadImge from './my-upload-imge.vue'
   import { doAdd as doAddCourse } from '@/api/course'
+
+  import {
+    add as addKnowledgeGroup,
+    put as editKnowledgeGroup,
+  } from '@/api/knowledgeGroup'
   const $baseMessage = inject('$baseMessage')
 
   const emit = defineEmits(['fetch-data'])
 
   const data = reactive({
-    // id: '',
+    id: '',
+    subject_id: '',
     title: '测试标题', // 标题
     intro: '', // 介绍
     logo: '', //
@@ -68,14 +73,24 @@
   ) => {
     state.objectName = objectName
     state.opName = opName
-    if (row) {
-      // data.id = row.id
-      data.order = row.order || 1
-      data.title = row.title
-    }
+    // if (row) {
+    //   // data.id = row.id
+    //   data.order = row.order || 1
+    //   data.title = row.title
+    // }
 
     if (opName === '添加') {
+      if (objectName === '目录') {
+        data.subject_id = row.id
+      }
       data.title = ''
+    } else if (opName === '修改' && objectName === '目录') {
+      data.title = row.title
+      data.intro = row.intro
+      data.order = row.order
+      data.remark = row.remar
+      data.id = row.id
+      data.subject_id = row.subject_id
     }
 
     visible.value = true
@@ -87,8 +102,16 @@
   const doSave = async (data) => {
     if (state.objectName === '科目' && state.opName === '添加') {
       await doAddCourse(data)
+    } else if (state.objectName === '目录' && state.opName === '添加') {
+      await addKnowledgeGroup(data)
+    } else if (state.objectName === '目录' && state.opName === '修改') {
+      await editKnowledgeGroup(data)
     }
-    $baseMessage('添加成功', 'success', 'vab-hey-message-success')
+    $baseMessage(
+      `${state.opName + state.objectName}成功`,
+      'success',
+      'vab-hey-message-success'
+    )
     emit('fetch-data')
   }
   const save = () => {

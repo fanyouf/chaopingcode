@@ -34,7 +34,7 @@
                   class="icon"
                   icon="edit-box-fill"
                   style="color: rgb(151, 95, 229)"
-                  @click="emit('edit-container')"
+                  @click="emit('edit-container', item)"
                 />
                 <vab-icon
                   class="icon"
@@ -78,7 +78,7 @@
                   class="icon"
                   icon="edit-box-fill"
                   style="color: rgb(151, 95, 229)"
-                  @click="emit('edit-container')"
+                  @click="emit('edit-container', item)"
                 />
                 <vab-icon
                   class="icon"
@@ -156,13 +156,13 @@
   ])
 
   const hDel = (item) => {
-    if (item.children.length) {
+    if (item.children?.length) {
       $baseMessage('还有子项，不能删除', 'error', 'vab-hey-message-error')
       return
     }
 
     $baseConfirm('你确定要删除当前项吗', null, () => {
-      emit('del-container')
+      emit('del-container', item)
     })
   }
 </script>

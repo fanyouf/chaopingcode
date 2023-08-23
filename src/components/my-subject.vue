@@ -31,6 +31,7 @@
     courseList.value = data.list
     // isLoading.value = false
     if (data.list.length) {
+      console.log(courseList.value[0])
       emit('update:modelValue', courseList.value[0])
     }
   })

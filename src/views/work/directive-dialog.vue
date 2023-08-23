@@ -56,7 +56,6 @@
 
 <script setup lang="ts">
   import useSubject from '~/src/hooks/useSubject'
-  // import MyUploadImge from './my-upload-imge.vue'
   import { doAdd as doAddCourse } from '@/api/course'
   const $baseMessage = inject('$baseMessage')
 
