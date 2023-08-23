@@ -30,15 +30,19 @@ interface KnowGroup extends DateTime {
   subject_id: number
   id: number
 }
-
-// 知识点组-目录
+// 知识点
 interface Knowledge extends DateTime {
   title: string
-  knowledge_group_id: string
+  intro: strinUseToNumberOptions
+  logo: string
   remark: string
   order: number
+  state: boolean
+  subject_id: number
+  knowledge_group_id: string
   id: number
 }
+// 知识点组-目录
 
 interface KnowledgeGroup {
   title: string
@@ -50,18 +54,6 @@ interface KnowledgeGroup {
   suject_id: number
 }
 
-// declare enum OPObject {
-//   '知识点' = '知识点',
-//   '目录' = '目录',
-//   '科目' = '科目',
-// }
-
-// declare enum OPType {
-//   '添加' = '添加',
-//   '删除' = '删除',
-//   '修改' = '修改',
-// }
-
 type OPObject =
   | '知识点'
   | '目录'
@@ -71,4 +63,5 @@ type OPObject =
   | '指令分类'
   | '作品'
   | '作品分类'
+
 type OPType = '添加' | '删除' | '修改'

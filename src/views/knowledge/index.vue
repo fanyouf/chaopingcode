@@ -16,7 +16,7 @@
       <template #default="{ item }">
         <div class="knowledge-group">
           <el-tag
-            v-for="it in item.children"
+            v-for="it in item.knowledge"
             :key="it.id"
             class="knowledge-group-item"
             closable
@@ -42,11 +42,12 @@
     name: 'KnowledgeIndex',
   })
 
-  import { getList, doDelete } from '@/api/knowledgeGroup'
+  import { getList, del as delKnowledgeGroup } from '@/api/knowledgeGroup'
+  import { del as delKnowledge } from '@/api/knowledge'
   import MyDialog from '@/components/my-dialog.vue'
 
   const curSubject = ref<Subject>({} as Subject)
-  // const $baseConfirm = inject('$baseConfirm')
+  const $baseConfirm = inject('$baseConfirm')
   // const $baseMessage = inject('$baseMessage')
   const editRef = ref<InstanceType<typeof MyDialog>>(null)
   // const hChangeCourse = () => {}
@@ -60,7 +61,10 @@
 
   const fetchData = async () => {
     state.listLoading = true
-    const res = await getList({ subject_id: curSubject.value.id })
+    const res = await getList({
+      subject_id: curSubject.value.id,
+      withKnowledge: true,
+    })
     console.log(res)
     state.list = res.data.list
     state.listLoading = false
@@ -74,15 +78,16 @@
   const hEditKnowledge = (knowledge) => {
     editRef.value.showDialog('知识点', '修改', knowledge)
   }
-
   const hDelKnowledge = (knowledge) => {
-    alert(1)
-    console.log('knowledge')
+    $baseConfirm('你确定要删除当前项吗', null, async () => {
+      console.log(knowledge)
+      await delKnowledge(knowledge.id)
+      fetchData()
+    })
   }
-
   const hDelKnowledgeGroup = async (obj) => {
     console.log('knowledgeGroup', obj)
-    await doDelete(obj.id)
+    await delKnowledgeGroup(obj.id)
     fetchData()
   }
 

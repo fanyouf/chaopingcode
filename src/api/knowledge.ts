@@ -1,24 +1,36 @@
 import request from '@/utils/request'
 
 export function getList(params: any) {
-  return request.get<{ list: Knowledge[]; total: number }>(
-    '/knowledge/getList',
-    params
-  )
+  return request<{
+    pageIndex: number
+    pageSize: number
+    list: Knowledge[]
+    total: number
+  }>({
+    url: 'http://8.142.32.7:8888/knowledge',
+    method: 'get',
+    params,
+  })
 }
 
-export function doEdit(data: any) {
+export function add(data: Knowledge) {
   return request({
-    url: '/knowledge/doEdit',
+    url: 'http://8.142.32.7:8888/knowledge',
     method: 'post',
     data,
   })
 }
-
-export function doDelete(data: any) {
+export function put(data: Knowledge) {
   return request({
-    url: '/knowledge/doDelete',
-    method: 'post',
+    url: 'http://8.142.32.7:8888/knowledge',
+    method: 'put',
     data,
+  })
+}
+
+export function del(id: number) {
+  return request({
+    url: `http://8.142.32.7:8888/knowledge?id=${id}`,
+    method: 'delete',
   })
 }

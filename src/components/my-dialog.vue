@@ -35,11 +35,15 @@
     add as addKnowledgeGroup,
     put as editKnowledgeGroup,
   } from '@/api/knowledgeGroup'
+
+  import { add as addKnowledge, put as editKnowledge } from '@/api/knowledge'
+
   const $baseMessage = inject('$baseMessage')
 
   const emit = defineEmits(['fetch-data'])
 
   const data = reactive({
+    knowledgeGroupID: '',
     id: '',
     subject_id: '',
     title: '测试标题', // 标题
@@ -73,22 +77,32 @@
   ) => {
     state.objectName = objectName
     state.opName = opName
-    // if (row) {
-    //   // data.id = row.id
-    //   data.order = row.order || 1
-    //   data.title = row.title
-    // }
-
-    if (opName === '添加') {
-      if (objectName === '目录') {
-        data.subject_id = row.id
-      }
+    if (opName === '添加' && objectName === '目录') {
+      data.subject_id = row.id
       data.title = ''
+    } else if (opName === '添加' && objectName === '知识点') {
+      data.title = ''
+      data.intro = ''
+      data.remark = ''
+      data.order = 1
+      data.knowledgeGroupID = row.id
+      data.id = null
+      data.subject_id = null
+      data.state = null
+    } else if (opName === '修改' && objectName === '知识点') {
+      data.title = row.title
+      data.intro = row.intro
+      data.remark = row.remark
+      data.order = row.order
+      data.id = row.id
+      data.knowledgeGroupID = null
+      data.subject_id = null
+      data.state = null
     } else if (opName === '修改' && objectName === '目录') {
       data.title = row.title
       data.intro = row.intro
       data.order = row.order
-      data.remark = row.remar
+      data.remark = row.remark
       data.id = row.id
       data.subject_id = row.subject_id
     }
@@ -106,6 +120,10 @@
       await addKnowledgeGroup(data)
     } else if (state.objectName === '目录' && state.opName === '修改') {
       await editKnowledgeGroup(data)
+    } else if (state.objectName === '知识点' && state.opName === '添加') {
+      await addKnowledge(data)
+    } else if (state.objectName === '知识点' && state.opName === '修改') {
+      await editKnowledge(data)
     }
     $baseMessage(
       `${state.opName + state.objectName}成功`,

@@ -28,7 +28,7 @@ export function put(data: KnowledgeGroup) {
   })
 }
 
-export function doDelete(id: number) {
+export function del(id: number) {
   return request({
     url: `http://8.142.32.7:8888/knowledgeGroup?id=${id}`,
     method: 'delete',
