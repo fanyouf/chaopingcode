@@ -74,6 +74,7 @@
   }
 
   const editorConfig = ref({
+    mode: 'simple',
     placeholder: '请输入内容...',
     MENU_CONF: {
       uploadImage: {
@@ -104,12 +105,9 @@
   // }
 
   const hChange = (editor: IDomEditor) => {
-    // console.log(editor)
-    // console.log('change', editor.getHtml())
     emit('update:modelValue', editor.getHtml())
   }
   const hBlur = () => {
-    console.log('失去焦点')
     emit('blur')
   }
 </script>

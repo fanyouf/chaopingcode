@@ -72,10 +72,31 @@
         </el-tabs>
       </el-form-item>
       <el-form-item label="选用作品" prop="knowledges">
-        <ExercisesKnowledges />
+        <my-input-dialog
+          v-model="data.anss"
+          name="作品"
+          getapiname="name"
+          :getapi="getList"
+          :columns="[
+            { label: '知识点1', prop: 'name', width: 120 },
+            { label: 'title', prop: 'title' },
+          ]"
+        />
+
+        <!-- <ExercisesKnowledges /> -->
       </el-form-item>
       <el-form-item label="课后练习" prop="knowledges">
-        <ExercisesKnowledges />
+        <my-input-dialog
+          v-model="data.anss"
+          name="课后练习"
+          getapiname="name"
+          :getapi="getList"
+          :columns="[
+            { label: '知识点1', prop: 'name', width: 120 },
+            { label: 'title', prop: 'title' },
+          ]"
+        />
+        <!-- <ExercisesKnowledges /> -->
       </el-form-item>
       <el-form-item label="显示顺序" prop="order">
         <el-input-number v-model="data.order" :step="1" />
@@ -109,6 +130,7 @@
 <script setup lang="ts">
   import ExercisesKnowledges from './components/exercises-knowledges.vue'
   import { doAdd as doAddCourse } from '@/api/course'
+  import { getList } from '@/api/subject'
   const $baseMessage = inject('$baseMessage')
 
   const emit = defineEmits(['fetch-data'])
