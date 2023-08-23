@@ -354,6 +354,16 @@ export const asyncRoutes: VabRouteRecord[] = [
         },
       },
       {
+        path: 'add',
+        name: 'PaperAddIndex',
+        component: () => import('@/views/paper/add.vue'),
+        meta: {
+          title: '试卷添加',
+          // icon: 'shopping-cart-line',
+          // badge: 'Hot',
+        },
+      },
+      {
         path: '/directive/:id',
         name: 'DirectiveDetail',
         component: () => import('@/views/directive/detail.vue'),
