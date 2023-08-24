@@ -222,22 +222,21 @@ export const asyncRoutes: VabRouteRecord[] = [
     children: [
       {
         path: '',
-        name: 'directiveIndex',
+        name: 'DirectiveIndex',
         component: () => import('@/views/directive/index.vue'),
         meta: {
-          title: '指令',
+          title: '指令管理',
           icon: 'shopping-cart-line',
           // badge: 'Hot',
         },
       },
-
       {
-        path: '/directive/:id',
-        name: 'DirectiveDetail',
-        component: () => import('@/views/directive/detail.vue'),
+        path: 'group/:id',
+        name: 'DirectiveGroupDetail',
+        component: () => import('@/views/directive/group.vue'),
         meta: {
           hidden: true,
-          title: '指令列表',
+          title: '指令组详情',
           // meta: { title: 'Params id=1' },
           dynamicNewTab: true,
         },
@@ -278,7 +277,7 @@ export const asyncRoutes: VabRouteRecord[] = [
       {
         path: '/directive/:id',
         name: 'DirectiveDetail',
-        component: () => import('@/views/directive/detail.vue'),
+        component: () => import('@/views/directive/group.vue'),
         meta: {
           hidden: true,
           title: '指令列表',
@@ -322,7 +321,7 @@ export const asyncRoutes: VabRouteRecord[] = [
       {
         path: '/directive/:id',
         name: 'DirectiveDetail',
-        component: () => import('@/views/directive/detail.vue'),
+        component: () => import('@/views/directive/group.vue'),
         meta: {
           hidden: true,
           title: '指令列表',
@@ -366,7 +365,7 @@ export const asyncRoutes: VabRouteRecord[] = [
       {
         path: '/directive/:id',
         name: 'DirectiveDetail',
-        component: () => import('@/views/directive/detail.vue'),
+        component: () => import('@/views/directive/group.vue'),
         meta: {
           hidden: true,
           title: '指令列表',
@@ -410,7 +409,7 @@ export const asyncRoutes: VabRouteRecord[] = [
       {
         path: '/directive/:id',
         name: 'DirectiveDetail',
-        component: () => import('@/views/directive/detail.vue'),
+        component: () => import('@/views/directive/group.vue'),
         meta: {
           hidden: true,
           title: '指令列表',
@@ -444,7 +443,7 @@ export const asyncRoutes: VabRouteRecord[] = [
       {
         path: '/directive/:id',
         name: 'DirectiveDetail',
-        component: () => import('@/views/directive/detail.vue'),
+        component: () => import('@/views/directive/group.vue'),
         meta: {
           hidden: true,
           title: '指令列表',

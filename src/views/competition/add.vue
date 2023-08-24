@@ -19,9 +19,9 @@
       <el-form-item :label="state.objectName + '图片'" prop="name">
         <my-upload-image v-model="data.logo" />
       </el-form-item>
-      <el-form-item label="官网地址" prop="netpage">
+      <el-form-item label="官网地址" prop="site">
         <el-input
-          v-model="data.netpage"
+          v-model="data.site"
           placeholder="官网地址"
           style="width: 500px"
         >
@@ -48,7 +48,7 @@
 
 <script setup lang="ts">
   import CompetitionProps from './components/competition-props.vue'
-  import { doAdd as doAddCourse } from '@/api/course'
+  import { add as doAddCompetition } from '@/api/competition'
   const $baseMessage = inject('$baseMessage')
 
   const emit = defineEmits(['fetch-data'])
@@ -61,19 +61,21 @@
     remark: '备注', // 备注
     type: '',
     order: 1,
-    netpage: 'www.baidu.com',
+    site: 'www.baidu.com',
     state: true, // boolean
+
+    // summary: string
   })
 
-  setTimeout(() => {
-    data.remark = 'ajax数据'
-    console.log('ajax数据')
-  }, 5000)
+  // setTimeout(() => {
+  //   data.remark = 'ajax数据'
+  //   console.log('ajax数据')
+  // }, 500)
   const rules = {
     title: [{ required: true, trigger: 'blur', message: '请输入标题' }],
   }
   const formRef = ref(null)
-  const visible = ref(false)
+
   const state = reactive<{ opName: OPType; objectName: OPObject }>({
     opName: '添加', // 操作方式的名字： 编辑 or 添加
     objectName: '赛事', // 操作对象的类型: 目录 or 知识点
@@ -97,17 +99,12 @@
     if (opName === '添加') {
       data.title = ''
     }
-
-    visible.value = true
   }
   const close = () => {
     formRef.value.resetFields()
-    visible.value = false
   }
   const doSave = async (data) => {
-    if (state.objectName === '科目' && state.opName === '添加') {
-      await doAddCourse(data)
-    }
+    await doAddCompetition(data)
     $baseMessage('添加成功', 'success', 'vab-hey-message-success')
     emit('fetch-data')
   }

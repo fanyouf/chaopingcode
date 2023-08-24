@@ -4,21 +4,23 @@
       :list="state.list"
       title="添加指令分类"
       item-type="指令"
-      has-op
+      :has-op="false"
+      has-op-top
       @view-container="hViewDirectiveGroup"
       @add-container="hAddDirectiveGroup"
       @add-item="hAddDirective"
       @edit-container="hEditDirectiveGroup"
     >
       <template #header>
-        <h3>选择科目，当前科目是:{{ curCourse.title }}</h3>
-        <my-subject v-model="curCourse" />
+        <h3>选择科目，当前科目是:{{ curSubject.title }}</h3>
+        <my-subject v-model="curSubject" />
       </template>
     </my-page>
     <my-dialog
       ref="editRef"
-      :subject-id="curCourse.id"
+      :subject-id="curSubject.id"
       @fetch-data="fetchData"
+      @view-directives="hViewDirectiveGroup"
     />
   </div>
 </template>
@@ -29,10 +31,10 @@
     name: 'DirectiveIndex',
   })
 
-  import { getList } from '@/api/knowledge'
+  import { getList } from '@/api/directiveGroup'
   import myDialog from './directive-dialog.vue'
   const router = useRouter()
-  const curCourse = ref({ id: -1, title: '' })
+  const curSubject = ref({ id: -1, title: '' })
   // const $baseConfirm = inject('$baseConfirm')
   // const $baseMessage = inject('$baseMessage')
   const subject = ref('c++')
@@ -48,23 +50,30 @@
 
   const fetchData = async () => {
     state.listLoading = true
-    const res = await getList({})
+    const res = await getList({
+      subjectID: curSubject.value.id,
+      withDirective: true,
+    })
     console.log(res)
     state.list = res.data.list
     state.listLoading = false
   }
   const hAddDirectiveGroup = () => {
-    editRef.value.showDialog('指令分类', '添加', curCourse.value.id, null)
+    editRef.value.showDialog('指令分类', '添加', {
+      subject_id: curSubject.value.id,
+    })
   }
-  const hAddDirective = (knowledgeGroup) => {
-    editRef.value.showDialog('指令', '添加', curCourse.value.id, knowledgeGroup)
+  const hAddDirective = (directiveGroup) => {
+    editRef.value.showDialog('指令', '添加', directiveGroup)
   }
 
   const hViewDirectiveGroup = (directiveGroup) => {
-    router.push(`/directive/${directiveGroup.id}`)
+    router.push(
+      `/directive/group/${directiveGroup.id}?subjectTitle=${curSubject.value.title}&groupTitle=${directiveGroup.title}`
+    )
   }
   const hEditDirective = (knowledge) => {
-    editRef.value.showDialog('指令', '修改', curCourse.value.id, knowledge)
+    editRef.value.showDialog('指令', '修改', curSubject.value.id, knowledge)
   }
 
   const hDelDirective = (knowledge) => {
@@ -83,14 +92,10 @@
   //   })
   // }
 
-  watch(
-    subject,
-    () => {
-      console.log('1', subject)
-      fetchData()
-    },
-    { immediate: true }
-  )
+  watch(curSubject, () => {
+    console.log('1', curSubject)
+    fetchData()
+  })
 </script>
 <style lang="scss">
   .section {

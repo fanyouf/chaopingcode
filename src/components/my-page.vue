@@ -25,24 +25,28 @@
             <div>
               <div v-if="hasOpTop" style="float: right" class="header-ops">
                 <vab-icon
+                  v-if="opNames.includes('add')"
                   class="icon"
                   icon="add-box-fill"
                   style="color: rgb(54, 203, 203)"
                   @click="emit('add-item', item)"
                 />
                 <vab-icon
+                  v-if="opNames.includes('edit')"
                   class="icon"
                   icon="edit-box-fill"
                   style="color: rgb(151, 95, 229)"
                   @click="emit('edit-container', item)"
                 />
                 <vab-icon
+                  v-if="opNames.includes('view')"
                   class="icon"
                   icon="eye-fill"
                   style="color: rgb(251, 212, 55)"
                   @click="emit('view-container', item)"
                 />
                 <vab-icon
+                  v-if="opNames.includes('del')"
                   icon="delete-bin-5-line"
                   style="color: rgb(24, 144, 255)"
                   class="icon"
@@ -64,6 +68,11 @@
                 v-if="item.logo"
                 style="width: 100%; height: 186px"
                 :src="item.logo"
+              />
+              <img
+                v-if="item.image"
+                style="width: 100%; height: 186px"
+                :src="item.image"
               />
               <p class="section-item-body-intro">{{ item.intro }}</p>
 
@@ -128,6 +137,10 @@
     hasOpTop: {
       type: Boolean,
       default: false,
+    },
+    opNames: {
+      type: Array,
+      default: () => ['add', 'del', 'update', 'view'],
     },
     hasOp: {
       type: Boolean,

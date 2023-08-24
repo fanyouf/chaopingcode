@@ -54,6 +54,40 @@ interface KnowledgeGroup {
   suject_id: number
 }
 
+interface Directive {
+  title: string
+  intro: string
+  logo: string
+  order: number
+  state: boolean
+  remark: string
+  directive_group_id: number
+}
+
+// 指令-分组
+interface DirectiveGroup {
+  title: string
+  intro: string
+  type: 'image' | 'text'
+  image: string
+  remark: string
+  order: number
+  state: boolean
+  suject_id: number
+}
+
+// 赛事
+interface Competition {
+  title: string
+  summary: string
+  logo: string
+  site: string
+  intro: string
+  order: number
+  state: boolean
+  remark: string
+}
+
 type OPObject =
   | '知识点'
   | '目录'

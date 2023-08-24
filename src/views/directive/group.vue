@@ -1,74 +1,90 @@
 <template>
   <div>
-    <myPage
+    <my-page
+      :op-names="['edit', 'del']"
       :list="state.list"
       title="添加指令"
       item-type="指令"
-      has-op
-      @view-container="hViewDirectiveGroup"
-      @add-container="hAddDirectiveGroup"
-      @add-item="hAddDirective"
-      @edit-container="hEditDirectiveGroup"
+      :has-op="false"
+      has-op-top
+      @add-container="hAddDirective"
+      @del-container="hDelDirective"
+      @edit-container="hEditDirective"
     >
       <template #header>
-        <h3>当前的科目是 Scratch , 分类是 {{ $route.params.id }}</h3>
+        <h3>
+          当前的科目是 {{ $route.query.subjectTitle }} , 分类是
+          {{ $route.query.groupTitle }}
+        </h3>
       </template>
-    </myPage>
+    </my-page>
     <my-dialog ref="editRef" @fetch-data="fetchData" />
   </div>
 </template>
 
 <script setup lang="ts">
-  // import { OPObject } from '../../types/data'
   defineOptions({
-    name: 'DirectiveDetail',
+    name: 'Group',
   })
-  import myPage from '~/src/components/my-page.vue'
-  import myCourse from '~/src/components/my-course.vue'
-  // import { onActivated, onDeactivated } from 'vue'
-  // import { Plus } from '@element-plus/icons-vue'
 
-  import { getList } from '@/api/knowledge'
-  import myDialog from '@/components/my-dialog.vue'
+  import { getList } from '@/api/directiveGroup'
+  import { del as delDirective } from '@/api/directive'
+  import myDialog from './directive-dialog.vue'
   const router = useRouter()
-  const curCourse = ref('Python')
-  // const $baseConfirm = inject('$baseConfirm')
-  // const $baseMessage = inject('$baseMessage')
-  const subject = ref('c++')
+  const route = useRoute()
+
+  const $baseMessage = inject('$baseMessage')
+
   const editRef = ref<InstanceType<typeof myDialog>>(null)
   // const hChangeCourse = () => {}
   const state = reactive({
+    id: -1,
+    title: '',
     list: [],
     listLoading: true,
+    type: 'text',
     layout: 'total, sizes, prev, pager, next, jumper',
     total: 0,
     selectRows: '',
   })
+  const title = ref('')
+  onMounted(() => {
+    fetchData()
+  })
 
   const fetchData = async () => {
     state.listLoading = true
-    const res = await getList({})
+    const res = await getList({
+      id: route.params.id,
+      withDirective: true,
+    })
     console.log(res)
-    state.list = res.data.list
+    state.id = res.data.id
+    state.title = res.data.title
+    state.type = res.data.type
+    state.list = res.data.directives
     state.listLoading = false
   }
-  const hAddDirectiveGroup = () => {
-    editRef.value.showDialog('目录', '添加', null)
-  }
-  const hAddDirective = (knowledgeGroup) => {
-    editRef.value.showDialog('知识点', '添加', knowledgeGroup)
+  const hAddDirective = () => {
+    editRef.value.showDialog('指令', '添加', {
+      id: state.id,
+      type: state.type,
+      title: state.title,
+    })
   }
 
   const hViewDirectiveGroup = (directiveGroup) => {
     router.push(`/directive/${directiveGroup.id}`)
   }
-  const hEditDirective = (knowledge) => {
-    editRef.value.showDialog('知识点', '修改', knowledge)
+  const hEditDirective = (directive) => {
+    console.log(directive)
+    editRef.value.showDialog('指令', '修改', { ...directive, type: state.type })
   }
 
-  const hDelDirective = (knowledge) => {
-    alert(1)
-    console.log('knowledge')
+  const hDelDirective = async (item) => {
+    await delDirective(item.id)
+    $baseMessage('删除成功', 'success', 'vab-hey-message-success')
+    await fetchData()
   }
 
   const hEditDirectiveGroup = (knowledgeGroup) => {
@@ -81,15 +97,6 @@
   //     await fetchData()
   //   })
   // }
-
-  watch(
-    subject,
-    () => {
-      console.log('1', subject)
-      fetchData()
-    },
-    { immediate: true }
-  )
 </script>
 <style lang="scss">
   .section {

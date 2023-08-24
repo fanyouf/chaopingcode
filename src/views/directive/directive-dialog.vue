@@ -6,7 +6,7 @@
         label="选择科目"
         prop="subject"
       >
-        <el-select v-model="data.subjectId" placeholder="请选择">
+        <el-select v-model="data.subjectID" placeholder="请选择">
           <el-option
             v-for="item in subjects"
             :key="item.id"
@@ -18,7 +18,7 @@
         </el-select>
       </el-form-item>
       <el-form-item :label="state.objectName + '名称'" prop="name">
-        <el-input v-model="data.name" aria-placeholder="请输入" />
+        <el-input v-model="data.title" aria-placeholder="请输入" />
       </el-form-item>
       <el-form-item :label="state.objectName + '描述'" prop="intro">
         <el-input
@@ -27,18 +27,23 @@
           aria-placeholder="请输入"
         />
       </el-form-item>
-      <el-form-item :label="state.objectName + '图片'" prop="intro">
-        <my-upload-imge v-model="data.image" />
-      </el-form-item>
+
       <el-form-item
         v-if="state.objectName === '指令分类'"
         :label="state.objectName + '类型'"
         prop="intro"
       >
         <el-radio-group v-model="data.type">
-          <el-radio label="图片">图片</el-radio>
-          <el-radio label="文字">文字</el-radio>
+          <el-radio label="image">图片</el-radio>
+          <el-radio label="text">文字</el-radio>
         </el-radio-group>
+      </el-form-item>
+      <el-form-item
+        v-if="data.type === 'image'"
+        :label="state.objectName + '图片'"
+        prop="intro"
+      >
+        <my-upload-image v-model="data.logo" />
       </el-form-item>
       <el-form-item label="显示排序" prop="order">
         <el-input v-model.number="data.order" type="number" />
@@ -56,21 +61,27 @@
 
 <script setup lang="ts">
   import useSubject from '~/src/hooks/useSubject'
-  import { doAdd as doAddCourse } from '@/api/course'
+  import { add as doAddDirectiveGroup } from '@/api/directiveGroup'
+  import {
+    add as doAddDirective,
+    put as doUpdateDirective,
+  } from '@/api/directive'
   const $baseMessage = inject('$baseMessage')
 
-  const emit = defineEmits(['fetch-data'])
+  const emit = defineEmits(['fetch-data', 'view-directives'])
 
   const { list: subjects } = useSubject()
 
   const data = reactive({
-    // id: '',
-    subjectId: -1,
-    name: '测试标题', // 标题
+    id: '',
+    directiveGroupID: -1,
+    title: '',
+    subjectID: -1,
     intro: '', // 介绍
-    type: '图片',
-    image: '', // 指令的图片
+    type: 'image', // image or text
+    logo: '', // 指令的图片
     order: 1,
+    state: false,
     remark: '备注', // 备注
   })
 
@@ -83,28 +94,56 @@
     opName: '添加', // 操作方式的名字： 编辑 or 添加
     objectName: '目录', // 操作对象的类型: 目录 or 知识点
   })
-  const cTitle = computed(() => {
-    return `${state.objectName}-${state.opName}`
-  })
+  const cTitle = ref('')
   const showDialog = (
     objectName: OPObject = '目录',
     opName: OPType = '添加',
-    subjectId = -1,
     row = null
   ) => {
     state.objectName = objectName
     state.opName = opName
-    data.subjectId = subjectId
-    if (row) {
-      // data.id = row.id
-      data.order = row.order || 1
-      // data.title = row.title
+
+    if (opName === '添加' && objectName === '指令分类') {
+      // data.title = '
+      data.title = ''
+      data.intro = ''
+      data.type = 'image'
+      data.remark = ''
+      data.order = 1
+      data.state = true
+      data.subjectID = row.subject_id
+    } else if (opName === '添加' && objectName === '指令') {
+      console.log(row)
+      // data.title = '
+      data.subjectID = null
+      data.type = row.type
+
+      data.title = ''
+      data.intro = ''
+      data.logo = data.type === 'image' ? '' : null
+      data.remark = ''
+      data.order = 1
+      data.state = true
+      data.directiveGroupID = row.id
+    } else if (opName === '修改' && objectName === '指令') {
+      debugger
+      console.log(row)
+      // data.title = '
+      data.subjectID = null
+      data.id = row.id
+      data.type = row.type
+
+      data.title = row.title
+      data.intro = row.intro
+      data.logo = row.logo
+      data.type = row.type
+      data.remark = row.remark
+      data.order = row.order
+      data.state = true
+      data.directiveGroupID = row.directiveGroupID
     }
 
-    if (opName === '添加') {
-      // data.title = ''
-    }
-
+    cTitle.value = `${state.objectName}-${state.opName}`
     visible.value = true
   }
   const close = () => {
@@ -112,11 +151,22 @@
     visible.value = false
   }
   const doSave = async (data) => {
-    if (state.objectName === '科目' && state.opName === '添加') {
-      await doAddCourse(data)
+    if (state.objectName === '指令分类' && state.opName === '添加') {
+      await doAddDirectiveGroup(data)
+      emit('fetch-data')
+    } else if (state.objectName === '指令' && state.opName === '添加') {
+      await doAddDirective(data)
+      emit('view-directives', { id: data.directiveGroupID, title: data.title })
+    } else if (state.objectName === '指令' && state.opName === '修改') {
+      await doUpdateDirective(data)
+      emit('fetch-data', { id: data.directiveGroupID, title: data.title })
     }
-    $baseMessage('添加成功', 'success', 'vab-hey-message-success')
-    emit('fetch-data')
+    $baseMessage(
+      `${state.opName + state.objectName}成功`,
+      'success',
+      'vab-hey-message-success'
+    )
+    // emit('fetch-data')
   }
   const save = () => {
     formRef.value.validate(async (valid) => {
