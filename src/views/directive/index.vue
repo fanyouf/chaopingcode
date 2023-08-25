@@ -8,12 +8,24 @@
       has-op-top
       @view-container="hViewDirectiveGroup"
       @add-container="hAddDirectiveGroup"
+      @del-container="hDelDirectiveGroup"
       @add-item="hAddDirective"
       @edit-container="hEditDirectiveGroup"
     >
       <template #header>
         <h3>选择科目，当前科目是:{{ curSubject.title }}</h3>
         <my-subject v-model="curSubject" />
+      </template>
+
+      <template #default="{ item }">
+        <!-- {{ item }} -->
+        <div>
+          <img v-if="item.type === 'image'" :src="item.image" />
+          <p>{{ item.intro }}</p>
+          <p @click="hViewDirectiveGroup(item)">
+            指令数量： {{ item.directives?.length }}
+          </p>
+        </div>
       </template>
     </my-page>
     <my-dialog
@@ -31,7 +43,8 @@
     name: 'DirectiveIndex',
   })
 
-  import { getList } from '@/api/directiveGroup'
+  import { getList, del as delDirectiveGroup } from '@/api/directiveGroup'
+  import { gp } from '@gp'
   import myDialog from './directive-dialog.vue'
   const router = useRouter()
   const curSubject = ref({ id: -1, title: '' })
@@ -76,9 +89,10 @@
     editRef.value.showDialog('指令', '修改', curSubject.value.id, knowledge)
   }
 
-  const hDelDirective = (knowledge) => {
-    alert(1)
-    console.log('knowledge')
+  const hDelDirectiveGroup = async (directiveGroup) => {
+    await delDirectiveGroup(directiveGroup.id)
+    gp.$baseMessage('删除指令分组成功', 'success')
+    fetchData()
   }
 
   const hEditDirectiveGroup = (knowledgeGroup) => {

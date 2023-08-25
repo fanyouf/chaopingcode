@@ -62,6 +62,7 @@
 <script setup lang="ts">
   import useSubject from '~/src/hooks/useSubject'
   import { add as doAddDirectiveGroup } from '@/api/directiveGroup'
+  import { gp } from '@gp'
   import {
     add as doAddDirective,
     put as doUpdateDirective,
@@ -104,7 +105,9 @@
     state.opName = opName
 
     if (opName === '添加' && objectName === '指令分类') {
-      // data.title = '
+      data.id = null
+      data.directiveGroupID = null
+
       data.title = ''
       data.intro = ''
       data.type = 'image'
@@ -113,9 +116,9 @@
       data.state = true
       data.subjectID = row.subject_id
     } else if (opName === '添加' && objectName === '指令') {
-      console.log(row)
-      // data.title = '
       data.subjectID = null
+      data.id = null
+
       data.type = row.type
 
       data.title = ''
@@ -126,10 +129,8 @@
       data.state = true
       data.directiveGroupID = row.id
     } else if (opName === '修改' && objectName === '指令') {
-      debugger
-      console.log(row)
-      // data.title = '
       data.subjectID = null
+
       data.id = row.id
       data.type = row.type
 
@@ -161,7 +162,7 @@
       await doUpdateDirective(data)
       emit('fetch-data', { id: data.directiveGroupID, title: data.title })
     }
-    $baseMessage(
+    gp.$baseMessage(
       `${state.opName + state.objectName}成功`,
       'success',
       'vab-hey-message-success'

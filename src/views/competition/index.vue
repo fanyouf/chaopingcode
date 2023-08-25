@@ -1,9 +1,14 @@
 <template>
   <div>
-    <my-page :list="list" title="添加赛事" @add-container="hAddCourse">
+    <my-page
+      :list="state.list"
+      title="添加赛事"
+      @del-container="hDelCompetition"
+      @add-container="hAddCompetition"
+    >
       <template #header>
         <h3>赛事列表</h3>
-        <p>当前一共有{{ list.length }}个赛事</p>
+        <p>当前一共有{{ state.list.length }}个赛事</p>
       </template>
 
       <!-- <template #default="{ item }">
@@ -27,97 +32,30 @@
     </my-page>
   </div>
 </template>
-
 <script setup lang="ts">
-  import { stat } from 'fs'
-  import useCourse from '@/hooks/useCourse'
-  import { doDelete, getList } from '@/api/course'
+  import { del as delCompetition, getList } from '@/api/competition'
   import { useRouter } from 'vue-router'
-
+  import { gp } from '@gp'
   defineOptions({
-    name: 'CourseIndex',
+    name: 'CompetitionIndex',
   })
 
   const router = useRouter()
-  const defaultImage =
-    'http://8.142.32.7:8888/assets/d1/57/d1576663f29233e326553db584e5520c.jpg'
+  // const defaultImage =
+  //   'http://8.142.32.7:8888/assets/d1/57/d1576663f29233e326553db584e5520c.jpg'
 
-  const $baseConfirm = inject('$baseConfirm')
-  const $baseMessage = inject('$baseMessage')
-
-  const hAddCourse = () => {
+  const hAddCompetition = () => {
     router.push('/competition/add')
   }
-  const hDetail = (item: Subject) => {
+  const hDetail = (item: Competition) => {
     router.push(`/course/${item.id}`)
   }
-  const hEdit = (item: Subject) => {
+  const hEdit = (item: Competition) => {
     console.log(item)
   }
 
   const state = reactive({
-    list: [
-      // {
-      //   title: 'Scratch图形化',
-      //   intro: '在咋必成大器谢谢大地方方法学才',
-      //   logo: './xxx',
-      //   remark: ',',
-      //   order: 1,
-      //   type: 'string',
-      //   id: 1,
-      //   create_at: 1,
-      //   update_at: 23,
-      //   deleted_at: 3,
-      // },
-      // {
-      //   title: 'Scratch图形化',
-      //   intro: '在咋必成大器谢谢大地方方法学才',
-      //   logo: './xxx',
-      //   remark: ',',
-      //   order: 1,
-      //   type: 'string',
-      //   id: 2,
-      //   create_at: 1,
-      //   update_at: 23,
-      //   deleted_at: 3,
-      // },
-      // {
-      //   title: 'Scratch图形化',
-      //   intro: '在咋必成大器谢谢大地方方法学才',
-      //   logo: './xxx',
-      //   remark: ',',
-      //   order: 1,
-      //   type: 'string',
-      //   id: 3,
-      //   create_at: 1,
-      //   update_at: 23,
-      //   deleted_at: 3,
-      // },
-      // {
-      //   title: 'Scratch图形化',
-      //   intro: '在咋必成大器谢谢大地方方法学才',
-      //   logo: './xxx',
-      //   remark: ',',
-      //   order: 1,
-      //   type: 'string',
-      //   id: 4,
-      //   create_at: 1,
-      //   update_at: 23,
-      //   deleted_at: 3,
-      // },
-      // {
-      //   title: 'Scratch图形化',
-      //   intro: '在咋必成大器谢谢大地方方法学才',
-      //   logo: './xxx',
-      //   remark: ',',
-      //   order: 1,
-      //   type: 'string',
-      //   id: 5,
-      //   create_at: 1,
-      //   update_at: 23,
-      //   deleted_at: 3,
-      // },
-    ] as Subject[],
+    list: [] as Competition[],
     isLoading: ref(false),
     layout: 'total, sizes, prev, pager, next, jumper',
     total: 0,
@@ -127,22 +65,22 @@
   // const hShowDialog = (typeName, opName, row = null) => {
   //   editRef.value.showDialog(typeName, opName, row)
   // }
-  const hDel = (row) => {
-    $baseConfirm('你确定要删除当前项吗', null, async () => {
-      await doDelete(row.id)
-      $baseMessage('OK', 'success', 'vab-hey-message-success')
-      fetchData()
-    })
+  const hDelCompetition = async (row: Competition) => {
+    await delCompetition(row.id)
+    gp.$baseMessage('OK', 'success', 'vab-hey-message-success')
+    fetchData()
   }
-
-  const { list, isLoading } = useCourse()
 
   const fetchData = async () => {
-    isLoading.value = true
-    const { data } = await getList()
-    list.value = data.list
-    isLoading.value = false
+    state.isLoading = true
+    const { data } = await getList({})
+    state.list = data.list
+    state.isLoading = false
   }
+
+  onMounted(() => {
+    fetchData()
+  })
 </script>
 <style scoped lang="scss">
   .section {
@@ -200,4 +138,3 @@
     }
   }
 </style>
-~/src/api/knowledege ~/src/api/knowledge

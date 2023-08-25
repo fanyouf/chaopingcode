@@ -30,6 +30,9 @@
   import { getList } from '@/api/directiveGroup'
   import { del as delDirective } from '@/api/directive'
   import myDialog from './directive-dialog.vue'
+
+  import { gp } from '@gp'
+
   const router = useRouter()
   const route = useRoute()
 
@@ -83,7 +86,7 @@
 
   const hDelDirective = async (item) => {
     await delDirective(item.id)
-    $baseMessage('删除成功', 'success', 'vab-hey-message-success')
+    gp.$baseMessage('删除成功', 'success', 'vab-hey-message-success')
     await fetchData()
   }
 

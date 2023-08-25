@@ -169,7 +169,7 @@
   ])
 
   const hDel = (item) => {
-    if (item.children?.length) {
+    if (item.children?.length || item.directives?.length) {
       $baseMessage('还有子项，不能删除', 'error', 'vab-hey-message-error')
       return
     }

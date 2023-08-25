@@ -78,6 +78,7 @@ interface DirectiveGroup {
 
 // 赛事
 interface Competition {
+  id: number
   title: string
   summary: string
   logo: string
