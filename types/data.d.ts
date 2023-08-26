@@ -89,6 +89,26 @@ interface Competition {
   remark: string
 }
 
+// 赛事 属性
+interface Label {
+  id: number
+  title: string
+  order: number
+  state: boolean
+  remark: string
+  entityType: string
+  entityID: number
+}
+
+// 赛事 属性值
+interface LabelValue {
+  val: string
+  keyID: number
+  order: number
+  id: number
+  state: boolean
+}
+
 type OPObject =
   | '知识点'
   | '目录'
@@ -98,5 +118,6 @@ type OPObject =
   | '指令分类'
   | '作品'
   | '作品分类'
+  | '属性'
 
 type OPType = '添加' | '删除' | '修改'
