@@ -1,3 +1,5 @@
+import { StringifyOptions } from 'querystring'
+
 interface Res<T> {
   data: T
   code: number
@@ -107,6 +109,41 @@ interface LabelValue {
   order: number
   id: number
   state: boolean
+}
+
+// 作品
+interface WorkCate {
+  title: string
+  intro: string
+  cover: string
+  remark: string
+  order: number
+  state: boolean
+}
+
+interface Work {
+  title: string
+  no: string
+  intro: string
+  highlight: string
+  cover: string
+  codeBasic: string
+  codeReference: string
+  codeLineNum: number
+  demoAddress: string
+  level: string
+  note: string
+  remark: string
+  order: number
+  state: boolean
+  productGroupIDs: number[]
+  directiveIDs: number[]
+  knowledgeIDs: number[]
+  subjectIDs: number[]
+  withProductGroup: boolean
+  withDirective: boolean
+  withKnowledge: boolean
+  withSubject: boolean
 }
 
 type OPObject =
