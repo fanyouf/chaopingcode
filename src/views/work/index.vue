@@ -5,27 +5,27 @@
       has-op-top
       :list="state.list"
       item-type="作品"
-      @add-container="hAddKnowledgeGroup"
-      @add-item="hAddKnowledge"
-      @edit-container="hEditKnowledgeGroup"
+      @add-container="hAddWorkGroup"
+      @add-item="hAddWork"
+      @edit-container="hEditWorkGroup"
     >
       <template #header>
         <h3>选择科目，当前科目是:{{ curCourse.title }}</h3>
         <my-subject v-model="curCourse" />
       </template>
       <template #default="{ item }">
-        <div class="knowledge-group">
+        <div class="Work-group">
           <el-tag
             v-for="it in item.children"
             :key="it.id"
-            class="knowledge-group-item"
+            class="Work-group-item"
             closable
-            @close="hDelKnowledge(it)"
+            @close="hDelWork(it)"
           >
             <span
               title="点击查看"
               style="cursor: pointer"
-              @click="hEditKnowledge(it)"
+              @click="hEditWork(it)"
             >
               {{ it.title }}
             </span>
@@ -40,11 +40,11 @@
 <script setup lang="ts">
   // import { OPObject } from '../../types/data'
   defineOptions({
-    name: 'KnowledgeIndex',
+    name: 'WorkIndex',
   })
 
-  import { getList } from '@/api/knowledge'
-  import myDialog from './directive-dialog.vue'
+  import { getList } from '@/api/work'
+  import myDialog from './work-type-dialog.vue'
   import router from '~/src/router'
 
   const curCourse = ref({ id: -1, title: '' })
@@ -68,23 +68,23 @@
     state.list = res.data.list
     state.listLoading = false
   }
-  const hAddKnowledgeGroup = () => {
+  const hAddWorkGroup = () => {
     editRef.value.showDialog('作品分类', '添加', null)
   }
-  const hAddKnowledge = (knowledgeGroup) => {
+  const hAddWork = (WorkGroup) => {
     router.push('/work/add')
   }
-  const hEditKnowledge = (knowledge) => {
-    editRef.value.showDialog('作品', '修改', knowledge)
+  const hEditWork = (Work) => {
+    editRef.value.showDialog('作品', '修改', Work)
   }
 
-  const hDelKnowledge = (knowledge) => {
+  const hDelWork = (Work) => {
     alert(1)
-    console.log('knowledge')
+    console.log('Work')
   }
 
-  const hEditKnowledgeGroup = (knowledgeGroup) => {
-    editRef.value.showDialog('目录', '修改', knowledgeGroup)
+  const hEditWorkGroup = (WorkGroup) => {
+    editRef.value.showDialog('目录', '修改', WorkGroup)
   }
   // const hDel = (typeName, row) => {
   //   $baseConfirm('你确定要删除当前项吗', null, async () => {
@@ -115,19 +115,19 @@
     background: $base-color-background !important;
     padding: 0;
   }
-  .knowledges {
+  .Works {
     padding: 10px 5px;
     background-color: $base-color-background;
   }
-  .knowledge-group {
+  .Work-group {
     background-color: #fff;
     border-radius: 5px;
     padding: 15px;
   }
-  .knowledge-group-item {
+  .Work-group-item {
     margin: 5px !important;
   }
-  .knowledge-group.empty {
+  .Work-group.empty {
     cursor: pointer;
     padding: 0;
     display: flex;

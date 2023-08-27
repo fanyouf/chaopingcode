@@ -10,7 +10,10 @@
       @add-item="hAddLabelValue"
       @edit-container="hEditLabel"
     >
-      <template #header>属性管理. 必须先有赛事数据</template>
+      <template #header>
+        <h3>选择赛事，当前赛事是:{{ curCompetition.title }}</h3>
+        <my-competition v-model="curCompetition" />
+      </template>
       <template #default="{ item }">
         <div class="Label-group">
           <el-tag
@@ -52,7 +55,9 @@
   // const $baseMessage = inject('$baseMessage')
   const editRef = ref<InstanceType<typeof MyDialog>>(null)
   const editValueRef = ref<InstanceType<typeof MyDialogValue>>(null)
-  // const hChangeCourse = () => {}
+
+  const curCompetition = ref<Competition>({})
+
   const state = reactive({
     list: [],
     listLoading: true,
@@ -64,6 +69,7 @@
   const fetchData = async () => {
     state.listLoading = true
     const res = await getList({
+      entityID: curCompetition.value.id,
       withLabelValue: true,
       entityType: 'competition',
     })
@@ -72,7 +78,7 @@
     state.listLoading = false
   }
   const hAddLabel = (label) => {
-    editRef.value.showDialog('属性', '添加', label)
+    editRef.value.showDialog('属性', '添加', { id: curCompetition.value.id })
   }
 
   const hAddLabelValue = (label) => {
@@ -98,6 +104,9 @@
     })
   }
   onMounted(() => {
+    fetchData()
+  })
+  watch(curCompetition, () => {
     fetchData()
   })
 </script>

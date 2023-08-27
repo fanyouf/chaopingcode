@@ -4,7 +4,7 @@
       <el-form-item label="属性名称" prop="title">
         <el-input v-model="data.title" aria-placeholder="请输入" />
       </el-form-item>
-      <el-form-item label="关联赛事" prop="entifyID">
+      <!-- <el-form-item label="关联赛事" prop="entifyID">
         <el-select v-model="data.entifyID" placeholder="请选择">
           <el-option
             v-for="item in competitionList"
@@ -15,7 +15,7 @@
             {{ item.title }}
           </el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="名称" prop="entityType">
         <el-select v-model="data.entityType" placeholder="请选择">
           <el-option value="competition" label="competition">
@@ -75,7 +75,7 @@
   const showDialog = (
     objectName: OPObject = '属性',
     opName: OPType = '添加',
-    row = null
+    row = {}
   ) => {
     state.objectName = objectName
     state.opName = opName
@@ -83,7 +83,7 @@
     if (opName === '添加' && objectName === '属性') {
       data.id = null
       data.title = ''
-      data.entifyID = -1
+      data.entifyID = row.id
       data.order = 1
       data.state = true
       data.remark = '备注' // 备注

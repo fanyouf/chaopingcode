@@ -1,6 +1,6 @@
 <template>
   <section class="competition-add-container">
-    <h3>添加竞赛</h3>
+    <h3>添加赛事</h3>
     <el-form ref="formRef" label-width="66px" :model="data" :rules="rules">
       <el-form-item :label="state.objectName + '名称'" prop="name">
         <el-input
@@ -25,15 +25,11 @@
           placeholder="官网地址"
           style="width: 500px"
         >
-          <template #prepend>Http://</template>
+          <template #prepend>http://</template>
         </el-input>
       </el-form-item>
-
       <el-form-item label="显示排序" prop="order">
         <el-input-number v-model="data.order" :step="1" />
-      </el-form-item>
-      <el-form-item label="赛事属性" prop="order">
-        <competition-props />
       </el-form-item>
       <el-form-item label="详细介绍" prop="remark">
         <my-wang-editor v-model="data.remark" />
