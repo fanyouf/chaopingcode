@@ -103,7 +103,7 @@ interface Label {
 // 赛事 属性值
 interface LabelValue {
   val: string
-  keyID: number
+  labelID: number
   order: number
   id: number
   state: boolean

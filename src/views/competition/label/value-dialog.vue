@@ -1,6 +1,6 @@
 <template>
   <el-dialog v-model="visible" :title="cTitle" width="500px" @close="close">
-    <el-form ref="formRef" :model="data" :rules="rules" label-position="top">
+    <el-form ref="formRef" :model="data" label-position="top">
       <el-form-item label="属性值" prop="val">
         <el-input v-model="data.val" aria-placeholder="请输入" />
       </el-form-item>
@@ -28,14 +28,10 @@
 
   const data = reactive({
     id: '',
-    keyID: -1, // 属性id
+    labelID: -1, // 属性id
     order: 1,
     val: '',
   })
-
-  const rules = {
-    title: [{ required: true, trigger: 'blur', message: '请输入标题' }],
-  }
   const formRef = ref(null)
   const visible = ref(false)
   const state = reactive<{ opName: OPType; objectName: OPObject }>({
@@ -46,14 +42,14 @@
   const showDialog = (
     objectName: OPObject = '属性',
     opName: OPType = '添加',
-    row = {}
+    row: LabelValue
   ) => {
     state.objectName = objectName
     state.opName = opName
 
     if (opName === '添加' && objectName === '属性值') {
       data.id = null
-      data.keyID = row.keyID
+      data.labelID = row.labelID
       data.order = 1
     }
 

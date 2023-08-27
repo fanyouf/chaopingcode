@@ -10,15 +10,15 @@
       @add-item="hAddLabelValue"
       @edit-container="hEditLabel"
     >
-      <template #header>属性管理</template>
+      <template #header>属性管理. 必须先有赛事数据</template>
       <template #default="{ item }">
         <div class="Label-group">
           <el-tag
-            v-for="it in item.values"
+            v-for="it in item.labelValues"
             :key="it.id"
             class="Label-group-item"
             closable
-            @close="hDelLabel(it)"
+            @close="hDelLabelValue(it)"
           >
             <span
               title="点击查看"
@@ -40,7 +40,11 @@
   defineOptions({
     name: 'LabelIndex',
   })
-  import { getList, del as delLabel } from '@/api/label'
+  import {
+    getList,
+    del as delLabel,
+    delValue as delLabelValue,
+  } from '@/api/label'
   import MyDialog from './label-dialog.vue'
   import MyDialogValue from './value-dialog.vue'
 
@@ -60,7 +64,7 @@
   const fetchData = async () => {
     state.listLoading = true
     const res = await getList({
-      withValue: true,
+      withLabelValue: true,
       entityType: 'competition',
     })
     console.log(res)
@@ -73,7 +77,7 @@
 
   const hAddLabelValue = (label) => {
     console.log(label)
-    editValueRef.value.showDialog('属性值', '添加', { keyID: label.id })
+    editValueRef.value.showDialog('属性值', '添加', { labelID: label.id })
   }
 
   const hEditLabel = (label) => {
@@ -83,6 +87,13 @@
     $baseConfirm('你确定要删除当前项吗', null, async () => {
       console.log(Label)
       await delLabel(Label.id)
+      fetchData()
+    })
+  }
+
+  const hDelLabelValue = (labelValue: LabelValue) => {
+    $baseConfirm('你确定要删除当前项吗', null, async () => {
+      await delLabelValue(labelValue.id)
       fetchData()
     })
   }
