@@ -32,6 +32,10 @@
           <el-radio label="挑战">挑战</el-radio>
         </el-radio-group>
       </el-form-item>
+
+      <el-form-item label="选择赛事" prop="netpage">
+        <ExercisesCompetitionSelect v-model="data.competition" />
+      </el-form-item>
       <el-form-item label="习题类型" prop="diff">
         <el-radio-group v-model="data.type">
           <el-radio label="单选题">单选题</el-radio>
@@ -41,17 +45,17 @@
           <el-radio label="编程题">编程题</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="选择赛事" prop="netpage">
-        <ExercisesCompetitionSelect v-model="data.competition" />
-      </el-form-item>
-
       <el-form-item label="题干部分" prop="subjectContent">
         <ExercisesInput v-model="data.ans" />
       </el-form-item>
-      <el-form-item label="答案选项" prop="subjectContent">
-        <ExercisesAnsArea v-model="data.ans" />
+      <el-form-item
+        v-if="visibles['选择项']"
+        label="答案选项"
+        prop="subjectContent"
+      >
+        <ExercisesAnsArea v-model="data.ans" :multi="visibles['多选']" />
       </el-form-item>
-      <el-form-item label="单选答案" prop="diff">
+      <el-form-item v-if="visibles['单选']" label="单选答案" prop="diff">
         <el-radio-group v-model="data.ans">
           <el-radio label="A">A</el-radio>
           <el-radio label="B">B</el-radio>
@@ -59,7 +63,7 @@
           <el-radio label="D">D</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="多选答案" prop="diff">
+      <el-form-item v-if="visibles['多选']" label="多选答案" prop="diff">
         <el-checkbox-group v-model="data.anss">
           <el-checkbox label="A" name="A" />
           <el-checkbox label="B" name="B" />
@@ -68,14 +72,46 @@
           <el-checkbox label="E" name="E" />
         </el-checkbox-group>
       </el-form-item>
+      <el-form-item v-if="visibles['判断']" label="判断答案" prop="diff">
+        <el-radio-group v-model="data.ans">
+          <el-radio label="正确">正确</el-radio>
+          <el-radio label="错误">错误</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item v-if="visibles['简答']" label="参考答案" prop="intro">
+        <el-input
+          v-model="data.intro"
+          type="textarea"
+          style="width: 500px"
+          aria-placeholder="请输入习题简介"
+        />
+      </el-form-item>
 
       <el-form-item label="相关知识" prop="knowledges">
-        <ExercisesKnowledges />
+        <my-input-dialog
+          v-model="data.anss"
+          name="知识"
+          getapiname="name"
+          :getapi="getList"
+          :columns="[
+            { label: '知识点1', prop: 'name', width: 120 },
+            { label: 'title', prop: 'title' },
+          ]"
+        />
       </el-form-item>
 
       <el-form-item label="相关指令" prop="directives">
         <!-- <el-input v-model="data.directives" style="width: 500px" /> -->
-        <ExercisesKnowledges />
+        <my-input-dialog
+          v-model="data.anss"
+          name="相关指令"
+          getapiname="name"
+          :getapi="getList"
+          :columns="[
+            { label: '知识点1', prop: 'name', width: 120 },
+            { label: 'title', prop: 'title' },
+          ]"
+        />
       </el-form-item>
 
       <el-form-item label="文本讲解" prop="remark">
@@ -120,21 +156,22 @@
   import ExercisesKnowledges from './components/exercises-knowledges.vue'
   import ExercisesCompetitionSelect from './components/exercises-competition-select.vue'
   import { doAdd as doAddCourse } from '@/api/course'
+  import { getList } from '@/api/knowledge'
   const $baseMessage = inject('$baseMessage')
 
   const emit = defineEmits(['fetch-data'])
 
   const data = reactive({
     // id: '',
-    title: '测试标题', // 标题
+    title: '', // 习题名称
     code: '',
-    diff: '',
+    diff: '简单',
     intro: '', // 介绍
     logo: '', //
     remark: '备注', // 备注
     competition: {},
-    type: '',
-    ans: '',
+    type: '单选题',
+    ans: '正确',
     anss: [],
     knowledges: '',
     directives: '',
@@ -146,6 +183,20 @@
     data.remark = 'ajax数据'
     console.log('ajax数据')
   }, 5000)
+
+  const visibles = computed(() => {
+    if (data.type === '单选题') {
+      return { 单选: true, 选择项: true }
+    } else if (data.type === '多选题') {
+      return { 多选: true, 选择项: true }
+    } else if (data.type === '判断题') {
+      return { 判断: true }
+    } else if (data.type === '问答题') {
+      return { 简答: true }
+    } else {
+      return {}
+    }
+  })
   const rules = {
     title: [{ required: true, trigger: 'blur', message: '请输入标题' }],
   }
@@ -155,28 +206,7 @@
     opName: '添加', // 操作方式的名字： 编辑 or 添加
     objectName: '赛事', // 操作对象的类型: 目录 or 知识点
   })
-  const cTitle = computed(() => {
-    return `${state.objectName}-${state.opName}`
-  })
-  const showDialog = (
-    objectName: OPObject = '目录',
-    opName: OPType = '添加',
-    row = null
-  ) => {
-    state.objectName = objectName
-    state.opName = opName
-    if (row) {
-      // data.id = row.id
-      data.order = row.order || 1
-      data.title = row.title
-    }
 
-    if (opName === '添加') {
-      data.title = ''
-    }
-
-    visible.value = true
-  }
   const close = () => {
     formRef.value.resetFields()
     visible.value = false
@@ -198,8 +228,6 @@
       }
     })
   }
-
-  defineExpose({ showDialog })
 </script>
 
 <style lang="scss" scoped>

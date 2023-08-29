@@ -1,6 +1,6 @@
 <template>
   <section class="competition-add-container">
-    <h3>添加赛事</h3>
+    <h3>{{ cTitle }}</h3>
     <el-form ref="formRef" label-width="66px" :model="data" :rules="rules">
       <el-form-item :label="state.objectName + '名称'" prop="name">
         <el-input
@@ -44,12 +44,16 @@
 
 <script setup lang="ts">
   import CompetitionProps from './components/competition-props.vue'
-  import { add as doAddCompetition } from '@/api/competition'
+  import {
+    add as doAddCompetition,
+    put as doEditCompetition,
+    getList,
+  } from '@/api/competition'
   const $baseMessage = inject('$baseMessage')
-
+  const route = useRoute()
   const emit = defineEmits(['fetch-data'])
 
-  const data = reactive({
+  const data = ref({
     // id: '',
     title: '测试标题', // 标题
     intro: '', // 介绍
@@ -62,6 +66,37 @@
 
     // summary: string
   })
+  const cTitle = computed(() => {
+    return route.params.id ? '修改赛事' : '添加赛事'
+  })
+
+  const init = async () => {
+    // 判断是否有参数
+    if (route.params.id) {
+      // 当加载页面的时候就要获取参数的值了
+      const res = await getList({ id: route.params.id })
+      console.log(res)
+      data.value = res.data
+    } else {
+    }
+  }
+  onMounted(() => {
+    init()
+  })
+  // 1、 怎么判断是否是新增还是修改
+  // 2、 根据teacher.id来判断
+
+  // saveOrUpdate(){
+  //   //当点击按钮的时候，让保存按钮为浅色， 不启用
+  //   this.saveBtnDisabled = true
+  // //判断teacher.id是否存在  存在则为修改
+  //   if(this.teacher.id){
+  //     this.updateById()
+  //   } else{
+  //     this.save()
+  //   }
+
+  // }
 
   // setTimeout(() => {
   //   data.remark = 'ajax数据'
@@ -76,52 +111,34 @@
     opName: '添加', // 操作方式的名字： 编辑 or 添加
     objectName: '赛事', // 操作对象的类型: 目录 or 知识点
   })
-  const cTitle = computed(() => {
-    return `${state.objectName}-${state.opName}`
-  })
-  const showDialog = (
-    objectName: OPObject = '目录',
-    opName: OPType = '添加',
-    row = null
-  ) => {
-    state.objectName = objectName
-    state.opName = opName
-    if (row) {
-      // data.id = row.id
-      data.order = row.order || 1
-      data.title = row.title
-    }
 
-    if (opName === '添加') {
-      data.title = ''
-    }
-  }
-  const close = () => {
-    formRef.value.resetFields()
-  }
   const doSave = async (data) => {
     await doAddCompetition(data)
+    $baseMessage('添加成功', 'success', 'vab-hey-message-success')
+    emit('fetch-data')
+  }
+  const doEdit = async (data) => {
+    await doEditCompetition(data)
     $baseMessage('添加成功', 'success', 'vab-hey-message-success')
     emit('fetch-data')
   }
   const save = () => {
     formRef.value.validate(async (valid) => {
       if (valid) {
-        await doSave(data)
+        if (route.params.id) {
+          await doEdit(data.value)
+        } else {
+          await doSave(data.value)
+        }
         // $baseMessage(msg, 'success', 'vab-hey-message-success')
         // emit('fetch-data')
         close()
       }
     })
   }
-
-  defineExpose({ showDialog })
 </script>
 
 <style lang="scss" scoped>
-  footer {
-    // padding-left: 66px;
-  }
   .competition-add-container {
     padding: 1em 0;
   }

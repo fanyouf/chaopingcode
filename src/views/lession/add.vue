@@ -82,8 +82,6 @@
             { label: 'title', prop: 'title' },
           ]"
         />
-
-        <!-- <ExercisesKnowledges /> -->
       </el-form-item>
       <el-form-item label="课后练习" prop="knowledges">
         <my-input-dialog

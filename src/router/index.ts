@@ -174,6 +174,17 @@ export const asyncRoutes: VabRouteRecord[] = [
         },
       },
       {
+        path: 'edit/:id',
+        name: 'CompetitionEditIndex',
+        component: () => import('@/views/competition/add.vue'),
+        meta: {
+          hidden: true,
+          title: '赛事修改',
+          icon: 'shopping-cart-line',
+          badge: 'Hot',
+        },
+      },
+      {
         path: 'label',
         name: 'CompetitionlabelIndex',
         component: () => import('@/views/competition/label/index.vue'),
