@@ -77,9 +77,14 @@
   ) => {
     state.objectName = objectName
     state.opName = opName
+
     if (opName === '添加' && objectName === '目录') {
       data.subject_id = row.id
       data.title = ''
+      data.id = null
+    } else if (opName === '添加' && objectName === '科目') {
+      data.id = null
+      // data.title = ''
     } else if (opName === '添加' && objectName === '知识点') {
       data.title = ''
       data.intro = ''

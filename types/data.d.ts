@@ -1,5 +1,3 @@
-import { StringifyOptions } from 'querystring'
-
 interface Res<T> {
   data: T
   code: number

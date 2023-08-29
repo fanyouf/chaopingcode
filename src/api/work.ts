@@ -1,5 +1,4 @@
 import request from '@/utils/request'
-import { Work } from '~/types/data'
 
 export function getList(params: any) {
   return request<{
