@@ -265,50 +265,6 @@ export const asyncRoutes: VabRouteRecord[] = [
     ],
   },
   {
-    path: '/exercises',
-    name: 'Exercises',
-    component: Layout,
-    meta: {
-      title: '习题库',
-      icon: 'apps-line',
-      levelHidden: true,
-      guard: ['Admin'],
-    },
-    children: [
-      {
-        path: '',
-        name: 'ExercisesIndex',
-        component: () => import('@/views/exercises/index.vue'),
-        meta: {
-          title: '习题库',
-          icon: 'shopping-cart-line',
-          // badge: 'Hot',
-        },
-      },
-      {
-        path: 'add',
-        name: 'ExercisesAddIndex',
-        component: () => import('@/views/exercises/add.vue'),
-        meta: {
-          title: '习题添加',
-          icon: 'shopping-cart-line',
-          badge: 'Hot',
-        },
-      },
-      {
-        path: '/directive/:id',
-        name: 'DirectiveDetail',
-        component: () => import('@/views/directive/group.vue'),
-        meta: {
-          hidden: true,
-          title: '指令列表',
-          // meta: { title: 'Params id=1' },
-          dynamicNewTab: true,
-        },
-      },
-    ],
-  },
-  {
     path: '/work',
     name: 'Work',
     component: Layout,
@@ -352,6 +308,51 @@ export const asyncRoutes: VabRouteRecord[] = [
       },
     ],
   },
+  {
+    path: '/exercises',
+    name: 'Exercises',
+    component: Layout,
+    meta: {
+      title: '习题库',
+      icon: 'apps-line',
+      levelHidden: true,
+      guard: ['Admin'],
+    },
+    children: [
+      {
+        path: '',
+        name: 'ExercisesIndex',
+        component: () => import('@/views/exercises/index.vue'),
+        meta: {
+          title: '习题库',
+          icon: 'shopping-cart-line',
+          // badge: 'Hot',
+        },
+      },
+      {
+        path: 'add',
+        name: 'ExercisesAddIndex',
+        component: () => import('@/views/exercises/add.vue'),
+        meta: {
+          title: '习题添加',
+          icon: 'shopping-cart-line',
+          badge: 'Hot',
+        },
+      },
+      {
+        path: '/directive/:id',
+        name: 'DirectiveDetail',
+        component: () => import('@/views/directive/group.vue'),
+        meta: {
+          hidden: true,
+          title: '指令列表',
+          // meta: { title: 'Params id=1' },
+          dynamicNewTab: true,
+        },
+      },
+    ],
+  },
+
   {
     path: '/paper',
     name: 'Paper',
