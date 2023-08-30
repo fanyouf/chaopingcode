@@ -49,9 +49,10 @@
     put as doEditCompetition,
     getList,
   } from '@/api/competition'
-  const $baseMessage = inject('$baseMessage')
+  import { gp } from '@gp'
   const route = useRoute()
-  const emit = defineEmits(['fetch-data'])
+
+  const bus = useEventBus<string>('news')
 
   const data = ref({
     // id: '',
@@ -77,31 +78,12 @@
       const res = await getList({ id: route.params.id })
       console.log(res)
       data.value = res.data
-    } else {
     }
   }
   onMounted(() => {
     init()
   })
-  // 1、 怎么判断是否是新增还是修改
-  // 2、 根据teacher.id来判断
 
-  // saveOrUpdate(){
-  //   //当点击按钮的时候，让保存按钮为浅色， 不启用
-  //   this.saveBtnDisabled = true
-  // //判断teacher.id是否存在  存在则为修改
-  //   if(this.teacher.id){
-  //     this.updateById()
-  //   } else{
-  //     this.save()
-  //   }
-
-  // }
-
-  // setTimeout(() => {
-  //   data.remark = 'ajax数据'
-  //   console.log('ajax数据')
-  // }, 500)
   const rules = {
     title: [{ required: true, trigger: 'blur', message: '请输入标题' }],
   }
@@ -114,13 +96,13 @@
 
   const doSave = async (data) => {
     await doAddCompetition(data)
-    $baseMessage('添加成功', 'success', 'vab-hey-message-success')
-    emit('fetch-data')
+    gp.$baseMessage('添加成功', 'success', 'vab-hey-message-success')
+    bus.emit()
   }
   const doEdit = async (data) => {
     await doEditCompetition(data)
-    $baseMessage('添加成功', 'success', 'vab-hey-message-success')
-    emit('fetch-data')
+    gp.$baseMessage('添加成功', 'success', 'vab-hey-message-success')
+    bus.emit()
   }
   const save = () => {
     formRef.value.validate(async (valid) => {

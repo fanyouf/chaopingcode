@@ -1,12 +1,14 @@
 <template>
-  <el-dialog v-model="visible" :title="cTitle" width="500px" @close="close">
-    <el-form ref="formRef" :model="data" :rules="rules" label-position="top">
+  <el-dialog v-model="visible" :title="cTitle" width="600px" @close="close">
+    <el-form ref="formRef" label-width="100px" :model="data" :rules="rules">
+      <!-- label-position="top" -->
       <el-form-item
         v-if="state.objectName === '指令分类'"
-        label="选择科目"
+        label="当前科目"
         prop="subject"
       >
-        <el-select v-model="data.subjectID" placeholder="请选择">
+        {{ data.subjectTitle }}
+        <!-- <el-select v-model="data.subjectID" placeholder="请选择">
           <el-option
             v-for="item in subjects"
             :key="item.id"
@@ -15,7 +17,7 @@
           >
             {{ item.title }}
           </el-option>
-        </el-select>
+        </el-select> -->
       </el-form-item>
       <el-form-item :label="state.objectName + '名称'" prop="name">
         <el-input v-model="data.title" aria-placeholder="请输入" />
@@ -45,8 +47,9 @@
       >
         <my-upload-image v-model="data.logo" />
       </el-form-item>
+
       <el-form-item label="显示排序" prop="order">
-        <el-input v-model.number="data.order" type="number" />
+        <el-input-number v-model="data.order" :step="1" />
       </el-form-item>
       <el-form-item :label="state.objectName + '备注'" prop="remark">
         <el-input v-model="data.remark" type="textarea" />
@@ -75,6 +78,7 @@
 
   const data = reactive({
     id: '',
+    subjectTitle: '',
     directiveGroupID: -1,
     title: '',
     subjectID: -1,
@@ -115,6 +119,7 @@
       data.order = 1
       data.state = true
       data.subjectID = row.subject_id
+      data.subjectTitle = row.subjectTitle
     } else if (opName === '添加' && objectName === '指令') {
       data.subjectID = null
       data.id = null

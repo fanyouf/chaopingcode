@@ -74,6 +74,7 @@
   const hAddDirectiveGroup = () => {
     editRef.value.showDialog('指令分类', '添加', {
       subject_id: curSubject.value.id,
+      subjectTitle: curSubject.value.title,
     })
   }
   const hAddDirective = (directiveGroup) => {

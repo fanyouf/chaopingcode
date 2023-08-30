@@ -38,13 +38,27 @@
   import { del as delCompetition, getList } from '@/api/competition'
   import { useRouter } from 'vue-router'
   import { gp } from '@gp'
+
+  import { useEventBus } from '@vueuse/core'
+
+  const bus = useEventBus<string>('news')
+
+  function listener() {
+    console.log('listener ')
+    fetchData()
+  }
+
+  const unsubscribe = bus.on(listener)
+
+  onUnmounted(() => {
+    unsubscribe()
+  })
+
   defineOptions({
     name: 'CompetitionIndex',
   })
 
   const router = useRouter()
-  // const defaultImage =
-  //   'http://8.142.32.7:8888/assets/d1/57/d1576663f29233e326553db584e5520c.jpg'
 
   const hAddCompetition = () => {
     router.push('/competition/add')

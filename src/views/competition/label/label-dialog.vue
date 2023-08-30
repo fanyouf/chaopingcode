@@ -4,8 +4,8 @@
       <el-form-item label="属性名称" prop="title">
         <el-input v-model="data.title" aria-placeholder="请输入" />
       </el-form-item>
-      <!-- <el-form-item label="关联赛事" prop="entifyID">
-        <el-select v-model="data.entifyID" placeholder="请选择">
+      <!-- <el-form-item label="关联赛事" prop="entityID">
+        <el-select v-model="data.entityID" placeholder="请选择">
           <el-option
             v-for="item in competitionList"
             :key="item.id"
@@ -56,7 +56,7 @@
     id: '',
     entityType: 'competition', // image or text
     title: '',
-    entifyID: -1,
+    entityID: -1,
     order: 1,
     state: false,
     remark: '备注', // 备注
@@ -83,7 +83,7 @@
     if (opName === '添加' && objectName === '属性') {
       data.id = null
       data.title = ''
-      data.entifyID = row.id
+      data.entityID = row.id
       data.order = 1
       data.state = true
       data.remark = '备注' // 备注

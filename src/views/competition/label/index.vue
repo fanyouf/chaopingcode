@@ -56,7 +56,7 @@
   const editRef = ref<InstanceType<typeof MyDialog>>(null)
   const editValueRef = ref<InstanceType<typeof MyDialogValue>>(null)
 
-  const curCompetition = ref<Competition>({})
+  const curCompetition = ref<Competition>({} as Competition)
 
   const state = reactive({
     list: [],
@@ -89,14 +89,13 @@
   const hEditLabel = (label) => {
     editRef.value.showDialog('知识点', '修改', label)
   }
-  const hDelLabel = (Label) => {
-    $baseConfirm('你确定要删除当前项吗', null, async () => {
-      console.log(Label)
-      await delLabel(Label.id)
-      fetchData()
-    })
+  // 删除属性
+  const hDelLabel = async (Label) => {
+    await delLabel(Label.id)
+    fetchData()
   }
 
+  // 删除属性值
   const hDelLabelValue = (labelValue: LabelValue) => {
     $baseConfirm('你确定要删除当前项吗', null, async () => {
       await delLabelValue(labelValue.id)

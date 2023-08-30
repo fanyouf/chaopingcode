@@ -1,6 +1,12 @@
 <template>
   <div>
-    <my-page :list="list" title="添加科目" @add-container="hAddCourse">
+    <my-page
+      :list="list"
+      title="添加科目"
+      @del-container="hDel"
+      @add-container="hAddCourse"
+      @view-container="hEditCourse"
+    >
       <template #header>
         <h3>科目列表</h3>
         <p>当前一共有{{ list.length }}个科目</p>
@@ -30,10 +36,8 @@
 </template>
 
 <script setup lang="ts">
-  import { stat } from 'fs'
   import useCourse from '@/hooks/useCourse'
   import { doDelete, getList } from '@/api/course'
-  import MyDialog from '~/src/components/my-dialog.vue'
 
   defineOptions({
     name: 'CourseIndex',
@@ -52,88 +56,17 @@
   const hDetail = (item: Subject) => {
     router.push(`/course/${item.id}`)
   }
-  const hEdit = (item: Subject) => {
-    console.log(item)
+  const hEditCourse = (item: Subject) => {
+    editRef.value.showDialog('科目', '修改', item)
   }
 
-  const state = reactive({
-    list: [
-      // {
-      //   title: 'Scratch图形化',
-      //   intro: '在咋必成大器谢谢大地方方法学才',
-      //   logo: './xxx',
-      //   remark: ',',
-      //   order: 1,
-      //   type: 'string',
-      //   id: 1,
-      //   create_at: 1,
-      //   update_at: 23,
-      //   deleted_at: 3,
-      // },
-      // {
-      //   title: 'Scratch图形化',
-      //   intro: '在咋必成大器谢谢大地方方法学才',
-      //   logo: './xxx',
-      //   remark: ',',
-      //   order: 1,
-      //   type: 'string',
-      //   id: 2,
-      //   create_at: 1,
-      //   update_at: 23,
-      //   deleted_at: 3,
-      // },
-      // {
-      //   title: 'Scratch图形化',
-      //   intro: '在咋必成大器谢谢大地方方法学才',
-      //   logo: './xxx',
-      //   remark: ',',
-      //   order: 1,
-      //   type: 'string',
-      //   id: 3,
-      //   create_at: 1,
-      //   update_at: 23,
-      //   deleted_at: 3,
-      // },
-      // {
-      //   title: 'Scratch图形化',
-      //   intro: '在咋必成大器谢谢大地方方法学才',
-      //   logo: './xxx',
-      //   remark: ',',
-      //   order: 1,
-      //   type: 'string',
-      //   id: 4,
-      //   create_at: 1,
-      //   update_at: 23,
-      //   deleted_at: 3,
-      // },
-      // {
-      //   title: 'Scratch图形化',
-      //   intro: '在咋必成大器谢谢大地方方法学才',
-      //   logo: './xxx',
-      //   remark: ',',
-      //   order: 1,
-      //   type: 'string',
-      //   id: 5,
-      //   create_at: 1,
-      //   update_at: 23,
-      //   deleted_at: 3,
-      // },
-    ] as Subject[],
-    isLoading: ref(false),
-    layout: 'total, sizes, prev, pager, next, jumper',
-    total: 0,
-    selectRows: '',
-  })
-
-  // const hShowDialog = (typeName, opName, row = null) => {
-  //   editRef.value.showDialog(typeName, opName, row)
-  // }
-  const hDel = (row) => {
-    $baseConfirm('你确定要删除当前项吗', null, async () => {
-      await doDelete(row.id)
-      $baseMessage('OK', 'success', 'vab-hey-message-success')
-      fetchData()
-    })
+  const hShowDialog = (typeName, opName, row = null) => {
+    editRef.value.showDialog(typeName, opName, row)
+  }
+  // 删除科目
+  const hDel = async (row) => {
+    await doDelete(row.id)
+    $baseMessage('OK', 'success', 'vab-hey-message-success')
   }
 
   const { list, isLoading } = useCourse()

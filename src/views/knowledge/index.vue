@@ -4,10 +4,11 @@
       :list="state.list"
       item-type="知识点"
       has-op-top
+      :op-names="['add', 'del', 'view']"
       @add-container="hAddKnowledgeGroup"
       @del-container="hDelKnowledgeGroup"
       @add-item="hAddKnowledge"
-      @edit-container="hEditKnowledgeGroup"
+      @view-container="hEditKnowledgeGroup"
     >
       <template #header>
         <h3>选择科目，当前科目是:{{ curSubject.title }}</h3>

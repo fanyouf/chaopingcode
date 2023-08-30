@@ -29,8 +29,8 @@
 </template>
 
 <script setup lang="ts">
-  import { doAdd as doAddCourse } from '@/api/course'
-
+  import { doAdd as doAddCourse, doEdit as editSubject } from '@/api/subject'
+  import { gp } from '@gp'
   import {
     add as addKnowledgeGroup,
     put as editKnowledgeGroup,
@@ -38,15 +38,13 @@
 
   import { add as addKnowledge, put as editKnowledge } from '@/api/knowledge'
 
-  const $baseMessage = inject('$baseMessage')
-
   const emit = defineEmits(['fetch-data'])
 
   const data = reactive({
     knowledgeGroupID: '',
     id: '',
     subject_id: '',
-    title: '测试标题', // 标题
+    title: '', // 标题
     intro: '', // 介绍
     logo: '', //
     remark: '', // 备注
@@ -91,6 +89,7 @@
       data.remark = ''
       data.order = 1
       data.knowledgeGroupID = row.id
+
       data.id = null
       data.subject_id = null
       data.state = null
@@ -100,6 +99,7 @@
       data.remark = row.remark
       data.order = row.order
       data.id = row.id
+
       data.knowledgeGroupID = null
       data.subject_id = null
       data.state = null
@@ -109,6 +109,14 @@
       data.order = row.order
       data.remark = row.remark
       data.id = row.id
+      data.subject_id = row.subject_id
+    } else if (opName === '修改' && objectName === '科目') {
+      data.title = row.title
+      data.intro = row.intro
+      data.order = row.order
+      data.remark = row.remark
+      data.id = row.id
+      data.logo = row.logo
       data.subject_id = row.subject_id
     }
 
@@ -129,8 +137,10 @@
       await addKnowledge(data)
     } else if (state.objectName === '知识点' && state.opName === '修改') {
       await editKnowledge(data)
+    } else if (state.objectName === '科目' && state.opName === '修改') {
+      await editSubject(data)
     }
-    $baseMessage(
+    gp.$baseMessage(
       `${state.opName + state.objectName}成功`,
       'success',
       'vab-hey-message-success'

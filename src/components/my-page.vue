@@ -144,7 +144,7 @@
     },
     opNames: {
       type: Array,
-      default: () => ['add', 'del', 'update', 'view'],
+      default: () => ['add', 'del', 'edit', 'view'],
     },
     hasOp: {
       type: Boolean,
@@ -173,7 +173,11 @@
   ])
 
   const hDel = (item) => {
-    if (item.children?.length || item.directives?.length) {
+    if (
+      item.children?.length ||
+      item.directives?.length ||
+      item.knowledge?.length
+    ) {
       $baseMessage('还有子项，不能删除', 'error', 'vab-hey-message-error')
       return
     }
