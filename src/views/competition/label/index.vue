@@ -87,7 +87,7 @@
   }
 
   const hEditLabel = (label) => {
-    editRef.value.showDialog('知识点', '修改', label)
+    editRef.value.showDialog('属性', '修改', label)
   }
   // 删除属性
   const hDelLabel = async (Label) => {

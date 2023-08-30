@@ -16,13 +16,13 @@
           </el-option>
         </el-select>
       </el-form-item> -->
-      <el-form-item label="名称" prop="entityType">
+      <!-- <el-form-item label="名称" prop="entityType">
         <el-select v-model="data.entityType" placeholder="请选择">
           <el-option value="competition" label="competition">
             competition
           </el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="显示排序" prop="order">
         <el-input-number v-model="data.order" :step="1" />
       </el-form-item>
@@ -84,6 +84,13 @@
       data.id = null
       data.title = ''
       data.entityID = row.id
+      data.order = 1
+      data.state = true
+      data.remark = '备注' // 备注
+    } else if (opName === '修改' && objectName === '属性') {
+      data.id = row.id
+      data.title = ''
+      data.entityID = row.entityID
       data.order = 1
       data.state = true
       data.remark = '备注' // 备注

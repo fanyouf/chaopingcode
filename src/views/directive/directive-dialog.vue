@@ -117,7 +117,7 @@
       data.remark = ''
       data.order = 1
       data.state = true
-      data.subjectID = row.subject_id
+      data.subjectID = row.subjectID
       data.subjectTitle = row.subjectTitle
     } else if (opName === '添加' && objectName === '指令') {
       data.subjectID = null
