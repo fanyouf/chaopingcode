@@ -7,17 +7,7 @@
         label="当前科目"
         prop="subject"
       >
-        {{ data.subjectTitle }}
-        <!-- <el-select v-model="data.subjectID" placeholder="请选择">
-          <el-option
-            v-for="item in subjects"
-            :key="item.id"
-            :value="item.id"
-            :label="item.title"
-          >
-            {{ item.title }}
-          </el-option>
-        </el-select> -->
+        <el-input :model-value="data.subjectTitle" disabled readonly />
       </el-form-item>
       <el-form-item :label="state.objectName + '名称'" prop="name">
         <el-input v-model="data.title" aria-placeholder="请输入" />
