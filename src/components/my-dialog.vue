@@ -43,7 +43,7 @@
   const data = reactive({
     knowledgeGroupID: '',
     id: '',
-    subject_id: '',
+    subjectID: '',
     title: '', // 标题
     intro: '', // 介绍
     logo: '', //
@@ -77,7 +77,7 @@
     state.opName = opName
 
     if (opName === '添加' && objectName === '目录') {
-      data.subject_id = row.id
+      data.subjectID = row.id
       data.title = ''
       data.id = null
     } else if (opName === '添加' && objectName === '科目') {
@@ -91,7 +91,7 @@
       data.knowledgeGroupID = row.id
 
       data.id = null
-      data.subject_id = null
+      data.subjectID = null
       data.state = null
     } else if (opName === '修改' && objectName === '知识点') {
       data.title = row.title
@@ -101,7 +101,7 @@
       data.id = row.id
 
       data.knowledgeGroupID = null
-      data.subject_id = null
+      data.subjectID = null
       data.state = null
     } else if (opName === '修改' && objectName === '目录') {
       data.title = row.title
@@ -109,7 +109,7 @@
       data.order = row.order
       data.remark = row.remark
       data.id = row.id
-      data.subject_id = row.subject_id
+      data.subjectID = row.subject_id
     } else if (opName === '修改' && objectName === '科目') {
       data.title = row.title
       data.intro = row.intro
@@ -117,7 +117,7 @@
       data.remark = row.remark
       data.id = row.id
       data.logo = row.logo
-      data.subject_id = row.subject_id
+      data.subjectID = row.subjectID
     }
 
     visible.value = true

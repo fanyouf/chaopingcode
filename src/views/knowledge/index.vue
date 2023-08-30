@@ -63,7 +63,7 @@
   const fetchData = async () => {
     state.listLoading = true
     const res = await getList({
-      subject_id: curSubject.value.id,
+      subjectID: curSubject.value.id,
       withKnowledge: true,
     })
     console.log(res)
