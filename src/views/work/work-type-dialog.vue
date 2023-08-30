@@ -1,24 +1,8 @@
 <template>
   <el-dialog v-model="visible" :title="cTitle" width="500px" @close="close">
     <el-form ref="formRef" :model="data" :rules="rules" label-position="top">
-      <el-form-item
-        v-if="state.objectName === '指令分类'"
-        label="选择科目"
-        prop="subject"
-      >
-        <el-select v-model="data.subjectId" placeholder="请选择">
-          <el-option
-            v-for="item in subjects"
-            :key="item.id"
-            :value="item.id"
-            :label="item.title"
-          >
-            {{ item.title }}
-          </el-option>
-        </el-select>
-      </el-form-item>
       <el-form-item :label="state.objectName + '名称'" prop="name">
-        <el-input v-model="data.name" aria-placeholder="请输入" />
+        <el-input v-model="data.title" aria-placeholder="请输入" />
       </el-form-item>
       <el-form-item :label="state.objectName + '描述'" prop="intro">
         <el-input
@@ -28,18 +12,9 @@
         />
       </el-form-item>
       <el-form-item :label="state.objectName + '图片上传'" prop="intro">
-        <my-upload-image v-model="data.image" />
+        <my-upload-image v-model="data.cover" />
       </el-form-item>
-      <el-form-item
-        v-if="state.objectName === '指令分类'"
-        :label="state.objectName + '类型'"
-        prop="intro"
-      >
-        <el-radio-group v-model="data.type">
-          <el-radio label="图片">图片</el-radio>
-          <el-radio label="文字">文字</el-radio>
-        </el-radio-group>
-      </el-form-item>
+
       <el-form-item label="显示排序" prop="order">
         <el-input-number v-model="data.order" :step="1" />
       </el-form-item>
@@ -56,21 +31,20 @@
 
 <script setup lang="ts">
   import useSubject from '~/src/hooks/useSubject'
-  import { doAdd as doAddCourse } from '@/api/course'
-  const $baseMessage = inject('$baseMessage')
+  import { add as addWorkCart, put as updateWorkCart } from '@/api/workCate'
+  import { gp } from '@gp'
 
   const emit = defineEmits(['fetch-data'])
 
   const { list: subjects } = useSubject()
 
-  const data = reactive({
-    // id: '',
-    subjectId: -1,
-    name: '测试标题', // 标题
+  const data = reactive<WorkCate>({
+    id: -1,
+    title: '',
     intro: '', // 介绍
-    type: '图片',
-    image: '', // 指令的图片
+    cover: '', // 指令的图片
     order: 1,
+    state: true,
     remark: '备注', // 备注
   })
 
@@ -89,22 +63,25 @@
   const showDialog = (
     objectName: OPObject = '目录',
     opName: OPType = '添加',
-    subjectId = -1,
-    row = null
+    row: WorkCate = null
   ) => {
     state.objectName = objectName
     state.opName = opName
-    data.subjectId = subjectId
-    if (row) {
-      // data.id = row.id
-      data.order = row.order || 1
-      // data.title = row.title
+    if (opName === '修改' && objectName === '作品分类') {
+      data.id = row.id
+      data.title = row.title
+      data.intro = row.intro // 介绍
+      data.cover = row.cover // 指令的图片
+      data.order = row.order
+      data.remark = row.remark
+    } else if (opName === '添加' && objectName === '作品分类') {
+      data.id = null
+      data.title = ''
+      data.intro = '' // 介绍
+      data.cover = '' // 图片
+      data.order = 1
+      data.remark = ''
     }
-
-    if (opName === '添加') {
-      // data.title = ''
-    }
-
     visible.value = true
   }
   const close = () => {
@@ -112,10 +89,12 @@
     visible.value = false
   }
   const doSave = async (data) => {
-    if (state.objectName === '科目' && state.opName === '添加') {
-      await doAddCourse(data)
+    if (state.objectName === '作品分类' && state.opName === '添加') {
+      await addWorkCart(data)
+    } else if (state.objectName === '作品分类' && state.opName === '修改') {
+      await updateWorkCart(data)
     }
-    $baseMessage('添加成功', 'success', 'vab-hey-message-success')
+    gp.$baseMessage('添加成功', 'success', 'vab-hey-message-success')
     emit('fetch-data')
   }
   const save = () => {

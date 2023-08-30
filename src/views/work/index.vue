@@ -3,10 +3,10 @@
     <my-page
       title="作品分类"
       has-op-top
+      :op-names="['del', 'edit']"
       :list="state.list"
-      item-type="作品"
       @add-container="hAddWorkGroup"
-      @add-item="hAddWork"
+      @del-container="hDelWorkGroup"
       @edit-container="hEditWorkGroup"
     >
       <template #header>
@@ -15,21 +15,7 @@
       </template>
       <template #default="{ item }">
         <div class="Work-group">
-          <el-tag
-            v-for="it in item.children"
-            :key="it.id"
-            class="Work-group-item"
-            closable
-            @close="hDelWork(it)"
-          >
-            <span
-              title="点击查看"
-              style="cursor: pointer"
-              @click="hEditWork(it)"
-            >
-              {{ it.title }}
-            </span>
-          </el-tag>
+          <p>{{ item.intro }}</p>
         </div>
       </template>
     </my-page>
@@ -43,14 +29,12 @@
     name: 'WorkIndex',
   })
 
-  import { getList } from '@/api/work'
+  import { gp } from '@gp'
+  import { getList, del as delWorkCate } from '@/api/workCate'
   import myDialog from './work-type-dialog.vue'
   import router from '~/src/router'
 
   const curCourse = ref({ id: -1, title: '' })
-  // const $baseConfirm = inject('$baseConfirm')
-  // const $baseMessage = inject('$baseMessage')
-  const subject = ref('c++')
   const editRef = ref<InstanceType<typeof myDialog>>(null)
   // const hChangeCourse = () => {}
   const state = reactive({
@@ -69,7 +53,7 @@
     state.listLoading = false
   }
   const hAddWorkGroup = () => {
-    editRef.value.showDialog('作品分类', '添加', null)
+    editRef.value.showDialog('作品分类', '添加', {})
   }
   const hAddWork = (WorkGroup) => {
     router.push('/work/add')
@@ -78,13 +62,15 @@
     editRef.value.showDialog('作品', '修改', Work)
   }
 
-  const hDelWork = (Work) => {
-    alert(1)
-    console.log('Work')
+  const hDelWorkGroup = async (work: WorkCate) => {
+    await delWorkCate(work.id)
+    gp.$baseMessage('OK', 'success', 'vab-hey-message-success')
+    fetchData()
   }
 
-  const hEditWorkGroup = (WorkGroup) => {
-    editRef.value.showDialog('目录', '修改', WorkGroup)
+  const hEditWorkGroup = (workGroup) => {
+    debugger
+    editRef.value.showDialog('作品分类', '修改', workGroup)
   }
   // const hDel = (typeName, row) => {
   //   $baseConfirm('你确定要删除当前项吗', null, async () => {
@@ -95,9 +81,9 @@
   // }
 
   watch(
-    subject,
+    () => curCourse,
     () => {
-      console.log('1', subject)
+      console.log('1', curCourse)
       fetchData()
     },
     { immediate: true }

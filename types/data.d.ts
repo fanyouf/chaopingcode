@@ -111,6 +111,7 @@ interface LabelValue {
 
 // 作品
 interface WorkCate {
+  id: number
   title: string
   intro: string
   cover: string
@@ -120,6 +121,7 @@ interface WorkCate {
 }
 
 interface Work {
+  id: number
   title: string
   no: string
   intro: string
@@ -142,6 +144,30 @@ interface Work {
   withDirective: boolean
   withKnowledge: boolean
   withSubject: boolean
+}
+
+// 练习题
+interface Exercise {
+  title: string
+  no: string
+  intro: string
+  level: string
+  type: string
+  competitionID: number
+  body: string
+  cover: string
+  explainText: string
+  explainVideo: string
+  remark: string
+  order: number
+  state: boolean
+  directiveIDs: number[]
+  knowledgeIDs: number[]
+  labelValueIDs: number[]
+  withCompetition: boolean
+  withDirective: boolean
+  withKnowledge: boolean
+  withLabelValue: boolean
 }
 
 type OPObject =

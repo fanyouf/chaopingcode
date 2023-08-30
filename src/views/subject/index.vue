@@ -4,8 +4,8 @@
       :list="list"
       title="添加科目"
       @del-container="hDel"
-      @add-container="hAddCourse"
-      @view-container="hEditCourse"
+      @add-container="hAddSubject"
+      @view-container="hEditSubject"
     >
       <template #header>
         <h3>科目列表</h3>
@@ -36,40 +36,31 @@
 </template>
 
 <script setup lang="ts">
-  import useCourse from '@/hooks/useCourse'
+  import useSubject from '@/hooks/useSubject'
   import { doDelete, getList } from '@/api/course'
-
+  import { gp } from '@gp'
   defineOptions({
-    name: 'CourseIndex',
+    name: 'SubjectIndex',
   })
-  const defaultImage =
-    'http://8.142.32.7:8888/assets/d1/57/d1576663f29233e326553db584e5520c.jpg'
-  const router = useRouter()
-
-  const $baseConfirm = inject('$baseConfirm')
-  const $baseMessage = inject('$baseMessage')
 
   const editRef = ref<InstanceType<typeof MyDialog>>(null)
-  const hAddCourse = () => {
+  const hAddSubject = () => {
     editRef.value.showDialog('科目', '添加', null)
   }
-  const hDetail = (item: Subject) => {
-    router.push(`/course/${item.id}`)
-  }
-  const hEditCourse = (item: Subject) => {
+  // const hDetail = (item: Subject) => {
+  //   router.push(`/course/${item.id}`)
+  // }
+  const hEditSubject = (item: Subject) => {
     editRef.value.showDialog('科目', '修改', item)
   }
 
-  const hShowDialog = (typeName, opName, row = null) => {
-    editRef.value.showDialog(typeName, opName, row)
-  }
   // 删除科目
   const hDel = async (row) => {
     await doDelete(row.id)
-    $baseMessage('OK', 'success', 'vab-hey-message-success')
+    gp.$baseMessage('OK', 'success', 'vab-hey-message-success')
   }
 
-  const { list, isLoading } = useCourse()
+  const { list, isLoading } = useSubject()
 
   const fetchData = async () => {
     isLoading.value = true
