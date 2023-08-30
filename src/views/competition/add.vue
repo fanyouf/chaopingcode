@@ -36,7 +36,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="save">确 定</el-button>
-        <el-button @click="close">取 消</el-button>
+        <!-- <el-button @click="close">取 消</el-button> -->
       </el-form-item>
     </el-form>
   </section>
@@ -97,12 +97,10 @@
   const doSave = async (data) => {
     await doAddCompetition(data)
     gp.$baseMessage('添加成功', 'success', 'vab-hey-message-success')
-    bus.emit()
   }
   const doEdit = async (data) => {
     await doEditCompetition(data)
     gp.$baseMessage('添加成功', 'success', 'vab-hey-message-success')
-    bus.emit()
   }
   const save = () => {
     formRef.value.validate(async (valid) => {
@@ -112,9 +110,7 @@
         } else {
           await doSave(data.value)
         }
-        // $baseMessage(msg, 'success', 'vab-hey-message-success')
-        // emit('fetch-data')
-        close()
+        bus.emit()
       }
     })
   }

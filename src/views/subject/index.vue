@@ -3,9 +3,10 @@
     <my-page
       :list="list"
       title="添加科目"
+      :op-names="['del', 'add', 'edit']"
       @del-container="hDel"
       @add-container="hAddSubject"
-      @view-container="hEditSubject"
+      @edit-container="hEditSubject"
     >
       <template #header>
         <h3>科目列表</h3>

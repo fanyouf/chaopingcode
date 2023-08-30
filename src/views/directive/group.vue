@@ -17,6 +17,18 @@
           {{ $route.query.groupTitle }}
         </h3>
       </template>
+      <template #default="{ item }">
+        <div style="padding: 10px">
+          <img
+            style="display: block; margin: 5px auto"
+            :src="item.logo"
+            alt=""
+          />
+          <p>
+            {{ item.intro }}
+          </p>
+        </div>
+      </template>
     </my-page>
     <my-dialog ref="editRef" @fetch-data="fetchData" />
   </div>
@@ -83,11 +95,13 @@
     console.log(directive)
     editRef.value.showDialog('指令', '修改', { ...directive, type: state.type })
   }
+  const bus = useEventBus<string>('directive')
 
   const hDelDirective = async (item) => {
     await delDirective(item.id)
     gp.$baseMessage('删除成功', 'success', 'vab-hey-message-success')
     await fetchData()
+    bus.emit()
   }
 
   const hEditDirectiveGroup = (knowledgeGroup) => {

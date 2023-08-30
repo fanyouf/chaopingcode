@@ -118,6 +118,7 @@ interface WorkCate {
   remark: string
   order: number
   state: boolean
+  subjectID: number
 }
 
 interface Work {

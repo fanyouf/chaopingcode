@@ -45,6 +45,7 @@
     cover: '', // 指令的图片
     order: 1,
     state: true,
+    subjectID: -1,
     remark: '备注', // 备注
   })
 
@@ -74,8 +75,11 @@
       data.cover = row.cover // 指令的图片
       data.order = row.order
       data.remark = row.remark
+      data.subjectID = row.subjectID
     } else if (opName === '添加' && objectName === '作品分类') {
       data.id = null
+
+      data.subjectID = row.subjectID
       data.title = ''
       data.intro = '' // 介绍
       data.cover = '' // 图片

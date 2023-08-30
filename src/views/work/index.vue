@@ -10,8 +10,8 @@
       @edit-container="hEditWorkGroup"
     >
       <template #header>
-        <h3>选择科目，当前科目是:{{ curCourse.title }}</h3>
-        <my-subject v-model="curCourse" />
+        <h3>选择科目，当前科目是:{{ curSubject.title }}</h3>
+        <my-subject v-model="curSubject" />
       </template>
       <template #default="{ item }">
         <div class="Work-group">
@@ -34,7 +34,7 @@
   import myDialog from './work-type-dialog.vue'
   import router from '~/src/router'
 
-  const curCourse = ref({ id: -1, title: '' })
+  const curSubject = ref({ id: -1, title: '' })
   const editRef = ref<InstanceType<typeof myDialog>>(null)
   // const hChangeCourse = () => {}
   const state = reactive({
@@ -47,13 +47,15 @@
 
   const fetchData = async () => {
     state.listLoading = true
-    const res = await getList({})
+    const res = await getList({ subjectID: curSubject.value.id })
     console.log(res)
     state.list = res.data.list
     state.listLoading = false
   }
   const hAddWorkGroup = () => {
-    editRef.value.showDialog('作品分类', '添加', {})
+    editRef.value.showDialog('作品分类', '添加', {
+      subjectID: curSubject.value.id,
+    })
   }
   const hAddWork = (WorkGroup) => {
     router.push('/work/add')
@@ -81,12 +83,12 @@
   // }
 
   watch(
-    () => curCourse,
+    () => curSubject,
     () => {
-      console.log('1', curCourse)
+      console.log('1', curSubject)
       fetchData()
     },
-    { immediate: true }
+    { deep: true }
   )
 
   // onActivated(() => {

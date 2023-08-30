@@ -19,11 +19,18 @@
 
       <template #default="{ item }">
         <!-- {{ item }} -->
-        <div>
-          <img v-if="item.type === 'image'" :src="item.image" />
+        <div style="padding: 10px">
+          <img
+            v-if="item.type === 'image'"
+            :src="item.image"
+            style="display: block; margin: 5px auto"
+          />
           <p>{{ item.intro }}</p>
-          <p @click="hViewDirectiveGroup(item)">
-            指令数量： {{ item.directives?.length }}
+          <p>
+            指令数量： {{ item.directives?.length }} 个
+            <el-button type="text" @click="hViewDirectiveGroup(item)">
+              查看
+            </el-button>
           </p>
         </div>
       </template>
@@ -46,11 +53,10 @@
   import { getList, del as delDirectiveGroup } from '@/api/directiveGroup'
   import { gp } from '@gp'
   import myDialog from './directive-dialog.vue'
+
   const router = useRouter()
   const curSubject = ref({ id: -1, title: '' })
-  // const $baseConfirm = inject('$baseConfirm')
-  // const $baseMessage = inject('$baseMessage')
-  const subject = ref('c++')
+  const bus = useEventBus<string>('directive')
   const editRef = ref<InstanceType<typeof myDialog>>(null)
   // const hChangeCourse = () => {}
   const state = reactive({
@@ -67,13 +73,15 @@
       subjectID: curSubject.value.id,
       withDirective: true,
     })
-    console.log(res)
     state.list = res.data.list
     state.listLoading = false
   }
+  // 监听来自
+  bus.on(() => fetchData())
+
   const hAddDirectiveGroup = () => {
     editRef.value.showDialog('指令分类', '添加', {
-      subject_id: curSubject.value.id,
+      subjectID: curSubject.value.id,
       subjectTitle: curSubject.value.title,
     })
   }
@@ -86,18 +94,25 @@
       `/directive/group/${directiveGroup.id}?subjectTitle=${curSubject.value.title}&groupTitle=${directiveGroup.title}`
     )
   }
-  const hEditDirective = (knowledge) => {
-    editRef.value.showDialog('指令', '修改', curSubject.value.id, knowledge)
-  }
+  // const hEditDirective = (knowledge) => {
+  //   editRef.value.showDialog('指令', '修改', curSubject.value.id, knowledge)
+  // }
 
   const hDelDirectiveGroup = async (directiveGroup) => {
+    if (directiveGroup.directives.length > 0) {
+      gp.$baseMessage('不能删除有指令的分组', 'error')
+      return
+    }
     await delDirectiveGroup(directiveGroup.id)
-    gp.$baseMessage('删除指令分组成功', 'success')
+    gp.$baseMessage('删除指令分类成功', 'success')
     fetchData()
   }
 
-  const hEditDirectiveGroup = (knowledgeGroup) => {
-    editRef.value.showDialog('目录', '修改', knowledgeGroup)
+  const hEditDirectiveGroup = (directiveGroup) => {
+    editRef.value.showDialog('指令分类', '修改', {
+      ...directiveGroup,
+      subjectTitle: curSubject.value.title,
+    })
   }
   // const hDel = (typeName, row) => {
   //   $baseConfirm('你确定要删除当前项吗', null, async () => {

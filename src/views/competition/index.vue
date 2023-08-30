@@ -41,14 +41,16 @@
 
   import { useEventBus } from '@vueuse/core'
 
-  const bus = useEventBus<string>('news')
-
-  function listener() {
-    console.log('listener ')
-    fetchData()
+  const fetchData = async () => {
+    state.isLoading = true
+    const { data } = await getList({})
+    state.list = data.list
+    state.isLoading = false
   }
 
-  const unsubscribe = bus.on(listener)
+  const bus = useEventBus<string>('news')
+
+  const unsubscribe = bus.on(fetchData)
 
   onUnmounted(() => {
     unsubscribe()
@@ -88,13 +90,6 @@
     await delCompetition(row.id)
     gp.$baseMessage('OK', 'success', 'vab-hey-message-success')
     fetchData()
-  }
-
-  const fetchData = async () => {
-    state.isLoading = true
-    const { data } = await getList({})
-    state.list = data.list
-    state.isLoading = false
   }
 
   onMounted(() => {

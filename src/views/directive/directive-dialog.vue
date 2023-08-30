@@ -63,18 +63,18 @@
 </template>
 
 <script setup lang="ts">
-  import useSubject from '~/src/hooks/useSubject'
-  import { add as doAddDirectiveGroup } from '@/api/directiveGroup'
+  import { objUnit } from '@/utils'
+  import {
+    add as doAddDirectiveGroup,
+    put as doUpdateDirectiveGroup,
+  } from '@/api/directiveGroup'
   import { gp } from '@gp'
   import {
     add as doAddDirective,
     put as doUpdateDirective,
   } from '@/api/directive'
-  const $baseMessage = inject('$baseMessage')
 
   const emit = defineEmits(['fetch-data', 'view-directives'])
-
-  const { list: subjects } = useSubject()
 
   const data = reactive({
     id: '',
@@ -103,7 +103,7 @@
   const showDialog = (
     objectName: OPObject = '目录',
     opName: OPType = '添加',
-    row = null
+    row: any = {}
   ) => {
     state.objectName = objectName
     state.opName = opName
@@ -111,7 +111,6 @@
     if (opName === '添加' && objectName === '指令分类') {
       data.id = null
       data.directiveGroupID = null
-
       data.title = ''
       data.intro = ''
       data.type = 'image'
@@ -147,6 +146,20 @@
       data.order = row.order
       data.state = true
       data.directiveGroupID = row.directiveGroupID
+    } else if (opName === '修改' && objectName === '指令分类') {
+      data.subjectID = row.subject
+      data.id = row.id
+      data.type = row.type
+
+      data.title = row.title
+      data.intro = row.intro
+      data.logo = row.logo
+      data.type = row.type
+      data.remark = row.remark
+      data.order = row.order
+      data.state = true
+      data.subjectTitle = row.subjectTitle
+      data.directiveGroupID = row.directiveGroupID
     }
 
     cTitle.value = `${state.objectName}-${state.opName}`
@@ -162,25 +175,26 @@
       emit('fetch-data')
     } else if (state.objectName === '指令' && state.opName === '添加') {
       await doAddDirective(data)
+      // 让页面跳转到详情页
       emit('view-directives', { id: data.directiveGroupID, title: data.title })
     } else if (state.objectName === '指令' && state.opName === '修改') {
       await doUpdateDirective(data)
-      emit('fetch-data', { id: data.directiveGroupID, title: data.title })
+      emit('fetch-data')
+    } else if (state.objectName === '指令分类' && state.opName === '修改') {
+      await doUpdateDirectiveGroup(data)
+      emit('fetch-data')
     }
     gp.$baseMessage(
       `${state.opName + state.objectName}成功`,
       'success',
       'vab-hey-message-success'
     )
-    // emit('fetch-data')
+    close()
   }
   const save = () => {
     formRef.value.validate(async (valid) => {
       if (valid) {
         await doSave(data)
-        // $baseMessage(msg, 'success', 'vab-hey-message-success')
-        // emit('fetch-data')
-        close()
       }
     })
   }

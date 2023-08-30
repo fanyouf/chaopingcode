@@ -2,39 +2,47 @@
   <section class="competition-add-container">
     <h3>添加作品</h3>
     <el-form ref="formRef" label-width="80px" :model="data" :rules="rules">
-      <el-form-item label="作品名称" prop="name">
+      <el-form-item label="作品名称" prop="title">
         <el-input
-          v-model="data.name"
+          v-model="data.title"
           style="width: 500px"
           aria-placeholder="请输入作品名称"
         />
       </el-form-item>
       <el-form-item label="作品编号" prop="code">
         <el-input
-          v-model="data.code"
+          v-model="data.no"
           style="width: 500px"
           aria-placeholder="请输入作品统一编号"
         />
       </el-form-item>
+
+      <el-form-item label="科目与分类" prop="productGroupIDs">
+        <el-cascader
+          :options="options"
+          :props="{ multiple: true, checkStrictly: true }"
+          clearable
+        />
+      </el-form-item>
+
       <el-form-item label="作品简介" prop="intro">
         <el-input
           v-model="data.intro"
+          type="textarea"
           style="width: 500px"
           aria-placeholder="请输入作品简介"
         />
       </el-form-item>
-      <el-form-item label="作品亮点" prop="intro">
+      <el-form-item label="作品亮点" prop="highlight">
         <el-input
-          v-model="data.points"
+          v-model="data.highlight"
+          type="textarea"
           style="width: 500px"
           aria-placeholder="请输入作品亮点"
         />
       </el-form-item>
-      <el-form-item label="所属分类" prop="diff">
-        <ExercisesKnowledges v-model="data.cate" />
-      </el-form-item>
       <el-form-item label="作品图片" prop="intro">
-        <my-upload-image v-model="data.logo" />
+        <my-upload-image v-model="data.cover" />
       </el-form-item>
 
       <el-form-item label="基础代码" prop="codeBaseUrl">文件上传</el-form-item>
@@ -44,7 +52,7 @@
 
       <el-form-item label="代码行数" prop="codeRowNum">
         <el-input
-          v-model.number="data.codeRowNum"
+          v-model.number="data.codeLineNum"
           style="width: 100px"
           type="number"
         />
@@ -52,7 +60,7 @@
 
       <el-form-item label="效果演示" prop="netpage">
         <el-input
-          v-model="data.previewUrl"
+          v-model="data.demoAddress"
           placeholder="请效果演示的地址"
           style="width: 500px"
         >
@@ -60,34 +68,54 @@
         </el-input>
       </el-form-item>
       <el-form-item label="相关知识点" prop="knowledges">
-        <ExercisesKnowledges v-model="data.knowledges" />
+        <my-input-dialog
+          v-model="data.knowledgeIDs"
+          name="知识"
+          getapiname="name"
+          :getapi="getKnowledge"
+          :columns="[
+            { label: '知识点名称', prop: 'name', width: 120 },
+            { label: 'title', prop: 'title' },
+          ]"
+        />
       </el-form-item>
 
       <el-form-item label="相关指令" prop="directives">
-        <ExercisesKnowledges v-model="data.diectives" />
+        <my-input-dialog
+          v-model="data.directiveIDs"
+          name="指令"
+          getapiname="name"
+          :getapi="getDirective"
+          :columns="[
+            { label: '指令名称', prop: 'name', width: 120 },
+            { label: 'title', prop: 'title' },
+          ]"
+        />
       </el-form-item>
 
-      <el-form-item label="涉及学科" prop="diff">
-        <el-checkbox-group v-model="data.subject">
-          <el-checkbox label="语文" name="type" />
-          <el-checkbox label="数学" name="type" />
-          <el-checkbox label="英语" name="type" />
-          <el-checkbox label="物理" name="type" />
-          <el-checkbox label="生物" name="type" />
-          <el-checkbox label="化学" name="type" />
+      <el-form-item label="涉及学科" prop="subject">
+        <el-checkbox-group v-model="data.courses">
+          <el-checkbox
+            v-for="item in SUBJECT"
+            :key="item.value"
+            :label="item.value"
+            name="type"
+          >
+            {{ item.label }}
+          </el-checkbox>
         </el-checkbox-group>
       </el-form-item>
       <el-form-item label="习题难度" prop="diff">
-        <el-radio-group v-model="data.diff">
-          <el-radio label="简单">简单</el-radio>
-          <el-radio label="中等">中等</el-radio>
-          <el-radio label="困难">困难</el-radio>
-          <el-radio label="挑战">挑战</el-radio>
+        <el-radio-group v-model="data.level">
+          <el-radio label="easy">简单</el-radio>
+          <el-radio label="medium">中等</el-radio>
+          <el-radio label="hard">困难</el-radio>
+          <el-radio label="challenge">挑战</el-radio>
         </el-radio-group>
       </el-form-item>
 
       <el-form-item label="注意事项" prop="subjectContent">
-        <ExercisesInput v-model="data.tips" />
+        <ExercisesInput v-model="data.note" />
       </el-form-item>
 
       <el-form-item label="作品备注" prop="remark">
@@ -109,36 +137,320 @@
 <script setup lang="ts">
   import ExercisesInput from './components/exercises-input.vue'
   import ExercisesKnowledges from './components/exercises-knowledges.vue'
-  import { doAdd as doAddCourse } from '@/api/course'
+  import { add as doAddWork } from '@/api/work'
   const $baseMessage = inject('$baseMessage')
+  import { getList } from '@/api/workCate'
+  import { getList as getKnowledge } from '@/api/knowledge'
+  import { getList as getDirective } from '@/api/directive'
+
+  const SUBJECT = [
+    { value: 'chinese', label: '语文' },
+    { value: 'mathematics', label: '数学' },
+    { value: 'english', label: '英语' },
+    { value: 'physics', label: '体育' },
+    { value: 'creature', label: '生物' },
+    { value: 'chemistry', label: '化学' },
+  ]
 
   const emit = defineEmits(['fetch-data'])
 
+  onMounted(async () => {
+    const res = await getList({ withProduct: true })
+    console.log(res)
+  })
+
+  const options = [
+    {
+      value: 'zhinan',
+      label: '指南',
+      children: [
+        {
+          value: 'shejiyuanze',
+          label: '设计原则',
+          children: [
+            {
+              value: 'yizhi',
+              label: '一致',
+            },
+            {
+              value: 'fankui',
+              label: '反馈',
+            },
+            {
+              value: 'xiaolv',
+              label: '效率',
+            },
+            {
+              value: 'kekong',
+              label: '可控',
+            },
+          ],
+        },
+        {
+          value: 'daohang',
+          label: '导航',
+          children: [
+            {
+              value: 'cexiangdaohang',
+              label: '侧向导航',
+            },
+            {
+              value: 'dingbudaohang',
+              label: '顶部导航',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      value: 'zujian',
+      label: '组件',
+      children: [
+        {
+          value: 'basic',
+          label: 'Basic',
+          children: [
+            {
+              value: 'layout',
+              label: 'Layout 布局',
+            },
+            {
+              value: 'color',
+              label: 'Color 色彩',
+            },
+            {
+              value: 'typography',
+              label: 'Typography 字体',
+            },
+            {
+              value: 'icon',
+              label: 'Icon 图标',
+            },
+            {
+              value: 'button',
+              label: 'Button 按钮',
+            },
+          ],
+        },
+        {
+          value: 'form',
+          label: 'Form',
+          children: [
+            {
+              value: 'radio',
+              label: 'Radio 单选框',
+            },
+            {
+              value: 'checkbox',
+              label: 'Checkbox 多选框',
+            },
+            {
+              value: 'input',
+              label: 'Input 输入框',
+            },
+            {
+              value: 'input-number',
+              label: 'InputNumber 计数器',
+            },
+            {
+              value: 'select',
+              label: 'Select 选择器',
+            },
+            {
+              value: 'cascader',
+              label: 'Cascader 级联选择器',
+            },
+            {
+              value: 'switch',
+              label: 'Switch 开关',
+            },
+            {
+              value: 'slider',
+              label: 'Slider 滑块',
+            },
+            {
+              value: 'time-picker',
+              label: 'TimePicker 时间选择器',
+            },
+            {
+              value: 'date-picker',
+              label: 'DatePicker 日期选择器',
+            },
+            {
+              value: 'datetime-picker',
+              label: 'DateTimePicker 日期时间选择器',
+            },
+            {
+              value: 'upload',
+              label: 'Upload 上传',
+            },
+            {
+              value: 'rate',
+              label: 'Rate 评分',
+            },
+            {
+              value: 'form',
+              label: 'Form 表单',
+            },
+          ],
+        },
+        {
+          value: 'data',
+          label: 'Data',
+          children: [
+            {
+              value: 'table',
+              label: 'Table 表格',
+            },
+            {
+              value: 'tag',
+              label: 'Tag 标签',
+            },
+            {
+              value: 'progress',
+              label: 'Progress 进度条',
+            },
+            {
+              value: 'tree',
+              label: 'Tree 树形控件',
+            },
+            {
+              value: 'pagination',
+              label: 'Pagination 分页',
+            },
+            {
+              value: 'badge',
+              label: 'Badge 标记',
+            },
+          ],
+        },
+        {
+          value: 'notice',
+          label: 'Notice',
+          children: [
+            {
+              value: 'alert',
+              label: 'Alert 警告',
+            },
+            {
+              value: 'loading',
+              label: 'Loading 加载',
+            },
+            {
+              value: 'message',
+              label: 'Message 消息提示',
+            },
+            {
+              value: 'message-box',
+              label: 'MessageBox 弹框',
+            },
+            {
+              value: 'notification',
+              label: 'Notification 通知',
+            },
+          ],
+        },
+        {
+          value: 'navigation',
+          label: 'Navigation',
+          children: [
+            {
+              value: 'menu',
+              label: 'NavMenu 导航菜单',
+            },
+            {
+              value: 'tabs',
+              label: 'Tabs 标签页',
+            },
+            {
+              value: 'breadcrumb',
+              label: 'Breadcrumb 面包屑',
+            },
+            {
+              value: 'dropdown',
+              label: 'Dropdown 下拉菜单',
+            },
+            {
+              value: 'steps',
+              label: 'Steps 步骤条',
+            },
+          ],
+        },
+        {
+          value: 'others',
+          label: 'Others',
+          children: [
+            {
+              value: 'dialog',
+              label: 'Dialog 对话框',
+            },
+            {
+              value: 'tooltip',
+              label: 'Tooltip 文字提示',
+            },
+            {
+              value: 'popover',
+              label: 'Popover 弹出框',
+            },
+            {
+              value: 'card',
+              label: 'Card 卡片',
+            },
+            {
+              value: 'carousel',
+              label: 'Carousel 走马灯',
+            },
+            {
+              value: 'collapse',
+              label: 'Collapse 折叠面板',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      value: 'ziyuan',
+      label: '资源',
+      children: [
+        {
+          value: 'axure',
+          label: 'Axure Components',
+        },
+        {
+          value: 'sketch',
+          label: 'Sketch Templates',
+        },
+        {
+          value: 'jiaohu',
+          label: '组件交互文档',
+        },
+      ],
+    },
+  ]
+
   const data = reactive({
     // id: '',
-    name: '作品名字', // 标题
-    title: '测试标题', // 标题
-    code: 'xz001', // 作品编号
-    intro: '', // 作品介绍
-    points: '', // 作品亮点
-    cate: '', // 作品分类
-    logo: '', // 作品图片
-    codeBaseUrl: '', // 作品基础代码
-    codeFinishedUrl: '', // 作品完成代码
-    codeRowNum: 10, // 代码行数
-    previewUrl: 'www.baidu.com', // 效果演示地址
-    knowledges: '', // 知识点
-    diectives: '', // 相关指令
-    subject: [], // 学科
-    diff: 1, // 难度
-    tips: '', // 注意事项
+    title: '飞机大战', // 标题
+    no: 'xz001', // 作品编号
+    intro: '用100个积木块实现一个飞机大战的游戏', // 作品介绍
+    highlight: '游戏非常的好玩~~', // 作品亮点
+    cate: '1', // 作品分类
+    cover: '', // 作品图片
+    codeBasic: '1', // 作品基础代码
+    codeReference: '1', // 作品完成代码
+    codeLineNum: 10, // 代码行数
+    demoAddress: 'www.baidu.com', // 效果演示地址
+    productGroupIDs: [],
+    knowledgeIDs: [], // 知识点
+    subjectIDs: [], // 科目
+    directiveIDs: [], // 相关指令
+    courses: ['mathematics'], // 学科
+    order: 1,
+    level: 'medium', // 难度
+    note: '1', // 注意事项
     remark: '备注', // 备注
   })
 
-  setTimeout(() => {
-    data.remark = 'ajax数据'
-    console.log('ajax数据')
-  }, 5000)
   const rules = {
     title: [{ required: true, trigger: 'blur', message: '请输入标题' }],
   }
@@ -174,17 +486,24 @@
     formRef.value.resetFields()
     visible.value = false
   }
-  const doSave = async (data) => {
-    if (state.objectName === '科目' && state.opName === '添加') {
-      await doAddCourse(data)
+  const doSave = async () => {
+    const d = {
+      ...data,
+      courses: data.courses.join(','),
+      directiveIDs: data.directiveIDs.map((it) => it.id),
+      knowledgeIDs: data.knowledgeIDs.map((it) => it.id),
     }
+    console.log(d)
+    debugger
+
+    await doAddWork(d)
     $baseMessage('添加成功', 'success', 'vab-hey-message-success')
     emit('fetch-data')
   }
   const save = () => {
     formRef.value.validate(async (valid) => {
       if (valid) {
-        await doSave(data)
+        await doSave()
         // $baseMessage(msg, 'success', 'vab-hey-message-success')
         // emit('fetch-data')
         close()

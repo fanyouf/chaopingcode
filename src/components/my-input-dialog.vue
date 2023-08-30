@@ -26,7 +26,7 @@
       <el-form-item label="知识点">
         <el-input v-model.trim="keyword" style="width: 300px" />
         &nbsp;&nbsp;&nbsp;
-        <el-button type="success">查询</el-button>
+        <el-button type="success" @click="hSearch">查询</el-button>
       </el-form-item>
     </el-form>
 
@@ -61,7 +61,7 @@
 
   const props = defineProps<{
     getapiname: string
-    getapi: () => Promise<any>
+    getapi: (any) => Promise<any>
     name: string
     modelValue: []
     columns: { prop: string; label: string; width?: number }[]
@@ -80,10 +80,16 @@
   const visible = ref(false)
   const multipleSelection = ref([])
   onMounted(async () => {
-    const res = await props.getapi()
+    const res = await props.getapi({ keyword: keyword.value })
     dataList.value = res.data.list
     console.log('加载数据....', res.data.list)
   })
+
+  const hSearch = async () => {
+    const res = await props.getapi({ keyword: keyword.value })
+    dataList.value = res.data.list
+  }
+
   watch(
     () => multipleSelection,
     () => {

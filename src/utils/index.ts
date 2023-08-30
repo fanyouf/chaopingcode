@@ -246,3 +246,22 @@ export function shuffle(array: any[]) {
   }
   return array
 }
+
+export function copy(to: object, from: object) {
+  const keys = Object.keys(to)
+
+  keys.forEach((key) => {
+    to[key] = from[key]
+  })
+}
+
+export function delProp(obj: object, keys: string[]) {
+  keys.forEach((key) => {
+    delete obj[key]
+  })
+}
+
+export const objUnit = {
+  copy,
+  delProp,
+}
