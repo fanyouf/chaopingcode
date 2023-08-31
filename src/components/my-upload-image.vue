@@ -2,6 +2,7 @@
   <div>
     <el-upload
       ref="refUpload"
+      accept=".jpg,.png,.gif,.jpeg"
       class="avatar-uploader"
       action="#"
       :show-file-list="false"
@@ -112,16 +113,19 @@
   }
 
   const beforeAvatarUpload = (file) => {
-    const isJPG = file.type === 'image/jpeg'
+    const type = file.name.split('.').pop()
+
     const isLt2M = file.size / 1024 / 1024 < 2
 
-    if (!isJPG) {
-      ElMessage.error('上传头像图片只能是 JPG 格式!')
+    if (!['png', 'jpg', 'jpeg', 'gif'].includes(type)) {
+      ElMessage.error('上传头像图片只能是 JPG PNG JPEG 格式!')
+      return false
     }
     if (!isLt2M) {
       ElMessage.error('上传头像图片大小不能超过 2MB!')
+      return false
     }
-    return isJPG && isLt2M
+    return true
   }
 </script>
 <style scoped>

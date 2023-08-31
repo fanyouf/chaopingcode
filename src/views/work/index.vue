@@ -23,9 +23,9 @@
               <div
                 v-for="item in cateList"
                 :key="item.id"
-                :class="{ selected: formData.workCateId === item.id }"
+                :class="{ selected: formData.productGroupID === item.id }"
                 class="item"
-                @click="formData.workCateId = item.id"
+                @click="formData.productGroupID = item.id"
               >
                 {{ item.title }}
               </div>
@@ -97,6 +97,9 @@
             <h3>{{ item.title }}</h3>
 
             <p class="section-item-body-intro">{{ item.intro }}</p>
+            <p>
+              <el-button type="danger" @click="hDel(item.id)">删除</el-button>
+            </p>
 
             <!-- <div v-if="hasOp" class="header-ops">
               <vab-icon
@@ -137,14 +140,12 @@
 <script setup lang="ts">
   import { getList } from '@/api/course'
   import { SUBJECT } from '@/constant'
-  import { getList as getWorks } from '@/api/work'
-
-  const $baseConfirm = inject('$baseConfirm')
-  const $baseMessage = inject('$baseMessage')
+  import { getList as getWorks, del as delWork } from '@/api/work'
+  import { gp } from '@gp'
 
   const formData = reactive({
     subjectId: null,
-    workCateId: null,
+    productGroupID: null,
     courses: [],
     level: 'medium',
     keyword: '', // 关键字
@@ -154,7 +155,13 @@
     console.log('查询结果', data)
     workList.value = data.list
   }
-
+  const hDel = (id) => {
+    gp.$baseConfirm('你确定要删除当前项吗', null, async () => {
+      await delWork(id)
+      gp.$baseMessage('删除成功')
+      search()
+    })
+  }
   const subjectList = ref<Subject[]>([])
   const workList = ref<Work[]>([])
   onMounted(async () => {
@@ -181,20 +188,20 @@
 
   console.log('list', subjectList)
 
-  const hDel = (item) => {
-    if (
-      item.children?.length ||
-      item.directives?.length ||
-      item.knowledge?.length
-    ) {
-      $baseMessage('还有子项，不能删除', 'error', 'vab-hey-message-error')
-      return
-    }
+  // const hDel = (item) => {
+  //   if (
+  //     item.children?.length ||
+  //     item.directives?.length ||
+  //     item.knowledge?.length
+  //   ) {
+  //     $baseMessage('还有子项，不能删除', 'error', 'vab-hey-message-error')
+  //     return
+  //   }
 
-    $baseConfirm('你确定要删除当前项吗', null, () => {
-      emit('del-container', item)
-    })
-  }
+  //   $baseConfirm('你确定要删除当前项吗', null, () => {
+  //     emit('del-container', item)
+  //   })
+  // }
 </script>
 <style lang="scss" scoped>
   .items-container {

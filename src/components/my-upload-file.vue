@@ -1,6 +1,8 @@
 <template>
   <div>
+    {{ accept }}
     <el-upload
+      :accept="accept"
       action="#"
       :show-file-list="true"
       :file-list="fileList"
@@ -28,9 +30,16 @@
 
   import { ElMessage } from 'element-plus'
 
-  defineProps<{
-    modelValue: string
-  }>()
+  defineProps({
+    modelValue: {
+      type: String,
+      default: '',
+    },
+    accept: {
+      type: String,
+      default: '.py,.sb3,.cpp',
+    },
+  })
 
   const emit = defineEmits(['update:modelValue'])
 
