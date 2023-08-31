@@ -1,5 +1,12 @@
 <template>
-  <el-dialog v-model="visible" :title="cTitle" width="500px" @close="close">
+  <el-dialog
+    v-model="visible"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+    :title="cTitle"
+    width="500px"
+    @close="close"
+  >
     <el-form ref="formRef" :model="data" label-position="top">
       <el-form-item label="属性值" prop="val">
         <el-input v-model="data.val" aria-placeholder="请输入" />
@@ -17,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-  import { addValue } from '@/api/label'
+  import { addValue, putValue } from '@/api/label'
   import { gp } from '@gp'
   // import {
   //   add as doAddDirective,
@@ -27,10 +34,11 @@
   const emit = defineEmits(['fetch-data', 'view-directives'])
 
   const data = reactive({
-    id: '',
+    id: -1,
     labelID: -1, // 属性id
     order: 1,
     val: '',
+    state: true,
   })
   const formRef = ref(null)
   const visible = ref(false)
@@ -51,6 +59,11 @@
       data.id = null
       data.labelID = row.labelID
       data.order = 1
+    } else if (opName === '修改' && objectName === '属性值') {
+      data.id = row.id
+      data.labelID = row.labelID
+      data.order = row.order
+      data.val = row.val
     }
 
     cTitle.value = `${state.objectName}-${state.opName}`
@@ -64,13 +77,16 @@
     if (state.objectName === '属性值' && state.opName === '添加') {
       await addValue(data)
       emit('fetch-data')
+    } else if (state.objectName === '属性值' && state.opName === '修改') {
+      await putValue(data)
+      emit('fetch-data')
     }
+
     gp.$baseMessage(
       `${state.opName + state.objectName}成功`,
       'success',
       'vab-hey-message-success'
     )
-    // emit('fetch-data')
   }
   const save = () => {
     formRef.value.validate(async (valid) => {

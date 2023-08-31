@@ -5,6 +5,7 @@
       item-type="属性"
       title="添加属性"
       has-op-top
+      :op-names="['add', 'edit', 'del']"
       @add-container="hAddLabel"
       @del-container="hDelLabel"
       @add-item="hAddLabelValue"
@@ -26,7 +27,7 @@
             <span
               title="点击查看"
               style="cursor: pointer"
-              @click="hEditLabel(it)"
+              @click="hEditLabelValue(it)"
             >
               {{ it.val }}
             </span>
@@ -89,6 +90,11 @@
   const hEditLabel = (label) => {
     editRef.value.showDialog('属性', '修改', label)
   }
+
+  const hEditLabelValue = (labelValue) => {
+    editValueRef.value.showDialog('属性值', '修改', labelValue)
+  }
+
   // 删除属性
   const hDelLabel = async (Label) => {
     await delLabel(Label.id)

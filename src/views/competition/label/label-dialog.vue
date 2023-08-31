@@ -1,5 +1,12 @@
 <template>
-  <el-dialog v-model="visible" :title="cTitle" width="500px" @close="close">
+  <el-dialog
+    v-model="visible"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+    :title="cTitle"
+    width="500px"
+    @close="close"
+  >
     <el-form ref="formRef" :model="data" :rules="rules" label-position="top">
       <el-form-item label="属性名称" prop="title">
         <el-input v-model="data.title" aria-placeholder="请输入" />
@@ -40,7 +47,7 @@
 
 <script setup lang="ts">
   import useCompetition from '@/hooks/useCompetition'
-  import { add as doAddLabel } from '@/api/label'
+  import { add as doAddLabel, put as doEditLabel } from '@/api/label'
   import { gp } from '@gp'
   // import {
   //   add as doAddDirective,
@@ -89,7 +96,7 @@
       data.remark = '备注' // 备注
     } else if (opName === '修改' && objectName === '属性') {
       data.id = row.id
-      data.title = ''
+      data.title = row.title
       data.entityID = row.entityID
       data.order = 1
       data.state = true
@@ -106,6 +113,9 @@
   const doSave = async (data) => {
     if (state.objectName === '属性' && state.opName === '添加') {
       await doAddLabel(data)
+      emit('fetch-data')
+    } else if (state.objectName === '属性' && state.opName === '修改') {
+      await doEditLabel(data)
       emit('fetch-data')
     }
     gp.$baseMessage(
