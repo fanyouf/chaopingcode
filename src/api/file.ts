@@ -12,3 +12,16 @@ export function upload(data?: any) {
     data,
   })
 }
+
+/**
+ * 上传普通文件
+ * @param data {file: FormData}
+ * @returns
+ */
+export function uploadFile(data?: any) {
+  return request({
+    url: 'http://8.142.32.7:8888/file/upload',
+    method: 'post',
+    data,
+  })
+}
