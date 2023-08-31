@@ -1,5 +1,12 @@
 <template>
-  <el-dialog v-model="visible" :title="cTitle" width="500px" @close="close">
+  <el-dialog
+    v-model="visible"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+    :title="cTitle"
+    width="500px"
+    @close="close"
+  >
     <el-form ref="formRef" :model="data" :rules="rules" label-position="top">
       <el-form-item :label="state.objectName + '名称'" prop="name">
         <el-input v-model="data.title" aria-placeholder="请输入" />

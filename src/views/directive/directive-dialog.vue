@@ -1,5 +1,12 @@
 <template>
-  <el-dialog v-model="visible" :title="cTitle" width="600px" @close="close">
+  <el-dialog
+    v-model="visible"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+    :title="cTitle"
+    width="600px"
+    @close="close"
+  >
     <el-form ref="formRef" label-width="100px" :model="data" :rules="rules">
       <!-- label-position="top" -->
       <el-form-item
@@ -33,9 +40,9 @@
       <el-form-item
         v-if="data.type === 'image'"
         :label="state.objectName + '图片'"
-        prop="intro"
+        prop="image"
       >
-        <my-upload-image v-model="data.logo" />
+        <my-upload-image v-model="data.image" />
       </el-form-item>
 
       <el-form-item label="显示排序" prop="order">
@@ -74,7 +81,7 @@
     subjectID: -1,
     intro: '', // 介绍
     type: 'image', // image or text
-    logo: '', // 指令的图片
+    image: '', // 指令的图片
     order: 1,
     state: false,
     remark: '备注', // 备注
@@ -117,7 +124,7 @@
 
       data.title = ''
       data.intro = ''
-      data.logo = data.type === 'image' ? '' : null
+      data.image = data.type === 'image' ? '' : null
       data.remark = ''
       data.order = 1
       data.state = true
@@ -130,7 +137,7 @@
 
       data.title = row.title
       data.intro = row.intro
-      data.logo = row.logo
+      data.image = row.image
       data.type = row.type
       data.remark = row.remark
       data.order = row.order
@@ -143,7 +150,7 @@
 
       data.title = row.title
       data.intro = row.intro
-      data.logo = row.logo
+      data.image = row.image
       data.type = row.type
       data.remark = row.remark
       data.order = row.order
