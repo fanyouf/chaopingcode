@@ -18,10 +18,10 @@
       </el-form-item>
 
       <el-form-item label="科目与分类" prop="productGroupIDs">
+        <!-- :props="{ multiple: true, checkStrictly: true }" -->
         <el-cascader
           v-model="data.productGroupIDs"
           :options="courseAndWorkgroup"
-          :props="{ multiple: true, checkStrictly: true }"
           clearable
           style="width: 500px"
         />
@@ -78,8 +78,8 @@
           getapiname="name"
           :getapi="getKnowledge"
           :columns="[
-            { label: '知识点名称', prop: 'name', width: 120 },
-            { label: 'title', prop: 'title' },
+            { label: '知识点名称', prop: 'title' },
+            // { label: '标题', prop: 'title' },
           ]"
         />
       </el-form-item>
@@ -91,8 +91,8 @@
           getapiname="name"
           :getapi="getDirective"
           :columns="[
-            { label: '指令名称', prop: 'name', width: 120 },
-            { label: 'title', prop: 'title' },
+            { label: '指令名称', prop: 'title' },
+            // { label: 'title', prop: 'title' },
           ]"
         />
       </el-form-item>
@@ -139,10 +139,9 @@
 
 <script setup lang="ts">
   import ExercisesInput from './components/exercises-input.vue'
-  import ExercisesKnowledges from './components/exercises-knowledges.vue'
   import { add as doAddWork } from '@/api/work'
   const $baseMessage = inject('$baseMessage')
-  import { getList } from '@/api/workCate'
+  // import { getList } from '@/api/workCate'
   import { getList as getKnowledge } from '@/api/knowledge'
   import { getList as getDirective } from '@/api/directive'
   import { getList as getCourseAndWorkgroup } from '@/api/course'
@@ -168,12 +167,10 @@
     })
   })
 
-  const emit = defineEmits(['fetch-data'])
-
-  onMounted(async () => {
-    const res = await getList({ withProduct: true })
-    console.log(res)
-  })
+  // onMounted(async () => {
+  //   const res = await getList({ withProduct: true })
+  //   console.log(res)
+  // })
 
   // const options = [
   //   {
@@ -450,13 +447,12 @@
     no: 'xz001', // 作品编号
     intro: '用100个积木块实现一个飞机大战的游戏', // 作品介绍
     highlight: '游戏非常的好玩~~', // 作品亮点
-    cate: '1', // 作品分类
     cover: '', // 作品图片
     codeBasic: '1', // 作品基础代码
     codeReference: '1', // 作品完成代码
     codeLineNum: 10, // 代码行数
     demoAddress: 'www.baidu.com', // 效果演示地址
-    productGroupIDs: [],
+    productGroupIDs: [], // 作品分类
     knowledgeIDs: [], // 知识点
     subjectIDs: [], // 科目
     directiveIDs: [], // 相关指令
@@ -506,16 +502,14 @@
     const d = {
       ...data,
       courses: data.courses.join(','),
-      productGroupIDs: data.productGroupIDs.map((it) => it.pop()),
+      productGroupIDs: [data.productGroupIDs.pop()],
       directiveIDs: data.directiveIDs.map((it) => it.id),
       knowledgeIDs: data.knowledgeIDs.map((it) => it.id),
     }
-    console.log(d)
-    debugger
 
     await doAddWork(d)
     $baseMessage('添加成功', 'success', 'vab-hey-message-success')
-    emit('fetch-data')
+    // emit('fetch-data')
   }
   const save = () => {
     formRef.value.validate(async (valid) => {
