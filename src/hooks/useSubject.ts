@@ -6,12 +6,12 @@ import { getList } from '@/api/course'
 //   state.listLoading = false
 // }
 
-export default () => {
+export default (params = {}) => {
   const list = ref<Subject[]>([])
   const isLoading = ref(false)
   onMounted(async () => {
     isLoading.value = true
-    const { data } = await getList()
+    const { data } = await getList(params)
     list.value = data.list
     isLoading.value = false
   })

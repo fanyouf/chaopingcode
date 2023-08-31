@@ -286,6 +286,16 @@ export const asyncRoutes: VabRouteRecord[] = [
         },
       },
       {
+        path: 'cate',
+        name: 'WorkCate',
+        component: () => import('@/views/work/cate.vue'),
+        meta: {
+          title: '作品分类',
+          // meta: { title: 'Params id=1' },
+          // dynamicNewTab: true,
+        },
+      },
+      {
         path: 'add',
         name: 'WorkAddIndex',
         component: () => import('@/views/work/add.vue'),
@@ -293,17 +303,6 @@ export const asyncRoutes: VabRouteRecord[] = [
           title: '作品添加',
           // icon: 'shopping-cart-line',
           // badge: 'Hot',
-        },
-      },
-      {
-        path: '/directive/:id',
-        name: 'DirectiveDetail',
-        component: () => import('@/views/directive/group.vue'),
-        meta: {
-          hidden: true,
-          title: '指令列表',
-          // meta: { title: 'Params id=1' },
-          dynamicNewTab: true,
         },
       },
     ],

@@ -8,6 +8,14 @@ export function getList(params?: any) {
   })
 }
 
+export function getSubjectAndDirectiveGroup() {
+  return request({
+    url: 'http://8.142.32.7:8888/subject',
+    method: 'get',
+    params: { withDirectiveGroup: true },
+  })
+}
+
 export function doAdd(data?: any) {
   return request({
     url: 'http://8.142.32.7:8888/subject',

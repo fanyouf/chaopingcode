@@ -19,9 +19,11 @@
 
       <el-form-item label="科目与分类" prop="productGroupIDs">
         <el-cascader
-          :options="options"
+          v-model="data.productGroupIDs"
+          :options="courseAndWorkgroup"
           :props="{ multiple: true, checkStrictly: true }"
           clearable
+          style="width: 500px"
         />
       </el-form-item>
 
@@ -45,9 +47,11 @@
         <my-upload-image v-model="data.cover" />
       </el-form-item>
 
-      <el-form-item label="基础代码" prop="codeBaseUrl">文件上传</el-form-item>
+      <el-form-item label="基础代码" prop="codeBaseUrl">
+        <my-upload-file v-model="data.codeBasic" />
+      </el-form-item>
       <el-form-item label="参考代码" prop="codeFinishedUrl">
-        文件上传
+        <my-upload-file v-model="data.codeReference" />
       </el-form-item>
 
       <el-form-item label="代码行数" prop="codeRowNum">
@@ -128,7 +132,6 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="save">确 定</el-button>
-        <el-button @click="close">取 消</el-button>
       </el-form-item>
     </el-form>
   </section>
@@ -142,15 +145,28 @@
   import { getList } from '@/api/workCate'
   import { getList as getKnowledge } from '@/api/knowledge'
   import { getList as getDirective } from '@/api/directive'
+  import { getList as getCourseAndWorkgroup } from '@/api/course'
+  import { SUBJECT } from '@/constant'
 
-  const SUBJECT = [
-    { value: 'chinese', label: '语文' },
-    { value: 'mathematics', label: '数学' },
-    { value: 'english', label: '英语' },
-    { value: 'physics', label: '体育' },
-    { value: 'creature', label: '生物' },
-    { value: 'chemistry', label: '化学' },
-  ]
+  const courseAndWorkgroup = ref([])
+
+  onMounted(async () => {
+    const { data } = await getCourseAndWorkgroup({ withProductGroup: true })
+    console.log('xxxx', data.list)
+
+    courseAndWorkgroup.value = data.list.map((item) => {
+      return {
+        value: item.id,
+        label: item.title,
+        children: item.productGroups.map((item) => {
+          return {
+            value: item.id,
+            label: item.title,
+          }
+        }),
+      }
+    })
+  })
 
   const emit = defineEmits(['fetch-data'])
 
@@ -159,274 +175,274 @@
     console.log(res)
   })
 
-  const options = [
-    {
-      value: 'zhinan',
-      label: '指南',
-      children: [
-        {
-          value: 'shejiyuanze',
-          label: '设计原则',
-          children: [
-            {
-              value: 'yizhi',
-              label: '一致',
-            },
-            {
-              value: 'fankui',
-              label: '反馈',
-            },
-            {
-              value: 'xiaolv',
-              label: '效率',
-            },
-            {
-              value: 'kekong',
-              label: '可控',
-            },
-          ],
-        },
-        {
-          value: 'daohang',
-          label: '导航',
-          children: [
-            {
-              value: 'cexiangdaohang',
-              label: '侧向导航',
-            },
-            {
-              value: 'dingbudaohang',
-              label: '顶部导航',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      value: 'zujian',
-      label: '组件',
-      children: [
-        {
-          value: 'basic',
-          label: 'Basic',
-          children: [
-            {
-              value: 'layout',
-              label: 'Layout 布局',
-            },
-            {
-              value: 'color',
-              label: 'Color 色彩',
-            },
-            {
-              value: 'typography',
-              label: 'Typography 字体',
-            },
-            {
-              value: 'icon',
-              label: 'Icon 图标',
-            },
-            {
-              value: 'button',
-              label: 'Button 按钮',
-            },
-          ],
-        },
-        {
-          value: 'form',
-          label: 'Form',
-          children: [
-            {
-              value: 'radio',
-              label: 'Radio 单选框',
-            },
-            {
-              value: 'checkbox',
-              label: 'Checkbox 多选框',
-            },
-            {
-              value: 'input',
-              label: 'Input 输入框',
-            },
-            {
-              value: 'input-number',
-              label: 'InputNumber 计数器',
-            },
-            {
-              value: 'select',
-              label: 'Select 选择器',
-            },
-            {
-              value: 'cascader',
-              label: 'Cascader 级联选择器',
-            },
-            {
-              value: 'switch',
-              label: 'Switch 开关',
-            },
-            {
-              value: 'slider',
-              label: 'Slider 滑块',
-            },
-            {
-              value: 'time-picker',
-              label: 'TimePicker 时间选择器',
-            },
-            {
-              value: 'date-picker',
-              label: 'DatePicker 日期选择器',
-            },
-            {
-              value: 'datetime-picker',
-              label: 'DateTimePicker 日期时间选择器',
-            },
-            {
-              value: 'upload',
-              label: 'Upload 上传',
-            },
-            {
-              value: 'rate',
-              label: 'Rate 评分',
-            },
-            {
-              value: 'form',
-              label: 'Form 表单',
-            },
-          ],
-        },
-        {
-          value: 'data',
-          label: 'Data',
-          children: [
-            {
-              value: 'table',
-              label: 'Table 表格',
-            },
-            {
-              value: 'tag',
-              label: 'Tag 标签',
-            },
-            {
-              value: 'progress',
-              label: 'Progress 进度条',
-            },
-            {
-              value: 'tree',
-              label: 'Tree 树形控件',
-            },
-            {
-              value: 'pagination',
-              label: 'Pagination 分页',
-            },
-            {
-              value: 'badge',
-              label: 'Badge 标记',
-            },
-          ],
-        },
-        {
-          value: 'notice',
-          label: 'Notice',
-          children: [
-            {
-              value: 'alert',
-              label: 'Alert 警告',
-            },
-            {
-              value: 'loading',
-              label: 'Loading 加载',
-            },
-            {
-              value: 'message',
-              label: 'Message 消息提示',
-            },
-            {
-              value: 'message-box',
-              label: 'MessageBox 弹框',
-            },
-            {
-              value: 'notification',
-              label: 'Notification 通知',
-            },
-          ],
-        },
-        {
-          value: 'navigation',
-          label: 'Navigation',
-          children: [
-            {
-              value: 'menu',
-              label: 'NavMenu 导航菜单',
-            },
-            {
-              value: 'tabs',
-              label: 'Tabs 标签页',
-            },
-            {
-              value: 'breadcrumb',
-              label: 'Breadcrumb 面包屑',
-            },
-            {
-              value: 'dropdown',
-              label: 'Dropdown 下拉菜单',
-            },
-            {
-              value: 'steps',
-              label: 'Steps 步骤条',
-            },
-          ],
-        },
-        {
-          value: 'others',
-          label: 'Others',
-          children: [
-            {
-              value: 'dialog',
-              label: 'Dialog 对话框',
-            },
-            {
-              value: 'tooltip',
-              label: 'Tooltip 文字提示',
-            },
-            {
-              value: 'popover',
-              label: 'Popover 弹出框',
-            },
-            {
-              value: 'card',
-              label: 'Card 卡片',
-            },
-            {
-              value: 'carousel',
-              label: 'Carousel 走马灯',
-            },
-            {
-              value: 'collapse',
-              label: 'Collapse 折叠面板',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      value: 'ziyuan',
-      label: '资源',
-      children: [
-        {
-          value: 'axure',
-          label: 'Axure Components',
-        },
-        {
-          value: 'sketch',
-          label: 'Sketch Templates',
-        },
-        {
-          value: 'jiaohu',
-          label: '组件交互文档',
-        },
-      ],
-    },
-  ]
+  // const options = [
+  //   {
+  //     value: 'zhinan',
+  //     label: '指南',
+  //     children: [
+  //       {
+  //         value: 'shejiyuanze',
+  //         label: '设计原则',
+  //         children: [
+  //           {
+  //             value: 'yizhi',
+  //             label: '一致',
+  //           },
+  //           {
+  //             value: 'fankui',
+  //             label: '反馈',
+  //           },
+  //           {
+  //             value: 'xiaolv',
+  //             label: '效率',
+  //           },
+  //           {
+  //             value: 'kekong',
+  //             label: '可控',
+  //           },
+  //         ],
+  //       },
+  //       {
+  //         value: 'daohang',
+  //         label: '导航',
+  //         children: [
+  //           {
+  //             value: 'cexiangdaohang',
+  //             label: '侧向导航',
+  //           },
+  //           {
+  //             value: 'dingbudaohang',
+  //             label: '顶部导航',
+  //           },
+  //         ],
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     value: 'zujian',
+  //     label: '组件',
+  //     children: [
+  //       {
+  //         value: 'basic',
+  //         label: 'Basic',
+  //         children: [
+  //           {
+  //             value: 'layout',
+  //             label: 'Layout 布局',
+  //           },
+  //           {
+  //             value: 'color',
+  //             label: 'Color 色彩',
+  //           },
+  //           {
+  //             value: 'typography',
+  //             label: 'Typography 字体',
+  //           },
+  //           {
+  //             value: 'icon',
+  //             label: 'Icon 图标',
+  //           },
+  //           {
+  //             value: 'button',
+  //             label: 'Button 按钮',
+  //           },
+  //         ],
+  //       },
+  //       {
+  //         value: 'form',
+  //         label: 'Form',
+  //         children: [
+  //           {
+  //             value: 'radio',
+  //             label: 'Radio 单选框',
+  //           },
+  //           {
+  //             value: 'checkbox',
+  //             label: 'Checkbox 多选框',
+  //           },
+  //           {
+  //             value: 'input',
+  //             label: 'Input 输入框',
+  //           },
+  //           {
+  //             value: 'input-number',
+  //             label: 'InputNumber 计数器',
+  //           },
+  //           {
+  //             value: 'select',
+  //             label: 'Select 选择器',
+  //           },
+  //           {
+  //             value: 'cascader',
+  //             label: 'Cascader 级联选择器',
+  //           },
+  //           {
+  //             value: 'switch',
+  //             label: 'Switch 开关',
+  //           },
+  //           {
+  //             value: 'slider',
+  //             label: 'Slider 滑块',
+  //           },
+  //           {
+  //             value: 'time-picker',
+  //             label: 'TimePicker 时间选择器',
+  //           },
+  //           {
+  //             value: 'date-picker',
+  //             label: 'DatePicker 日期选择器',
+  //           },
+  //           {
+  //             value: 'datetime-picker',
+  //             label: 'DateTimePicker 日期时间选择器',
+  //           },
+  //           {
+  //             value: 'upload',
+  //             label: 'Upload 上传',
+  //           },
+  //           {
+  //             value: 'rate',
+  //             label: 'Rate 评分',
+  //           },
+  //           {
+  //             value: 'form',
+  //             label: 'Form 表单',
+  //           },
+  //         ],
+  //       },
+  //       {
+  //         value: 'data',
+  //         label: 'Data',
+  //         children: [
+  //           {
+  //             value: 'table',
+  //             label: 'Table 表格',
+  //           },
+  //           {
+  //             value: 'tag',
+  //             label: 'Tag 标签',
+  //           },
+  //           {
+  //             value: 'progress',
+  //             label: 'Progress 进度条',
+  //           },
+  //           {
+  //             value: 'tree',
+  //             label: 'Tree 树形控件',
+  //           },
+  //           {
+  //             value: 'pagination',
+  //             label: 'Pagination 分页',
+  //           },
+  //           {
+  //             value: 'badge',
+  //             label: 'Badge 标记',
+  //           },
+  //         ],
+  //       },
+  //       {
+  //         value: 'notice',
+  //         label: 'Notice',
+  //         children: [
+  //           {
+  //             value: 'alert',
+  //             label: 'Alert 警告',
+  //           },
+  //           {
+  //             value: 'loading',
+  //             label: 'Loading 加载',
+  //           },
+  //           {
+  //             value: 'message',
+  //             label: 'Message 消息提示',
+  //           },
+  //           {
+  //             value: 'message-box',
+  //             label: 'MessageBox 弹框',
+  //           },
+  //           {
+  //             value: 'notification',
+  //             label: 'Notification 通知',
+  //           },
+  //         ],
+  //       },
+  //       {
+  //         value: 'navigation',
+  //         label: 'Navigation',
+  //         children: [
+  //           {
+  //             value: 'menu',
+  //             label: 'NavMenu 导航菜单',
+  //           },
+  //           {
+  //             value: 'tabs',
+  //             label: 'Tabs 标签页',
+  //           },
+  //           {
+  //             value: 'breadcrumb',
+  //             label: 'Breadcrumb 面包屑',
+  //           },
+  //           {
+  //             value: 'dropdown',
+  //             label: 'Dropdown 下拉菜单',
+  //           },
+  //           {
+  //             value: 'steps',
+  //             label: 'Steps 步骤条',
+  //           },
+  //         ],
+  //       },
+  //       {
+  //         value: 'others',
+  //         label: 'Others',
+  //         children: [
+  //           {
+  //             value: 'dialog',
+  //             label: 'Dialog 对话框',
+  //           },
+  //           {
+  //             value: 'tooltip',
+  //             label: 'Tooltip 文字提示',
+  //           },
+  //           {
+  //             value: 'popover',
+  //             label: 'Popover 弹出框',
+  //           },
+  //           {
+  //             value: 'card',
+  //             label: 'Card 卡片',
+  //           },
+  //           {
+  //             value: 'carousel',
+  //             label: 'Carousel 走马灯',
+  //           },
+  //           {
+  //             value: 'collapse',
+  //             label: 'Collapse 折叠面板',
+  //           },
+  //         ],
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     value: 'ziyuan',
+  //     label: '资源',
+  //     children: [
+  //       {
+  //         value: 'axure',
+  //         label: 'Axure Components',
+  //       },
+  //       {
+  //         value: 'sketch',
+  //         label: 'Sketch Templates',
+  //       },
+  //       {
+  //         value: 'jiaohu',
+  //         label: '组件交互文档',
+  //       },
+  //     ],
+  //   },
+  // ]
 
   const data = reactive({
     // id: '',
@@ -490,6 +506,7 @@
     const d = {
       ...data,
       courses: data.courses.join(','),
+      productGroupIDs: data.productGroupIDs.map((it) => it.pop()),
       directiveIDs: data.directiveIDs.map((it) => it.id),
       knowledgeIDs: data.knowledgeIDs.map((it) => it.id),
     }

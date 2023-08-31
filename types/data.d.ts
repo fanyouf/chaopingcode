@@ -13,11 +13,12 @@ interface DateTime {
 interface Subject extends DateTime {
   title: string
   intro: string
-  logo: string
+  cover: string
   remark: string
   order: number
   type: string
   id: number
+  productGroups: ProductGroup[] | null
 }
 
 // 知识点组-目录
