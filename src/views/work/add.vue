@@ -18,7 +18,7 @@
       </el-form-item>
 
       <el-form-item label="科目与分类" prop="productGroupIDs">
-        <!-- :props="{ multiple: true, checkStrictly: true }" -->
+        <!--  -->
         <el-cascader
           v-model="data.productGroupIDs"
           :options="courseAndWorkgroup"
@@ -72,7 +72,14 @@
         </el-input>
       </el-form-item>
       <el-form-item label="相关知识点" prop="knowledges">
-        <my-input-dialog
+        <el-cascader
+          v-model="data.knowledgeIDs"
+          :options="knowledges"
+          clearable
+          style="width: 500px"
+          :props="{ multiple: true, checkStrictly: true }"
+        />
+        <!-- <my-input-dialog
           v-model="data.knowledgeIDs"
           name="知识"
           getapiname="name"
@@ -81,11 +88,11 @@
             { label: '知识点名称', prop: 'title' },
             // { label: '标题', prop: 'title' },
           ]"
-        />
+        /> -->
       </el-form-item>
 
       <el-form-item label="相关指令" prop="directives">
-        <my-input-dialog
+        <!-- <my-input-dialog
           v-model="data.directiveIDs"
           name="指令"
           getapiname="name"
@@ -94,6 +101,13 @@
             { label: '指令名称', prop: 'title' },
             // { label: 'title', prop: 'title' },
           ]"
+        /> -->
+        <el-cascader
+          v-model="data.directiveIDs"
+          :options="directives"
+          clearable
+          style="width: 500px"
+          :props="{ multiple: true, checkStrictly: true }"
         />
       </el-form-item>
 
@@ -140,14 +154,16 @@
 <script setup lang="ts">
   import ExercisesInput from './components/exercises-input.vue'
   import { add as doAddWork } from '@/api/work'
-  const $baseMessage = inject('$baseMessage')
+  import { gp } from '@gp'
   // import { getList } from '@/api/workCate'
-  import { getList as getKnowledge } from '@/api/knowledge'
-  import { getList as getDirective } from '@/api/directive'
+  import { getList as getKnowledge } from '@/api/knowledgeGroup'
+  import { getList as getDirective } from '@/api/directiveGroup'
   import { getList as getCourseAndWorkgroup } from '@/api/course'
   import { SUBJECT } from '@/constant'
 
   const courseAndWorkgroup = ref([])
+  const knowledges = ref([])
+  const directives = ref([])
   const accept = computed(() => {
     if (data.productGroupIDs.length > 0) {
       const couId = data.productGroupIDs[0]
@@ -158,7 +174,7 @@
       } else if (label.toLowerCase().includes('c++')) {
         return '.cpp'
       } else if (label.toLowerCase().includes('scratch')) {
-        return '.py'
+        return '.sb3'
       }
     }
     return '.py,.cpp,.sb3'
@@ -243,12 +259,11 @@
       ...data,
       courses: data.courses.join(','),
       productGroupIDs: [data.productGroupIDs.pop()],
-      directiveIDs: data.directiveIDs.map((it) => it.id),
-      knowledgeIDs: data.knowledgeIDs.map((it) => it.id),
+      directiveIDs: data.directiveIDs.map((it) => it.pop()),
+      knowledgeIDs: data.knowledgeIDs.map((it) => it.pop()),
     }
-
     await doAddWork(d)
-    $baseMessage('添加成功', 'success', 'vab-hey-message-success')
+    gp.$baseMessage('添加成功', 'success', 'vab-hey-message-success')
     // emit('fetch-data')
   }
   const save = () => {
@@ -261,6 +276,53 @@
       }
     })
   }
+
+  watch(
+    () => data.productGroupIDs,
+    async (val) => {
+      console.log('subjectID', val[0])
+      const { data } = await getKnowledge({
+        subjectID: val[0],
+        withKnowledge: true,
+      })
+
+      knowledges.value = data.list.map((item) => {
+        return {
+          value: item.id,
+          label: item.title,
+          children: item.knowledge.map((item) => {
+            return {
+              value: item.id,
+              label: item.title,
+            }
+          }),
+        }
+      })
+    }
+  )
+
+  watch(
+    () => data.productGroupIDs,
+    async (val) => {
+      console.log('subjectID', val[0])
+      const { data } = await getDirective({
+        subjectID: val[0],
+        withDirective: true,
+      })
+      directives.value = data.list.map((item) => {
+        return {
+          value: item.id,
+          label: item.title,
+          children: item.directives.map((item) => {
+            return {
+              value: item.id,
+              label: item.title,
+            }
+          }),
+        }
+      })
+    }
+  )
 
   defineExpose({ showDialog })
 </script>

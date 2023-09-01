@@ -46,13 +46,15 @@ interface Knowledge extends DateTime {
 // 知识点组-目录
 
 interface KnowledgeGroup {
+  id: number
   title: string
   intro: string
   logo: string
   remark: string
   order: number
   state: boolean
-  suject_id: number
+  sujectID: number
+  knowledge: Knowledge[]
 }
 
 interface Directive {

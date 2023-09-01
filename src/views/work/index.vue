@@ -3,73 +3,39 @@
     <el-row :gutter="20">
       <el-col :span="24">
         <vab-card class="page-header" shadow="never">
-          <div class="items-container">
-            <label for="">所属科目:</label>
-            <div class="items">
-              <div
-                v-for="item in subjectList"
-                :key="item.id"
-                :class="{ selected: formData.subjectId === item.id }"
-                class="item"
-                @click="formData.subjectId = item.id"
-              >
-                {{ item.title }}
-              </div>
-            </div>
-          </div>
-          <div class="items-container">
-            <label for="">所属分类:</label>
-            <div class="items">
-              <div
-                v-for="item in cateList"
-                :key="item.id"
-                :class="{ selected: formData.productGroupID === item.id }"
-                class="item"
-                @click="formData.productGroupID = item.id"
-              >
-                {{ item.title }}
-              </div>
-            </div>
-          </div>
-          <div class="items-container">
-            <label for="">涉及学科:</label>
-            <el-checkbox-group v-model="formData.courses">
-              <el-checkbox
-                v-for="item in SUBJECT"
-                :key="item.value"
-                :label="item.value"
-                name="type"
-              >
-                {{ item.label }}
-              </el-checkbox>
-            </el-checkbox-group>
+          <my-radio
+            v-model="formData.subjectId"
+            label="所属科目"
+            :list="subjectList"
+          />
 
-            <!-- <div class="items">
-              <div
-                v-for="item in SUBJECT"
-                :key="item.value"
-                :class="{ selected: formData.courseId === item.value }"
-                class="item"
-                @click="formData.courseId = item.value"
-              >
-                {{ item.label }}
-              </div>
-            </div> -->
-          </div>
+          <my-radio
+            v-model="formData.productGroupID"
+            label="所属分类"
+            :list="cateList"
+          />
+
+          <my-radio
+            v-model="formData.courses"
+            label="涉及学科"
+            :list="subjects"
+          />
+
           <hr />
           <div class="items-container">
             <label for="">关键字:</label>
             <el-input v-model="formData.keyword" style="width: 200px" />
+            &nbsp; &nbsp;
             <label for="">难度:</label>
-            <el-radio-group v-model="formData.level">
-              <el-radio :label="null">全部</el-radio>
-              <el-radio label="easy">简单</el-radio>
-              <el-radio label="medium">中等</el-radio>
-              <el-radio label="hard">困难</el-radio>
-              <el-radio label="challenge">挑战</el-radio>
-            </el-radio-group>
-
-            <el-button type="primary" @click="search">搜索</el-button>
+            <el-select v-model="formData.level">
+              <el-option label="全部" :value="null">全部</el-option>
+              <el-option label="简单" value="easy">简单</el-option>
+              <el-option label="中等" value="medium">中等</el-option>
+              <el-option label="困难" value="hard">困难</el-option>
+              <el-option label="挑战" value="challenge">挑战</el-option>
+            </el-select>
+            &nbsp; &nbsp;
+            <el-button type="success" @click="search">搜索</el-button>
           </div>
         </vab-card>
       </el-col>
@@ -100,37 +66,6 @@
             <p>
               <el-button type="danger" @click="hDel(item.id)">删除</el-button>
             </p>
-
-            <!-- <div v-if="hasOp" class="header-ops">
-              <vab-icon
-                v-if="opNames.includes('add')"
-                class="icon"
-                icon="add-box-fill"
-                style="color: rgb(54, 203, 203)"
-                @click="emit('add-item', item)"
-              />
-              <vab-icon
-                v-if="opNames.includes('edit')"
-                class="icon"
-                icon="edit-box-fill"
-                style="color: rgb(151, 95, 229)"
-                @click="emit('edit-container', item)"
-              />
-              <vab-icon
-                v-if="opNames.includes('view')"
-                class="icon"
-                icon="eye-fill"
-                style="color: rgb(251, 212, 55)"
-                @click="emit('view-container', item)"
-              />
-              <vab-icon
-                v-if="opNames.includes('del')"
-                icon="delete-bin-5-line"
-                style="color: rgb(24, 144, 255)"
-                class="icon"
-                @click="hDel(item)"
-              />
-            </div> -->
           </div>
         </vab-card>
       </el-col>
@@ -142,16 +77,22 @@
   import { SUBJECT } from '@/constant'
   import { getList as getWorks, del as delWork } from '@/api/work'
   import { gp } from '@gp'
+  import MyRadio from '~/src/components/my-radio.vue'
+
+  const subjects = SUBJECT.map((it) => ({ id: it.value, title: it.label }))
 
   const formData = reactive({
     subjectId: null,
     productGroupID: null,
-    courses: [],
+    courses: '',
     level: 'medium',
     keyword: '', // 关键字
   })
   const search = async () => {
-    const { data } = await getWorks(formData)
+    const d = {
+      productGroupID: formData.productGroupID,
+    }
+    const { data } = await getWorks(d)
     console.log('查询结果', data)
     workList.value = data.list
   }
@@ -204,27 +145,6 @@
   // }
 </script>
 <style lang="scss" scoped>
-  .items-container {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    label {
-      margin-right: 5px;
-    }
-    .items {
-      display: flex;
-      .item {
-        padding: 3px;
-        cursor: pointer;
-        margin: 5px;
-      }
-    }
-
-    .selected {
-      color: #fff;
-      background-color: var(--el-color-primary);
-    }
-  }
   .emptybox {
     min-height: 100px;
     display: flex;
@@ -246,12 +166,11 @@
       margin: 0;
     }
     .section-item-body {
-      // padding: 20px;
+      padding: 10px;
     }
     .section-item-body-intro {
       height: 3em;
       overflow: hidden;
-      padding: 10px;
     }
   }
   .header-ops {

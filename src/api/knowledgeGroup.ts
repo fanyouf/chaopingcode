@@ -4,7 +4,7 @@ export function getList(params: any) {
   return request<{
     pageIndex: number
     pageSize: number
-    list: Knowledge[]
+    list: KnowledgeGroup[]
     total: number
   }>({
     url: 'http://8.142.32.7:8888/knowledgeGroup',
