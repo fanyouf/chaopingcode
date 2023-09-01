@@ -79,7 +79,12 @@
   import { gp } from '@gp'
   import MyRadio from '~/src/components/my-radio.vue'
 
-  const subjects = SUBJECT.map((it) => ({ id: it.value, title: it.label }))
+  const subjects = SUBJECT.map((it) => ({
+    id: it.value,
+    title: it.label,
+  }))
+
+  subjects.unshift({ id: '-1', title: '全部' })
 
   const formData = reactive({
     subjectId: null,
@@ -90,7 +95,14 @@
   })
   const search = async () => {
     const d = {
-      productGroupID: formData.productGroupID,
+      course:
+        formData.courses === '-1'
+          ? subjects.filter((it) => it.id !== '-1').map((it) => it.id)
+          : formData.courses,
+      productGroupID:
+        formData.productGroupID === -1
+          ? cateList.value.filter((it) => it.id !== -1).map((it) => it.id)
+          : formData.productGroupID,
     }
     const { data } = await getWorks(d)
     console.log('查询结果', data)
@@ -120,14 +132,12 @@
       console.log(item.id, formData.subjectId)
       return item.id === formData.subjectId
     })
-    const res = [{ title: '全部', id: null }]
+    const res = [{ title: '全部', id: -1 }]
     if (t && t.productGroups) {
       res.push(...t.productGroups)
     }
     return res
   })
-
-  console.log('list', subjectList)
 
   // const hDel = (item) => {
   //   if (
