@@ -90,6 +90,7 @@ interface Competition {
   order: number
   state: boolean
   remark: string
+  labels: Label[]
 }
 
 // 赛事 属性
@@ -101,6 +102,7 @@ interface Label {
   remark: string
   entityType: string
   entityID: number
+  labelValues: LabelValue[]
 }
 
 // 赛事 属性值

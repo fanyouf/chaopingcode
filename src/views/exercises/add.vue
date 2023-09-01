@@ -129,7 +129,7 @@
           placeholder="请输入视频讲解的url地址"
           style="width: 500px"
         >
-          <template #prepend>Http://</template>
+          <template #prepend>http://</template>
         </el-input>
       </el-form-item>
 
