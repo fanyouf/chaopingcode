@@ -84,7 +84,7 @@
     title: it.label,
   }))
 
-  subjects.unshift({ id: '-1', title: '全部' })
+  subjects.unshift({ id: null, title: '全部' })
 
   const formData = reactive({
     subjectId: null,
@@ -95,10 +95,10 @@
   })
   const search = async () => {
     const d = {
-      course:
-        formData.courses === '-1'
-          ? subjects.filter((it) => it.id !== '-1').map((it) => it.id)
-          : formData.courses,
+      course: formData.courses,
+      // formData.courses === '-1'
+      // ? subjects.filter((it) => it.id !== '-1').map((it) => it.id)
+      // : formData.courses,
       productGroupID:
         formData.productGroupID === -1
           ? cateList.value.filter((it) => it.id !== -1).map((it) => it.id)

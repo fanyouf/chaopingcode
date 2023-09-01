@@ -18,10 +18,10 @@
 <script setup lang="ts">
   const emit = defineEmits(['update:modelValue'])
 
-  type List = { title: string; id: number | string }[]
+  type List = { title: string; id: number | string | null }[]
   withDefaults(
     defineProps<{
-      modelValue: string | number
+      modelValue: string | number | null
       list: List
       label: string
     }>(),
