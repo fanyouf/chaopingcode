@@ -11,6 +11,16 @@
       <el-form-item :label="state.objectName + '名称'" prop="name">
         <el-input v-model="data.title" aria-placeholder="请输入" />
       </el-form-item>
+      <el-form-item
+        v-if="state.objectName === '科目'"
+        :label="state.objectName + '类型'"
+        prop="type"
+      >
+        <el-select v-model="data.type" placeholder="请选择">
+          <el-option value="special" label="专业学科" />
+          <el-option value="common" label="通用学科" />
+        </el-select>
+      </el-form-item>
       <el-form-item :label="state.objectName + '描述'" prop="intro">
         <el-input v-model="data.intro" aria-placeholder="请输入" />
       </el-form-item>
@@ -120,6 +130,7 @@
     } else if (opName === '修改' && objectName === '科目') {
       data.title = row.title
       data.intro = row.intro
+      data.type = row.type
       data.order = row.order
       data.remark = row.remark
       data.id = row.id
