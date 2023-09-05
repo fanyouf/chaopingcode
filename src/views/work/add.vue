@@ -74,6 +74,7 @@
       <el-form-item label="相关知识点" prop="knowledges">
         <el-cascader
           v-model="data.knowledgeIDs"
+          popper-class="last-check"
           :options="knowledges"
           clearable
           style="width: 500px"
@@ -107,7 +108,7 @@
           :options="directives"
           clearable
           style="width: 500px"
-          :props="{ multiple: true, checkStrictly: true }"
+          :props="{ multiple: true }"
         />
       </el-form-item>
 
@@ -180,6 +181,7 @@
     return '.py,.cpp,.sb3'
   })
   onMounted(async () => {
+    // 获取到课程和作品分组
     const { data } = await getCourseAndWorkgroup({ withProductGroup: true })
     console.log('xxxx', data.list)
 
@@ -277,27 +279,46 @@
     })
   }
 
+  const buildKnowledge = async (subjectID: number) => {
+    // 获取对应的知识点
+    const { data } = await getKnowledge({
+      subjectID,
+      withKnowledge: true,
+    })
+
+    debugger
+    const curCourse = courseAndWorkgroup.value.find(
+      (it) => it.value === subjectID
+    )
+
+    const res = [
+      {
+        value: curCourse.value,
+        label: curCourse.label,
+        children: data.list.map((item) => {
+          return {
+            value: item.id,
+            label: item.title,
+            children: item.knowledge.map((item) => {
+              return {
+                value: item.id,
+                label: item.title,
+              }
+            }),
+          }
+        }),
+      },
+    ]
+
+    knowledges.value = res
+  }
+
   watch(
     () => data.productGroupIDs,
     async (val) => {
+      // 作品分组选择变化
       console.log('subjectID', val[0])
-      const { data } = await getKnowledge({
-        subjectID: val[0],
-        withKnowledge: true,
-      })
-
-      knowledges.value = data.list.map((item) => {
-        return {
-          value: item.id,
-          label: item.title,
-          children: item.knowledge.map((item) => {
-            return {
-              value: item.id,
-              label: item.title,
-            }
-          }),
-        }
-      })
+      buildKnowledge(val[0])
     }
   )
 
@@ -333,5 +354,15 @@
   }
   .competition-add-container {
     padding: 1em 0;
+  }
+</style>
+
+<style lang="scss">
+  .last-check {
+    li[aria-haspopup='true'] {
+      .el-checkbox {
+        display: none;
+      }
+    }
   }
 </style>
