@@ -58,6 +58,7 @@ interface KnowledgeGroup {
 }
 
 interface Directive {
+  id?: number
   title: string
   intro: string
   logo: string
@@ -65,6 +66,7 @@ interface Directive {
   state: boolean
   remark: string
   directive_group_id: number
+  directives?: Directive[]
 }
 
 // 指令-分组

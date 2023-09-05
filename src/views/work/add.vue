@@ -71,7 +71,8 @@
           <template #prepend>Http://</template>
         </el-input>
       </el-form-item>
-      <el-form-item label="相关知识点" prop="knowledges">
+      <my-knowledges v-model="data.knowledgeIDs" :subject="curSubject" />
+      <!-- <el-form-item label="相关知识点" prop="knowledges">
         <el-cascader
           v-model="data.knowledgeIDs"
           popper-class="last-check"
@@ -80,29 +81,11 @@
           style="width: 500px"
           :props="{ multiple: true, checkStrictly: true }"
         />
-        <!-- <my-input-dialog
-          v-model="data.knowledgeIDs"
-          name="知识"
-          getapiname="name"
-          :getapi="getKnowledge"
-          :columns="[
-            { label: '知识点名称', prop: 'title' },
-            // { label: '标题', prop: 'title' },
-          ]"
-        /> -->
-      </el-form-item>
+      </el-form-item> -->
+      <my-directives v-model="data.directiveIDs" :subject="curSubject" />
 
-      <el-form-item label="相关指令" prop="directives">
-        <!-- <my-input-dialog
-          v-model="data.directiveIDs"
-          name="指令"
-          getapiname="name"
-          :getapi="getDirective"
-          :columns="[
-            { label: '指令名称', prop: 'title' },
-            // { label: 'title', prop: 'title' },
-          ]"
-        /> -->
+      <!-- <el-form-item label="相关指令" prop="directives">
+        
         <el-cascader
           v-model="data.directiveIDs"
           :options="directives"
@@ -110,7 +93,7 @@
           style="width: 500px"
           :props="{ multiple: true }"
         />
-      </el-form-item>
+      </el-form-item> -->
 
       <el-form-item label="涉及学科" prop="subject">
         <el-checkbox-group v-model="data.courses">
@@ -156,49 +139,9 @@
   import ExercisesInput from './components/exercises-input.vue'
   import { add as doAddWork } from '@/api/work'
   import { gp } from '@gp'
-  // import { getList } from '@/api/workCate'
-  import { getList as getKnowledge } from '@/api/knowledgeGroup'
-  import { getList as getDirective } from '@/api/directiveGroup'
+
   import { getList as getCourseAndWorkgroup } from '@/api/course'
   import { SUBJECT } from '@/constant'
-
-  const courseAndWorkgroup = ref([])
-  const knowledges = ref([])
-  const directives = ref([])
-  const accept = computed(() => {
-    if (data.productGroupIDs.length > 0) {
-      const couId = data.productGroupIDs[0]
-      const t = courseAndWorkgroup.value.find((it) => it.value === couId)
-      const label = t.label
-      if (label.toLowerCase().includes('python')) {
-        return '.py'
-      } else if (label.toLowerCase().includes('c++')) {
-        return '.cpp'
-      } else if (label.toLowerCase().includes('scratch')) {
-        return '.sb3'
-      }
-    }
-    return '.py,.cpp,.sb3'
-  })
-  onMounted(async () => {
-    // 获取到课程和作品分组
-    const { data } = await getCourseAndWorkgroup({ withProductGroup: true })
-    console.log('xxxx', data.list)
-
-    courseAndWorkgroup.value = data.list.map((item) => {
-      return {
-        value: item.id,
-        label: item.title,
-        children: item.productGroups.map((item) => {
-          return {
-            value: item.id,
-            label: item.title,
-          }
-        }),
-      }
-    })
-  })
-
   const data = reactive({
     // id: '',
     title: '飞机大战', // 标题
@@ -221,11 +164,63 @@
     remark: '备注', // 备注
   })
 
+  const courseAndWorkgroup = ref([])
+  const curSubject = ref({})
+  watch(
+    () => data.productGroupIDs,
+    (val) => {
+      if (!val) {
+        curSubject.value = {}
+        return
+      }
+
+      const curCourse = courseAndWorkgroup.value.find(
+        (it) => it.value === data.productGroupIDs[0]
+      )
+      curSubject.value = {
+        value: curCourse.value,
+        label: curCourse.label,
+      }
+    }
+  )
+
+  const accept = computed(() => {
+    if (data.productGroupIDs && data.productGroupIDs.length > 0) {
+      const couId = data.productGroupIDs[0]
+      const t = courseAndWorkgroup.value.find((it) => it.value === couId)
+      const label = t.label
+      if (label.toLowerCase().includes('python')) {
+        return '.py'
+      } else if (label.toLowerCase().includes('c++')) {
+        return '.cpp'
+      } else if (label.toLowerCase().includes('scratch')) {
+        return '.sb3'
+      }
+    }
+    return '.py,.cpp,.sb3'
+  })
+  onMounted(async () => {
+    // 获取到课程和作品分组
+    const { data } = await getCourseAndWorkgroup({ withProductGroup: true })
+
+    courseAndWorkgroup.value = data.list.map((item) => {
+      return {
+        value: item.id,
+        label: item.title,
+        children: item.productGroups.map((item) => {
+          return {
+            value: item.id,
+            label: item.title,
+          }
+        }),
+      }
+    })
+  })
+
   const rules = {
     title: [{ required: true, trigger: 'blur', message: '请输入标题' }],
   }
   const formRef = ref(null)
-  const visible = ref(false)
   const state = reactive<{ opName: OPType; objectName: OPObject }>({
     opName: '添加', // 操作方式的名字： 编辑 or 添加
     objectName: '赛事', // 操作对象的类型: 目录 or 知识点
@@ -233,36 +228,13 @@
   const cTitle = computed(() => {
     return `${state.objectName}-${state.opName}`
   })
-  const showDialog = (
-    objectName: OPObject = '目录',
-    opName: OPType = '添加',
-    row = null
-  ) => {
-    state.objectName = objectName
-    state.opName = opName
-    if (row) {
-      // data.id = row.id
-      data.order = row.order || 1
-      data.title = row.title
-    }
-
-    if (opName === '添加') {
-      data.title = ''
-    }
-
-    visible.value = true
-  }
-  const close = () => {
-    formRef.value.resetFields()
-    visible.value = false
-  }
   const doSave = async () => {
     const d = {
       ...data,
       courses: data.courses.join(','),
       productGroupIDs: [data.productGroupIDs.pop()],
-      directiveIDs: data.directiveIDs.map((it) => it.pop()),
-      knowledgeIDs: data.knowledgeIDs.map((it) => it.pop()),
+      directiveIDs: data.directiveIDs,
+      knowledgeIDs: data.knowledgeIDs,
     }
     await doAddWork(d)
     gp.$baseMessage('添加成功', 'success', 'vab-hey-message-success')
@@ -279,73 +251,39 @@
     })
   }
 
-  const buildKnowledge = async (subjectID: number) => {
-    // 获取对应的知识点
-    const { data } = await getKnowledge({
-      subjectID,
-      withKnowledge: true,
-    })
+  // const buildKnowledge = async (subjectID: number) => {
+  //   // 获取对应的知识点
+  //   const { data } = await getKnowledge({
+  //     subjectID,
+  //     withKnowledge: true,
+  //   })
 
-    debugger
-    const curCourse = courseAndWorkgroup.value.find(
-      (it) => it.value === subjectID
-    )
+  //   debugger
+  //   const curCourse = courseAndWorkgroup.value.find(
+  //     (it) => it.value === subjectID
+  //   )
 
-    const res = [
-      {
-        value: curCourse.value,
-        label: curCourse.label,
-        children: data.list.map((item) => {
-          return {
-            value: item.id,
-            label: item.title,
-            children: item.knowledge.map((item) => {
-              return {
-                value: item.id,
-                label: item.title,
-              }
-            }),
-          }
-        }),
-      },
-    ]
+  //   const res = [
+  //     {
+  //       value: curCourse.value,
+  //       label: curCourse.label,
+  //       children: data.list.map((item) => {
+  //         return {
+  //           value: item.id,
+  //           label: item.title,
+  //           children: item.knowledge.map((item) => {
+  //             return {
+  //               value: item.id,
+  //               label: item.title,
+  //             }
+  //           }),
+  //         }
+  //       }),
+  //     },
+  //   ]
 
-    knowledges.value = res
-  }
-
-  watch(
-    () => data.productGroupIDs,
-    async (val) => {
-      // 作品分组选择变化
-      console.log('subjectID', val[0])
-      buildKnowledge(val[0])
-    }
-  )
-
-  watch(
-    () => data.productGroupIDs,
-    async (val) => {
-      console.log('subjectID', val[0])
-      const { data } = await getDirective({
-        subjectID: val[0],
-        withDirective: true,
-      })
-      directives.value = data.list.map((item) => {
-        return {
-          value: item.id,
-          label: item.title,
-          children: item.directives.map((item) => {
-            return {
-              value: item.id,
-              label: item.title,
-            }
-          }),
-        }
-      })
-    }
-  )
-
-  defineExpose({ showDialog })
+  //   knowledges.value = res
+  // }
 </script>
 
 <style lang="scss" scoped>

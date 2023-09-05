@@ -2,6 +2,19 @@
   <section class="competition-add-container">
     <h3>添加习题</h3>
     <el-form ref="formRef" label-width="66px" :model="data" :rules="rules">
+      <el-form-item label="科目" prop="diff">
+        <el-select v-model="data.subjectId">
+          <el-option
+            v-for="item in subjectList"
+            :key="item.id"
+            :label="item.title"
+            :value="item.id"
+          >
+            {{ item.title }}
+          </el-option>
+        </el-select>
+      </el-form-item>
+
       <el-form-item label="习题编号" prop="code">
         <el-input
           v-model="data.code"
@@ -155,7 +168,7 @@
   import ExercisesAnsArea from './components/exercises-ans-area.vue'
   import ExercisesKnowledges from './components/exercises-knowledges.vue'
   import ExercisesCompetitionSelect from './components/exercises-competition-select.vue'
-  import { doAdd as doAddCourse } from '@/api/course'
+  import { doAdd as doAddCourse, getList as getSubject } from '@/api/subject'
   import { getList } from '@/api/knowledge'
   const $baseMessage = inject('$baseMessage')
 
@@ -163,6 +176,7 @@
 
   const data = reactive({
     // id: '',
+    subjectId: '',
     title: '', // 习题名称
     code: '',
     diff: '简单',
@@ -179,10 +193,67 @@
     state: true, // boolean
   })
 
-  setTimeout(() => {
-    data.remark = 'ajax数据'
-    console.log('ajax数据')
-  }, 5000)
+  // setTimeout(() => {
+  //   data.remark = 'ajax数据'
+  //   console.log('ajax数据')
+  // }, 5000)
+  const subjectList = ref([])
+
+  const buildKnowledge = async (subjectID: number | string) => {
+    // 获取对应的知识点
+    const { data } = await getKnowledge({
+      subjectID,
+      withKnowledge: true,
+    })
+
+    debugger
+    const curCourse = courseAndWorkgroup.value.find(
+      (it) => it.value === subjectID
+    )
+
+    const res = [
+      {
+        value: curCourse.value,
+        label: curCourse.label,
+        children: data.list.map((item) => {
+          return {
+            value: item.id,
+            label: item.title,
+            children: item.knowledge.map((item) => {
+              return {
+                value: item.id,
+                label: item.title,
+              }
+            }),
+          }
+        }),
+      },
+    ]
+
+    knowledges.value = res
+  }
+
+  watch(
+    () => data.subjectId,
+    async (val) => {
+      // 作品分组选择变化
+      console.log('subjectID', val)
+      buildKnowledge(val)
+    }
+  )
+
+  onMounted(async () => {
+    // 获取到课程和作品分组
+    const { data } = await getSubject()
+    console.log('xxxx', data.list)
+
+    subjectList.value = data.list.map((item) => {
+      return {
+        id: item.id,
+        title: item.title,
+      }
+    })
+  })
 
   const visibles = computed(() => {
     if (data.type === '单选题') {

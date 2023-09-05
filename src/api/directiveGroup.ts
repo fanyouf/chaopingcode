@@ -4,7 +4,6 @@ export function getList(params: any) {
   return request<{
     id: number
     type: 'image' | 'text'
-    directives?: Directive[]
     pageIndex: number
     pageSize: number
     list: Directive[]
