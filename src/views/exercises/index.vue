@@ -1,147 +1,223 @@
 <template>
-  <div>
-    <my-page
-      :list="state.list"
-      title="添加习题库"
-      @add-container="hAddExerciseGroup"
-      @add-item="hAddExercise"
-      @edit-container="hEditExerciseGroup"
-    >
-      <template #header>
-        <h3>选择科目，当前科目是{{ curSubject.title }}</h3>
-        <my-subject v-model="curSubject" />
-      </template>
-      <template #default="{ item }">
-        <div class="exercise-group">
-          <el-tag
-            v-for="it in item.children"
-            :key="it.id"
-            class="exercise-group-item"
-            closable
-            @close="hDelExercise(it)"
-          >
-            <span
-              title="点击查看"
-              style="cursor: pointer"
-              @click="hEditExercise(it)"
-            >
-              {{ it.title }}
-            </span>
-          </el-tag>
-        </div>
-      </template>
-    </my-page>
-    <my-dialog ref="editRef" @fetch-data="fetchData" />
-  </div>
+  <section class="section">
+    <el-row :gutter="20">
+      <el-col :span="24">
+        <vab-card class="page-header" shadow="never">
+          <my-radio
+            v-model="formData.subjectId"
+            label="所属科目"
+            :list="subjectList"
+          />
+
+          <my-radio-competition v-model="formData.subjectId" />
+
+          <my-radio
+            v-model="formData.courses"
+            label="题目类型"
+            :list="[
+              { id: null, title: '全部' },
+              // 'single' | 'multiple' | 'judge' | 'answer' | 'code'
+              {
+                id: 'single',
+                title: '单选题',
+              },
+              {
+                id: 'multiple',
+                title: '多选题',
+              },
+              {
+                id: 'judge',
+                title: '判断题',
+              },
+              {
+                id: 'answer',
+                title: '简答题',
+              },
+              {
+                id: 'code',
+                title: '代码题',
+              },
+            ]"
+          />
+
+          <hr />
+          <div class="items-container">
+            <label for="">关键字:</label>
+            <el-input v-model="formData.keyword" style="width: 200px" />
+            &nbsp; &nbsp;
+            <label for="">难度:</label>
+            <el-select v-model="formData.level">
+              <el-option label="全部" :value="null">全部</el-option>
+              <el-option label="简单" value="easy">简单</el-option>
+              <el-option label="中等" value="medium">中等</el-option>
+              <el-option label="困难" value="hard">困难</el-option>
+              <el-option label="挑战" value="challenge">挑战</el-option>
+            </el-select>
+            &nbsp; &nbsp;
+            <el-button type="success" @click="search">搜索</el-button>
+          </div>
+        </vab-card>
+      </el-col>
+
+      <el-col
+        v-for="item in workList"
+        :key="item.id"
+        :lg="6"
+        :md="8"
+        :sm="8"
+        :xl="6"
+        :xs="24"
+      >
+        <vab-card
+          class="section-item"
+          :body-style="{ padding: '0px' }"
+          shadow="hover"
+        >
+          <div class="section-item-body">
+            <img
+              v-if="item.cover"
+              style="width: 100%; height: 186px"
+              :src="item.cover"
+            />
+            <h3>{{ item.title }}</h3>
+
+            <p class="section-item-body-intro">{{ item.intro }}</p>
+            <p>
+              <el-button type="danger" @click="hDel(item.id)">删除</el-button>
+            </p>
+          </div>
+        </vab-card>
+      </el-col>
+    </el-row>
+  </section>
 </template>
-
 <script setup lang="ts">
-  // import { OPObject } from '../../types/data'
-  defineOptions({
-    name: 'ExerciseIndex',
+  import { getList } from '@/api/course'
+  import { SUBJECT } from '@/constant'
+  import { getList as getWorks, del as delWork } from '@/api/work'
+  import { gp } from '@gp'
+  import MyRadio from '~/src/components/my-radio.vue'
+
+  const subjects = SUBJECT.map((it) => ({
+    id: it.value,
+    title: it.label,
+  }))
+
+  subjects.unshift({ id: null, title: '全部' })
+
+  const formData = reactive({
+    subjectId: null,
+    productGroupID: null,
+    courses: null, // 默认学科是 全部 。表示不用传过去
+    level: 'medium',
+    keyword: '', // 关键字
   })
-  // import myPage from '~/src/components/my-page.vue'
-  // import myCourse from '~/src/components/my-course.vue'
-  // import { onActivated, onDeactivated } from 'vue'
-  // import { Plus } from '@element-plus/icons-vue'
-
-  import { getList } from '@/api/exercise'
-  import MyDialog from '@/components/my-dialog.vue'
-
-  const curSubject = ref<Subject>({} as Subject)
-  // const $baseConfirm = inject('$baseConfirm')
-  // const $baseMessage = inject('$baseMessage')
-  const subject = ref('c++')
-  const editRef = ref<InstanceType<typeof MyDialog>>(null)
-  // const hChangeCourse = () => {}
-  const state = reactive({
-    list: [],
-    listLoading: true,
-    layout: 'total, sizes, prev, pager, next, jumper',
-    total: 0,
-    selectRows: '',
+  const search = async () => {
+    const d = {
+      withKnowledge: true,
+      withProductGroup: true,
+      course: formData.courses,
+      // formData.courses === '-1'
+      // ? subjects.filter((it) => it.id !== '-1').map((it) => it.id)
+      // : formData.courses,
+      productGroupID:
+        formData.productGroupID === -1
+          ? cateList.value.filter((it) => it.id !== -1).map((it) => it.id)
+          : formData.productGroupID,
+    }
+    const { data } = await getWorks(d)
+    console.log('查询结果', data)
+    workList.value = data.list
+  }
+  const hDel = (id) => {
+    gp.$baseConfirm('你确定要删除当前项吗', null, async () => {
+      await delWork(id)
+      gp.$baseMessage('删除成功')
+      search()
+    })
+  }
+  const subjectList = ref<Subject[]>([])
+  const workList = ref<Work[]>([])
+  onMounted(async () => {
+    const { data } = await getList({ withProductGroup: true })
+    console.log(data)
+    if (data.list.length) {
+      subjectList.value = data.list
+      formData.subjectId = data.list[0].id
+      search()
+    }
   })
 
-  const fetchData = async () => {
-    state.listLoading = true
-    const res = await getList({})
-    console.log(res)
-    state.list = res.data.list
-    state.listLoading = false
-  }
-  const hAddExerciseGroup = () => {
-    editRef.value.showDialog('目录', '添加', null)
-  }
-  const hAddExercise = (exerciseGroup) => {
-    editRef.value.showDialog('知识点', '添加', exerciseGroup)
-  }
-  const hEditExercise = (exercise) => {
-    editRef.value.showDialog('知识点', '修改', exercise)
-  }
+  const cateList = computed(() => {
+    const t = subjectList.value.find((item) => {
+      console.log(item.id, formData.subjectId)
+      return item.id === formData.subjectId
+    })
+    const res = [{ title: '全部', id: -1 }]
+    if (t && t.productGroups) {
+      res.push(...t.productGroups)
+    }
+    return res
+  })
 
-  const hDelExercise = (exercise) => {
-    alert(1)
-    console.log('exercise')
-  }
+  // const hDel = (item) => {
+  //   if (
+  //     item.children?.length ||
+  //     item.directives?.length ||
+  //     item.knowledge?.length
+  //   ) {
+  //     $baseMessage('还有子项，不能删除', 'error', 'vab-hey-message-error')
+  //     return
+  //   }
 
-  const hEditExerciseGroup = (exerciseGroup) => {
-    editRef.value.showDialog('目录', '修改', exerciseGroup)
-  }
-  // const hDel = (typeName, row) => {
-  //   $baseConfirm('你确定要删除当前项吗', null, async () => {
-  //     const { msg } = await doDelete({ ids: row.id })
-  //     $baseMessage(msg, 'success', 'vab-hey-message-success')
-  //     await fetchData()
+  //   $baseConfirm('你确定要删除当前项吗', null, () => {
+  //     emit('del-container', item)
   //   })
   // }
-
-  watch(
-    subject,
-    () => {
-      console.log('1', subject)
-      fetchData()
-    },
-    { immediate: true }
-  )
-
-  // onActivated(() => {
-  //   console.log('onActived')
-  //   // 调用时机为首次挂载
-  //   // 以及每次从缓存中被重新插入时
-  //   fetchData()
-  // })
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
+  .emptybox {
+    min-height: 100px;
+    display: flex;
+    cursor: pointer;
+    margin-top: 62px;
+  }
+  .empty {
+    margin: auto;
+    text-align: center;
+  }
   .section {
     background: $base-color-background !important;
     padding: 0;
-  }
-  .exercises {
-    padding: 10px 5px;
-    background-color: $base-color-background;
-  }
-  .exercise-group {
-    background-color: #fff;
-    border-radius: 5px;
-    padding: 15px;
-  }
-  .exercise-group-item {
-    margin: 5px !important;
-  }
-  .exercise-group.empty {
-    cursor: pointer;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-  }
 
-  .icon-button {
-    margin: 0 5px;
-    // color: red;
-    &:hover {
-      cursor: pointer;
+    .section-item {
+      // height: 200px;
     }
+    .section-item-title {
+      margin: 0;
+    }
+    .section-item-body {
+      padding: 10px;
+    }
+    .section-item-body-intro {
+      height: 3em;
+      overflow: hidden;
+    }
+  }
+  .header-ops {
+    padding: 0 10px 10px;
+    text-align: right;
+    .icon {
+      // color: #ccc;
+      font-size: 24px;
+      margin-left: 3px;
+      cursor: pointer;
+      &:hover {
+        // color: #000;
+      }
+    }
+  }
+  .badge {
+    top: 5px;
   }
 </style>

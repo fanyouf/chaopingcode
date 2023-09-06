@@ -2,8 +2,8 @@
   <section class="competition-add-container">
     <h3>添加习题</h3>
     <el-form ref="formRef" label-width="80px" :model="data" :rules="rules">
-      <el-form-item label="科目" prop="subjectId">
-        <el-select v-model="data.subjectId">
+      <el-form-item label="科目" prop="subjectID">
+        <el-select v-model="data.subjectID">
           <el-option
             v-for="item in subjectList"
             :key="item.id"
@@ -87,9 +87,9 @@
         </el-checkbox-group>
       </el-form-item>
       <el-form-item v-if="visibles['判断']" label="判断答案" prop="diff">
-        <el-radio-group v-model="data.ans">
-          <el-radio label="正确">正确</el-radio>
-          <el-radio label="错误">错误</el-radio>
+        <el-radio-group v-model="data.contentJudge.answer">
+          <el-radio label="yes">正确</el-radio>
+          <el-radio label="no">错误</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item v-if="visibles['简答']" label="参考答案" prop="answer">
@@ -149,17 +149,20 @@
 
   const data = reactive({
     // id: '',
-    subjectId: '',
+    subjectID: '',
     title: '习题名称11', // 习题名称
-    no: 'zj001',
+    no: `zj00${Math.random()}`,
     intro: '习题介绍',
     level: 'easy',
     answer: '参考答案',
-    body: '',
+    body: '题目的内容',
     explainText: '', // 文字讲解
     explainVideo: 'www.baidu.com', // 视频讲解
     remark: '备注', // 备注
-    competition: {},
+    competition: {
+      competitionID: '',
+      labelValueIDs: [],
+    },
     type: 'single',
     contentAnswer: {
       body: '问答题题干',
@@ -171,7 +174,7 @@
     },
     contentJudge: {
       body: '判断题题干',
-      answer: '',
+      answer: 'yes',
     },
     contentSelect: {
       body: '选择题干',
@@ -203,7 +206,7 @@
 
   const curSubject = ref({})
   watch(
-    () => data.subjectId,
+    () => data.subjectID,
     (val) => {
       if (!val) {
         curSubject.value = {}
@@ -240,16 +243,18 @@
     formRef.value.resetFields()
     visible.value = false
   }
-  const doSave = async (data) => {
+  const doSave = async () => {
     const d = {
       ...data,
-      competitionID: data.competitionId,
-      labelValueIDs: data.labelValueIds,
+      ...data.competition,
+    }
+    if (data.type === 'judge') {
+      d.contentJudge.body = data.body
     }
     delete d.competition
     delete d.body
     delete d.answer
-
+    debugger
     await doAdd(d)
     $baseMessage('添加成功', 'success', 'vab-hey-message-success')
   }

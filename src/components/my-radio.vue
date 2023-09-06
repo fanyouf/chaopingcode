@@ -9,7 +9,7 @@
         class="item"
         @click="emit('update:modelValue', item.id)"
       >
-        {{ item.title }}
+        {{ item[propName] }}
       </div>
     </div>
   </div>
@@ -21,11 +21,13 @@
   type List = { title: string; id: number | string | null }[]
   withDefaults(
     defineProps<{
+      propName: string
       modelValue: string | number | null
       list: List
       label: string
     }>(),
     {
+      propName: 'title',
       label: '默认标题',
     }
   )
