@@ -191,3 +191,5 @@ type OPObject =
   | '属性值'
 
 type OPType = '添加' | '删除' | '修改'
+
+type ExerciseType = 'single' | 'multiple' | 'judge' | 'answer' | 'code'

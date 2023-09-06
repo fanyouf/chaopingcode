@@ -89,12 +89,14 @@
   const formData = reactive({
     subjectId: null,
     productGroupID: null,
-    courses: '',
+    courses: null, // 默认学科是 全部 。表示不用传过去
     level: 'medium',
     keyword: '', // 关键字
   })
   const search = async () => {
     const d = {
+      withKnowledge: true,
+      withProductGroup: true,
       course: formData.courses,
       // formData.courses === '-1'
       // ? subjects.filter((it) => it.id !== '-1').map((it) => it.id)

@@ -5,21 +5,18 @@
       <!-- <el-option label="GESP" value="GESP" /> -->
       <el-option
         v-for="item in competitionList"
-        :key="item.label"
-        :label="item.label"
-        :value="item.value"
+        :key="item.id"
+        :label="item.title"
+        :value="item.id"
       />
     </el-select>
     <div>
       <div v-for="(item, idx) in cTableData" :key="idx" style="display: flex">
         <label for="" style="margin-right: 20px">{{ item.key }}:</label>
-        <el-radio-group v-model="item.selected">
-          <el-radio
-            v-for="it in item.value"
-            :key="it"
-            :value="it"
-            :label="it"
-          />
+        <el-radio-group v-model="item.selected" @change="hChange">
+          <el-radio v-for="it in item.value" :key="it.id" :label="it.id">
+            {{ it.value }}
+          </el-radio>
         </el-radio-group>
       </div>
     </div>
@@ -37,16 +34,16 @@
     const { data } = await getList({ withLabel: true, withLabelValue: true })
     console.log('赛事', data.list)
     competitionList.value = data.list.map((it) => ({
-      label: it.title,
-      value: it.title,
+      id: it.id,
+      title: it.title,
     }))
     tableData.value = data.list.reduce((acc, cur) => {
       return {
         ...acc,
-        [cur.title]: cur.labels.map((i) => {
+        [cur.id]: cur.labels.map((i) => {
           return {
             key: i.title,
-            value: i.labelValues.map((j) => j.val),
+            value: i.labelValues.map((j) => ({ value: j.val, id: j.id })),
             selected: '',
           }
         }),
@@ -60,6 +57,14 @@
   })
 
   const emit = defineEmits(['update:modelValue'])
+
+  const hChange = () => {
+    console.log(cTableData)
+    emit('update:modelValue', {
+      competitionID: matchName.value,
+      labelValueIDs: cTableData.value.map((it) => it.selected),
+    })
+  }
 
   const tableData = ref({})
   const competitionList = ref([])
