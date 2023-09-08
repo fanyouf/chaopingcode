@@ -225,6 +225,8 @@ export function uuid(length = 32) {
  * @param n
  * @returns {number}
  */
+
+import { CONST_SELECTION } from '@/constant'
 export function random(m: number, n: number) {
   return Math.floor(Math.random() * (m - n) + n)
 }
@@ -261,7 +263,20 @@ export function delProp(obj: object, keys: string[]) {
   })
 }
 
+export function getSelectOptionCode(n: number) {
+  if (n in CONST_SELECTION) {
+    return CONST_SELECTION[n]
+  } else {
+    const keys = Object.keys(CONST_SELECTION)
+    return keys.reduce(
+      (acc, cur) => (n & Number(cur) ? acc + CONST_SELECTION[cur] : acc),
+      ''
+    )
+  }
+}
+
 export const objUnit = {
   copy,
   delProp,
+  getSelectOptionCode,
 }

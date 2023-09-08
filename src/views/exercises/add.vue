@@ -67,23 +67,30 @@
         label="答案选项"
         prop="subjectContent"
       >
-        <ExercisesAnsArea v-model="data.ans" :multi="visibles['多选']" />
+        <ExercisesAnsArea
+          v-model="data.selectOptions"
+          :multi="visibles['多选']"
+        />
       </el-form-item>
       <el-form-item v-if="visibles['单选']" label="单选答案" prop="diff">
-        <el-radio-group v-model="data.ans">
-          <el-radio label="A">A</el-radio>
-          <el-radio label="B">B</el-radio>
-          <el-radio label="C">C</el-radio>
-          <el-radio label="D">D</el-radio>
+        <el-radio-group v-model="data.selectAns">
+          <el-radio :label="1">A</el-radio>
+          <el-radio :label="2">B</el-radio>
+          <el-radio :label="4">C</el-radio>
+          <el-radio :label="8">D</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item v-if="visibles['多选']" label="多选答案" prop="diff">
-        <el-checkbox-group v-model="data.anss">
-          <el-checkbox label="A" name="A" />
-          <el-checkbox label="B" name="B" />
-          <el-checkbox label="C" name="C" />
-          <el-checkbox label="D" name="D" />
-          <el-checkbox label="E" name="E" />
+      <el-form-item
+        v-if="visibles['多选']"
+        label="多选答案"
+        prop="selectOptionsMultiple"
+      >
+        <el-checkbox-group v-model="data.selectOptionsMultiple">
+          <el-checkbox :label="1">A</el-checkbox>
+          <el-checkbox :label="2">B</el-checkbox>
+          <el-checkbox :label="4">C</el-checkbox>
+          <el-checkbox :label="8">D</el-checkbox>
+          <el-checkbox :label="16">E</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
       <el-form-item v-if="visibles['判断']" label="判断答案" prop="diff">
@@ -176,15 +183,12 @@
       body: '判断题题干',
       answer: 'yes',
     },
-    contentSelect: {
-      body: '选择题干',
-      optionA: 'choose A',
-      optionB: 'choose B',
-      optionLen: 2,
-      answer: 3,
-    }, //单选，多选题内容
+
     knowledgeIDs: '',
     directiveIDs: '',
+    selectAns: 1,
+    selectOptions: [],
+    selectOptionsMultiple: [],
     state: true, // boolean
   })
 
@@ -247,13 +251,43 @@
     const d = {
       ...data,
       ...data.competition,
+      contentSelect: {},
     }
+    // 判断题
     if (data.type === 'judge') {
       d.contentJudge.body = data.body
     }
+
+    // 选择题
+    else if (data.type === 'single' || data.type === 'multi') {
+      // contentSelect: {
+      // body: '选择题干',
+      // optionA: 'choose A',
+      // optionB: 'choose B',
+      // optionLen: 2,
+      // answer: 3,
+      const contentSelect = {
+        answer: 1,
+        body: data.body,
+        optionLen: data.selectOptions.length,
+      }
+      data.selectOptions.forEach((it) => {
+        contentSelect[`option${it.code}`] = it.content
+      })
+      contentSelect.answer = data.selectAns
+      if (data.type === 'multi') {
+        contentSelect.answer = data.selectOptionsMultiple.reduce((acc, cur) => {
+          return acc + cur
+        }, 0)
+      }
+      d.contentSelect = contentSelect
+    }
+
     delete d.competition
     delete d.body
     delete d.answer
+    delete d.selectOptions
+    delete d.selectAns
     debugger
     await doAdd(d)
     $baseMessage('添加成功', 'success', 'vab-hey-message-success')

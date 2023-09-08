@@ -28,32 +28,45 @@
 
 <script setup lang="ts">
   const props = defineProps({
+    modelValue: Array,
     multi: {
       type: Boolean,
       default: false,
     },
   })
+  const emit = defineEmits(['update:modelValue'])
+
   const handleChange = (val) => {
     console.log(val)
   }
   const ansList = ref([
     {
       code: 'A',
-      content: '123',
+      content: '选择项A',
     },
     {
       code: 'B',
-      content: '123',
+      content: '选择项B',
     },
     {
       code: 'C',
-      content: '123',
+      content: '选择项C',
     },
     {
       code: 'D',
-      content: '123',
+      content: '选择项D',
     },
   ])
+
+  watch(
+    ansList,
+    () => {
+      emit('update:modelValue', ansList.value)
+    },
+    {
+      deep: true,
+    }
+  )
 
   const cAnsList = computed(() => {
     if (props.multi) {
