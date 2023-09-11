@@ -33,7 +33,7 @@
   )
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .items-container {
     display: flex;
     justify-content: flex-start;

@@ -1,13 +1,13 @@
 <template>
-  <el-form-item label="相关指令" prop="knowledges">
+  <el-form-item label="相关指令" prop="directives">
     <el-cascader
       v-model="knowledgeIDs"
       popper-class="last-check"
-      :options="knowledges"
+      :options="directives"
       clearable
       style="width: 500px"
       :show-all-levels="false"
-      :props="{ emitPath: false, multiple: true, checkStrictly: true }"
+      :props="{ emitPath: false, multiple: true }"
     />
   </el-form-item>
 </template>
@@ -16,15 +16,15 @@
   const props = defineProps<{
     modelValue: (number | string)[]
     subject: {
-      value: number | string
-      label: string
+      id: number | string
+      title: string
     }
   }>()
   const emit = defineEmits(['update:modelValue'])
 
   import { getList } from '@/api/directiveGroup'
 
-  const knowledges = ref<Array<any>>([])
+  const directives = ref<Array<any>>([])
   const knowledgeIDs = ref<Array<any>>([])
 
   // watch(
@@ -59,8 +59,8 @@
 
     const res = [
       {
-        value: props.subject.value,
-        label: props.subject.label,
+        value: props.subject.id,
+        label: props.subject.title,
         children: data.list.map((item) => {
           return {
             value: item.id,
@@ -78,18 +78,18 @@
 
     console.log(res)
 
-    knowledges.value = res
+    directives.value = res
   }
 
   watch(
-    () => props.subject.value,
+    () => props.subject.id,
     async (val) => {
       console.log('subject变化了', val)
       if (val) {
         buildKnowledge(val)
       } else {
         // 用户清空了选择项
-        knowledges.value = []
+        directives.value = []
       }
     }
   )

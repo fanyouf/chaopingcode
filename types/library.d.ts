@@ -17,9 +17,9 @@ declare interface globalPropertiesType {
     content: string | VNode,
     title: string,
     callback1: any,
-    callback2: any,
-    confirmButtonText: string,
-    cancelButtonText: string
+    callback2?: any,
+    confirmButtonText?: string,
+    cancelButtonText?: string
   ): any
   $baseNotify(
     message: string,

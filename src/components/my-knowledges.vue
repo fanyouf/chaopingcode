@@ -7,7 +7,7 @@
       clearable
       style="width: 500px"
       :show-all-levels="false"
-      :props="{ emitPath: false, multiple: true, checkStrictly: true }"
+      :props="{ emitPath: false, multiple: true }"
     />
   </el-form-item>
 </template>
@@ -16,8 +16,8 @@
   const props = defineProps<{
     modelValue: (number | string)[]
     subject: {
-      value: number | string
-      label: string
+      id: number | string
+      title: string
     }
   }>()
   const emit = defineEmits(['update:modelValue'])
@@ -36,8 +36,8 @@
 
     const res = [
       {
-        value: props.subject.value,
-        label: props.subject.label,
+        value: props.subject.id,
+        label: props.subject.title,
         children: data.list.map((item) => {
           return {
             value: item.id,
@@ -59,7 +59,7 @@
   }
 
   watch(
-    () => props.subject.value,
+    () => props.subject.id,
     async (val) => {
       console.log('subject变化了', val)
       if (val) {
