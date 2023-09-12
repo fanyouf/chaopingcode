@@ -37,7 +37,11 @@
       </div>
 
       <div class="subject-list">
-        <div v-for="i in list[item.id].list" :key="i.id" class="subject-item">
+        <div
+          v-for="(i, idx) in list[item.id].list"
+          :key="i.id"
+          class="subject-item"
+        >
           <div class="subject-item-title" v-html="i.title"></div>
           <footer class="right">
             本题
@@ -48,17 +52,32 @@
               :step="1"
             />
             分
-            <button>上</button>
-            <button>下</button>
-            <button>删</button>
+            <button :disabled="idx === 0" @click="hMove(i, -1)">上</button>
+            <button
+              :disabled="idx === list[item.id].list.length - 1"
+              @click="hMove(i, 1)"
+            >
+              下
+            </button>
+            <button @click="hDel(i, idx)">删</button>
           </footer>
         </div>
       </div>
     </div>
   </el-drawer>
 
-  <el-button type="primary" style="margin-left: 16px" @click="hOpen">
-    点我打开
+  <el-button
+    type="primary"
+    style="
+      position: absolute;
+      top: 100px;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+    "
+    @click="hOpen"
+  >
+    打开试题篮
   </el-button>
 </template>
 <script setup>
@@ -73,6 +92,8 @@
       required: true,
     },
   })
+
+  const emit = defineEmits(['moveout'])
 
   const isShow = ref(false)
   const totalMark = ref(0)
@@ -136,6 +157,24 @@
   const hOpen = () => {
     isShow.value = true
     buildList()
+  }
+
+  const hMove = (item, idx) => {
+    const templist = list.value[item.type].list
+
+    const curIndx = templist.findIndex((it) => it === item)
+
+    const newIndx = curIndx + idx
+
+    templist[curIndx] = templist[newIndx]
+    templist[newIndx] = item
+
+    list.value[item.type].list = templist
+  }
+  const hDel = (item, idx) => {
+    const templist = list.value[item.type].list
+    templist.splice(idx, 1)
+    emit('moveout', item)
   }
 
   // defineExpose({ buildList })

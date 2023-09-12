@@ -62,7 +62,11 @@
       <el-button type="success" @click="search">搜索</el-button>
     </vab-card>
 
-    <paperCart :cart-list="cartList" :subject="formData.subject" />
+    <paperCart
+      :cart-list="cartList"
+      :subject="formData.subject"
+      @moveout="hMoveout"
+    />
     <vab-card
       v-for="item in exerciseList"
       :key="item.id"
@@ -111,7 +115,7 @@
       <div v-if="item.type === 'judge'" class="section-item-body">
         <div v-html="item.contentJudge.body"></div>
       </div>
-      <div>
+      <div class="m1">
         <!-- <el-button icon="del" type="primary" @click="hEdit(item.id)">
           修改
         </el-button> -->
@@ -122,7 +126,12 @@
           @click="hDel(item.id)"
         />
         <!-- <el-button type="danger" >删除</el-button> -->
-        <el-button v-if="!item.inCart" type="primary" @click="hAddtoCart(item)">
+        <el-button
+          v-if="!item.inCart"
+          size="small"
+          type="primary"
+          @click="hAddtoCart(item)"
+        >
           加试题篮
         </el-button>
         <el-button v-else type="success" @click="hRemoveFromCart(item)">
@@ -158,6 +167,13 @@
   const hAddtoCart = (item) => {
     item.inCart = true
     cartList.value.push(item)
+  }
+  const hMoveout = (it) => {
+    const item = exerciseList.value.find((i) => i.id === it.id)
+    item.inCart = false
+
+    const idx = cartList.value.find((i) => i.id === it.id)
+    cartList.value.splice(idx, 1)
   }
   const hRemoveFromCart = (item) => {
     item.inCart = false
