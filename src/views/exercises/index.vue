@@ -134,7 +134,12 @@
         >
           加试题篮
         </el-button>
-        <el-button v-else type="success" @click="hRemoveFromCart(item)">
+        <el-button
+          v-else
+          size="small"
+          type="success"
+          @click="hRemoveFromCart(item)"
+        >
           移出试题篮
         </el-button>
       </div>

@@ -3,7 +3,12 @@
     <div>
       <label>科目： {{ subject.title }}</label>
     </div>
-    <p>共计{{ cartList.length }}个资源，当前总分:{{ totalMark }} 分</p>
+    <p>
+      共计{{ cartList.length }}个资源，当前总分:{{
+        listDetail.reduce((a, b) => a + b.total, 0)
+      }}
+      分
+    </p>
 
     <!-- 统计区域 -->
     <div>
@@ -19,7 +24,7 @@
       <div class="flex header">
         <label>
           <b>{{ CONST_EX_TYPE[item.id] }}</b>
-          共{{ [list[item.id].list.length] }}题, 共{{ 30 }} 分
+          共 {{ [list[item.id].list.length] }}题, 共{{ item.total }} 分
         </label>
         <div>
           每题
@@ -69,15 +74,16 @@
   <el-button
     type="primary"
     style="
-      position: absolute;
-      top: 100px;
+      position: fixed;
+      top: 250px;
+      right: 100px;
       width: 100px;
       height: 100px;
       border-radius: 50%;
     "
     @click="hOpen"
   >
-    打开试题篮
+    试题篮{{ cartList.length }}
   </el-button>
 </template>
 <script setup>
@@ -106,6 +112,7 @@
         res.push({
           id: it,
           title: `${CONST_EX_TYPE[it]}(${list.value[it].list.length})`,
+          total: list.value[it].list.reduce((a, b) => a + b.mark, 0),
         })
       }
     })
