@@ -35,7 +35,6 @@
 </template>
 
 <script setup lang="ts">
-  import { stat } from 'fs'
   import useCourse from '@/hooks/useCourse'
   import { doDelete, getList } from '@/api/course'
   import MyDialog from '~/src/components/my-dialog.vue'

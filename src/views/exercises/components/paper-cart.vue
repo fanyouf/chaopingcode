@@ -69,7 +69,13 @@
         </div>
       </div>
     </div>
+
+    <div>
+      <el-button @click="showDialog">保存为试卷</el-button>
+    </div>
   </el-drawer>
+
+  <paper-dialog ref="refDialog" :list="cartList" />
 
   <el-button
     type="primary"
@@ -86,7 +92,8 @@
     试题篮{{ cartList.length }}
   </el-button>
 </template>
-<script setup>
+<script setup lang="ts">
+  import PaperDialog from './paper-dialog.vue'
   import { CONST_EX_TYPE } from '@/constant'
   const props = defineProps({
     subject: {
@@ -98,7 +105,11 @@
       required: true,
     },
   })
+  const refDialog = ref<InstanceType<typeof PaperDialog>>(null)
 
+  const showDialog = () => {
+    refDialog.value.showDialog()
+  }
   const emit = defineEmits(['moveout'])
 
   const isShow = ref(false)

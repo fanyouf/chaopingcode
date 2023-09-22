@@ -1,147 +1,143 @@
 <template>
-  <div>
-    <my-page
-      :list="state.list"
-      item-type="知识点"
-      @add-container="hAddKnowledgeGroup"
-      @add-item="hAddKnowledge"
-      @edit-container="hEditKnowledgeGroup"
-    >
-      <template #header>
-        <h3>选择科目，当前科目是{{ curCourse }}</h3>
-        <my-subject v-model="curCourse" />
-      </template>
-      <template #default="{ item }">
-        <div class="knowledge-group">
-          <el-tag
-            v-for="it in item.children"
-            :key="it.id"
-            class="knowledge-group-item"
-            closable
-            @close="hDelKnowledge(it)"
-          >
-            <span
-              title="点击查看"
-              style="cursor: pointer"
-              @click="hEditKnowledge(it)"
-            >
-              {{ it.title }}
-            </span>
-          </el-tag>
+  <my-page
+    :list="list"
+    title="添加试卷"
+    :op-names="['del', 'update', 'view']"
+    @view-container="hViewCompetition"
+    @del-container="hDelCompetition"
+    @add-container="hAddCompetition"
+  >
+    <template #header>
+      <my-radio-subject v-model="formData.subject" />
+
+      <my-radio-competition v-model="formData.subject" />
+
+      <div class="m1">
+        <label>难度</label>
+        <el-select v-model="formData.level" style="width: 100px">
+          <el-option label="全部" :value="null">全部</el-option>
+          <el-option label="简单" value="easy">简单</el-option>
+          <el-option label="中等" value="medium">中等</el-option>
+          <el-option label="困难" value="hard">困难</el-option>
+          <el-option label="挑战" value="challenge">挑战</el-option>
+        </el-select>
+        &nbsp;&nbsp;
+
+        <label>类型</label>
+        <el-select v-model="formData.level" style="width: 100px">
+          <el-option label="全部" :value="null">全部</el-option>
+          <el-option label="简单" value="easy">简单</el-option>
+          <el-option label="中等" value="medium">中等</el-option>
+          <el-option label="困难" value="hard">困难</el-option>
+          <el-option label="挑战" value="challenge">挑战</el-option>
+        </el-select>
+        &nbsp;&nbsp;
+
+        <label for="">关键字:</label>
+        <el-input v-model="formData.keyword" style="width: 200px" />
+        &nbsp;&nbsp;
+        <el-button type="success" @click="search">查询</el-button>
+      </div>
+    </template>
+
+    <template #default="{ item }">
+      <div class="course">
+        <img :src="item.logo || defaultImage" class="logo" />
+        <h3 class="course-title">{{ item.title }}</h3>
+        <p class="course-info">{{ item.intro }}</p>
+        <div class="course-ops">
+          <el-button size="small" type="primary" @click="hEdit(item)">
+            编辑
+          </el-button>
+          <el-button size="small" type="primary" @click="hDetail(item)">
+            查看详情
+          </el-button>
+          <el-button size="small" type="primary" @click="hDel(item)">
+            删除
+          </el-button>
         </div>
-      </template>
-    </my-page>
-    <my-dialog ref="editRef" @fetch-data="fetchData" />
-  </div>
+      </div>
+    </template>
+  </my-page>
 </template>
-
 <script setup lang="ts">
-  // import { OPObject } from '../../types/data'
-  defineOptions({
-    name: 'KnowledgeIndex',
+  import { Delete } from '@element-plus/icons-vue'
+  import paperCart from './components/paper-cart.vue'
+  import { getSelectOptionCode } from '@/utils'
+  import { CONST_EX_TYPE, CONST_LEVEL } from '~/src/constant'
+  import { getList as getExerciseList, doDelete } from '@/api/exercise'
+  import { gp } from '@gp'
+  import MyRadio from '~/src/components/my-radio.vue'
+  import MyKnowledges from '~/src/components/my-knowledges.vue'
+
+  const formData = reactive({
+    subject: { id: null, title: '' },
+    productGroupID: null,
+    courses: null, // 默认学科是 全部 。表示不用传过去
+    level: 'medium',
+    keyword: '', // 关键字
   })
-  // import myPage from '~/src/components/my-page.vue'
-  // import myCourse from '~/src/components/my-course.vue'
-  // import { onActivated, onDeactivated } from 'vue'
-  // import { Plus } from '@element-plus/icons-vue'
+  const isShowMore = ref(false)
+  const toggle = () => {
+    isShowMore.value = !isShowMore.value
+  }
+  const cartList = ref([])
+  // 添加到试题篮
+  const hAddtoCart = (item) => {
+    item.inCart = true
+    cartList.value.push(item)
+  }
+  const hMoveout = (it) => {
+    const item = exerciseList.value.find((i) => i.id === it.id)
+    item.inCart = false
 
-  import { getList } from '@/api/knowledge'
-  import MyDialog from '@/components/my-dialog.vue'
+    const idx = cartList.value.find((i) => i.id === it.id)
+    cartList.value.splice(idx, 1)
+  }
+  const hRemoveFromCart = (item) => {
+    item.inCart = false
+    cartList.value.splice(cartList.value.indexOf(item), 1)
+  }
 
-  const curCourse = ref('Python')
-  // const $baseConfirm = inject('$baseConfirm')
-  // const $baseMessage = inject('$baseMessage')
-  const subject = ref('c++')
-  const editRef = ref<InstanceType<typeof MyDialog>>(null)
-  // const hChangeCourse = () => {}
-  const state = reactive({
-    list: [],
-    listLoading: true,
-    layout: 'total, sizes, prev, pager, next, jumper',
-    total: 0,
-    selectRows: '',
+  onMounted(() => {
+    search()
   })
 
-  const fetchData = async () => {
-    state.listLoading = true
-    const res = await getList({})
-    console.log(res)
-    state.list = res.data.list
-    state.listLoading = false
+  const search = async () => {
+    // 查询条件
+    const d = {}
+    const { data } = await getExerciseList(d)
+    exerciseList.value = data.list
   }
-  const hAddKnowledgeGroup = () => {
-    editRef.value.showDialog('目录', '添加', null)
-  }
-  const hAddKnowledge = (knowledgeGroup) => {
-    editRef.value.showDialog('知识点', '添加', knowledgeGroup)
-  }
-  const hEditKnowledge = (knowledge) => {
-    editRef.value.showDialog('知识点', '修改', knowledge)
-  }
-
-  const hDelKnowledge = (knowledge) => {
-    alert(1)
-    console.log('knowledge')
-  }
-
-  const hEditKnowledgeGroup = (knowledgeGroup) => {
-    editRef.value.showDialog('目录', '修改', knowledgeGroup)
-  }
-  // const hDel = (typeName, row) => {
-  //   $baseConfirm('你确定要删除当前项吗', null, async () => {
-  //     const { msg } = await doDelete({ ids: row.id })
-  //     $baseMessage(msg, 'success', 'vab-hey-message-success')
-  //     await fetchData()
+  // const hDel = (id) => {
+  //   gp.$baseConfirm('你确定要删除当前项吗', null, async () => {
+  //     await delWork(id)
+  //     gp.$baseMessage('删除成功')
+  //     search()
   //   })
   // }
+  const subjectList = ref<Subject[]>([])
+  const exerciseList = ref<Work[]>([])
 
-  watch(
-    subject,
-    () => {
-      console.log('1', subject)
-      fetchData()
-    },
-    { immediate: true }
-  )
-
-  // onActivated(() => {
-  //   console.log('onActived')
-  //   // 调用时机为首次挂载
-  //   // 以及每次从缓存中被重新插入时
-  //   fetchData()
-  // })
+  const hDel = (id) => {
+    gp.$baseConfirm('你确定要删除当前项吗', null, async () => {
+      // emit('del-container', item)
+      await doDelete(id)
+      gp.$baseMessage('删除成功', 'success')
+      search()
+    })
+  }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
   .section {
-    background: $base-color-background !important;
-    padding: 0;
+    background-color: #f6f8f9;
   }
-  .knowledges {
-    padding: 10px 5px;
-    background-color: $base-color-background;
+  .section-item {
+    padding: 1em;
+    border: none !important;
   }
-  .knowledge-group {
-    background-color: #fff;
-    border-radius: 5px;
-    padding: 15px;
-  }
-  .knowledge-group-item {
-    margin: 5px !important;
-  }
-  .knowledge-group.empty {
-    cursor: pointer;
-    padding: 0;
+  .header {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-  }
-
-  .icon-button {
-    margin: 0 5px;
-    // color: red;
-    &:hover {
-      cursor: pointer;
-    }
+    align-items: center;
   }
 </style>
