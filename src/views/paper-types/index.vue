@@ -1,18 +1,19 @@
 <template>
-  <div>
-    <h3>试卷类型</h3>
+  <div class="p1">
     <el-button type="primary" @click="add">添加</el-button>
-    <el-table>
-      <el-table-column prop="name" label="类型名称" />
+    <el-table :data="state.list">
+      <el-table-column prop="title" label="类型名称" />
       <el-table-column prop="intro" label="类型简介" />
       <el-table-column prop="order" label="显示顺序" />
       <el-table-column prop="remark" label="备注" />
     </el-table>
-    <PaperTypeDialog ref="refDialog" />
+    <PaperTypeDialog ref="refDialog" @fetch-data="fetchData" />
   </div>
 </template>
 
 <script setup lang="ts">
+  import { getList } from '@/api/paperType'
+
   import PaperTypeDialog from './paper-type-dialog'
 
   const refDialog = ref(null)
@@ -27,13 +28,13 @@
     total: 0,
     selectRows: '',
   })
+  onMounted(() => {
+    fetchData()
+  })
 
   const fetchData = async () => {
     state.listLoading = true
-    const res = await getList({
-      subjectID: curSubject.value.id,
-      withDirective: true,
-    })
+    const res = await getList()
     state.list = res.data.list
     state.listLoading = false
   }

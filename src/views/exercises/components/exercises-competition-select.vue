@@ -12,7 +12,9 @@
     </el-select>
     <div>
       <div v-for="(item, idx) in cTableData" :key="idx" style="display: flex">
-        <label for="" style="margin-right: 20px">{{ item.key }}:</label>
+        <label style="flex-grow: 0; flex-shrink: 0; margin-right: 10px" for="">
+          {{ item.key }}:
+        </label>
         <el-radio-group v-model="item.selected" @change="hChange">
           <el-radio v-for="it in item.value" :key="it.id" :label="it.id">
             {{ it.value }}

@@ -1,9 +1,10 @@
 <template>
   <section class="competition-add-container">
-    <h3>添加习题</h3>
+    <h3>{{ $route.params.id ? '编辑' : '添加' }}习题</h3>
     <el-form ref="formRef" label-width="80px" :model="data" :rules="rules">
       <el-form-item label="科目" prop="subjectID">
-        <el-select v-model="data.subjectID">
+        <my-select-subject v-model="curSubject" />
+        <!-- <el-select v-model="data.subjectID">
           <el-option
             v-for="item in subjectList"
             :key="item.id"
@@ -12,7 +13,7 @@
           >
             {{ item.title }}
           </el-option>
-        </el-select>
+        </el-select> -->
       </el-form-item>
 
       <el-form-item label="习题编号" prop="no">
@@ -150,8 +151,9 @@
   import ExercisesAnsArea from './components/exercises-ans-area.vue'
   import ExercisesKnowledges from './components/exercises-knowledges.vue'
   import ExercisesCompetitionSelect from './components/exercises-competition-select.vue'
-  import { getList as getSubject } from '@/api/subject'
-  import { doAdd } from '@/api/exercise'
+  import { doAdd, getList as getExerice } from '@/api/exercise'
+
+  const route = useRoute()
   const $baseMessage = inject('$baseMessage')
 
   const data = reactive({
@@ -192,38 +194,26 @@
     state: true, // boolean
   })
 
-  // setTimeout(() => {
-  //   data.remark = 'ajax数据'
-  //   console.log('ajax数据')
-  // }, 5000)
-  const subjectList = ref([])
-  onMounted(async () => {
-    // 获取到课程
-    const { data } = await getSubject()
-    subjectList.value = data.list.map((item) => {
-      return {
-        id: item.id,
-        title: item.title,
-      }
-    })
-  })
+  const curSubject = ref<{ id: number }>({})
+  onMounted(() => {
+    if (route.params.id) {
+      getExerice({
+        id: route.params.id,
+        withCompetion: true,
+        withDirective: true,
+        withKnowledege: true,
+      }).then((res) => {
+        console.log(res)
+        data.type = res.data.type
+        data.no = res.data.no
+        data.level = res.data.level
+        data.intro = res.data.intro
+        data.title = res.data.title
 
-  const curSubject = ref({})
-  watch(
-    () => data.subjectID,
-    (val) => {
-      if (!val) {
-        curSubject.value = {}
-        return
-      }
-
-      const curCourse = subjectList.value.find((it) => it.id === val)
-      curSubject.value = {
-        value: curCourse.id,
-        label: curCourse.title,
-      }
+        // data.subjectID = res.data.id
+      })
     }
-  )
+  })
 
   const visibles = computed(() => {
     if (data.type === 'single') {
@@ -243,12 +233,9 @@
   }
   const formRef = ref(null)
 
-  const close = () => {
-    formRef.value.resetFields()
-    visible.value = false
-  }
   const doSave = async () => {
     const d = {
+      subjectID: curSubject.id,
       ...data,
       ...data.competition,
       contentSelect: {},
@@ -295,7 +282,7 @@
   const save = () => {
     formRef.value.validate(async (valid) => {
       if (valid) {
-        await doSave(data)
+        await doSave()
       }
     })
   }

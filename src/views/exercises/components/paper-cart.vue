@@ -1,5 +1,5 @@
 <template>
-  <el-drawer v-model="isShow" title="试题篮" destroy-on-close>
+  <el-drawer v-model="isShow" size="70%" title="试题篮" destroy-on-close>
     <div>
       <label>科目： {{ subject.title }}</label>
     </div>
@@ -75,7 +75,7 @@
     </div>
   </el-drawer>
 
-  <paper-dialog ref="refDialog" :list="cartList" />
+  <paper-dialog ref="refDialog" :list="list" :list-detail="listDetail" />
 
   <el-button
     type="primary"
@@ -122,6 +122,7 @@
       if (list.value[it].list.length > 0) {
         res.push({
           id: it,
+          tit: `${CONST_EX_TYPE[it]}`,
           title: `${CONST_EX_TYPE[it]}(${list.value[it].list.length})`,
           total: list.value[it].list.reduce((a, b) => a + b.mark, 0),
         })

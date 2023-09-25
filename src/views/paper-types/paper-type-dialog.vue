@@ -9,14 +9,14 @@
   >
     <el-form ref="formRef" label-width="100px" :model="data" :rules="rules">
       <!-- label-position="top" -->
-      <el-form-item label="类型名称" prop="name">
-        <el-input :model-value="data.name" />
+      <el-form-item label="类型名称" prop="title">
+        <el-input v-model="data.title" />
       </el-form-item>
       <el-form-item label="类型简介" prop="intro">
         <el-input
           v-model="data.intro"
           type="textarea"
-          aria-placeholder="请输入"
+          aria-placeholder="请输入介绍"
         />
       </el-form-item>
 
@@ -35,24 +35,18 @@
 </template>
 
 <script setup lang="ts">
-  import {
-    add as doAddDirectiveGroup,
-    put as doUpdateDirectiveGroup,
-  } from '@/api/directiveGroup'
+  import { doAdd, doEdit } from '@/api/paperType'
   import { gp } from '@gp'
-  import {
-    add as doAddDirective,
-    put as doUpdateDirective,
-  } from '@/api/directive'
 
   const emit = defineEmits(['fetch-data'])
 
   const data = reactive({
     id: '',
-    name: '',
-    intro: -1,
+    title: '',
+    intro: '',
+    remark: '备注',
     order: 1,
-    remark: '备注', // 备注
+    state: true,
   })
 
   const rules = {
@@ -70,6 +64,11 @@
 
     if (opName === '添加') {
       data.id = null
+    } else if (opName === '修改') {
+      data.id = row.id
+      data.title = row.title
+      data.intro = row.intro
+      data.order = row.order
     }
     cTitle.value = `试卷类型-${state.opName}`
     visible.value = true
@@ -80,10 +79,10 @@
   }
   const doSave = async (data) => {
     if (state.opName === '添加') {
-      await doAddDirectiveGroup(data)
+      await doAdd(data)
       emit('fetch-data')
     } else if (state.opName === '修改') {
-      await doUpdateDirective(data)
+      await doEdit(data)
       emit('fetch-data')
     }
 

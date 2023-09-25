@@ -116,9 +116,14 @@
         <div v-html="item.contentJudge.body"></div>
       </div>
       <div class="m1">
-        <!-- <el-button icon="del" type="primary" @click="hEdit(item.id)">
+        <el-button
+          size="small"
+          :icon="Edit"
+          type="primary"
+          @click="hEdit(item.id)"
+        >
           修改
-        </el-button> -->
+        </el-button>
         <el-button
           size="small"
           :icon="Delete"
@@ -147,7 +152,7 @@
   </section>
 </template>
 <script setup lang="ts">
-  import { Delete } from '@element-plus/icons-vue'
+  import { Delete, Edit } from '@element-plus/icons-vue'
   import paperCart from './components/paper-cart.vue'
   import { getSelectOptionCode } from '@/utils'
   import { CONST_EX_TYPE, CONST_LEVEL } from '~/src/constant'
@@ -156,6 +161,8 @@
   import MyRadio from '~/src/components/my-radio.vue'
   import MyKnowledges from '~/src/components/my-knowledges.vue'
 
+  import { useRouter } from 'vue-router'
+  const router = useRouter()
   const formData = reactive({
     subject: { id: null, title: '' },
     productGroupID: null,
@@ -212,6 +219,10 @@
       gp.$baseMessage('删除成功', 'success')
       search()
     })
+  }
+
+  const hEdit = (id) => {
+    router.push(`/exercises/edit/${id}`)
   }
 </script>
 <style lang="scss" scoped>
