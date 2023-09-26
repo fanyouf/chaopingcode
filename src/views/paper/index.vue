@@ -1,6 +1,6 @@
 <template>
   <my-page
-    :list="list"
+    :list="paperList"
     title="添加试卷"
     :op-names="['del', 'update', 'view']"
     @view-container="hViewCompetition"
@@ -41,10 +41,10 @@
     </template>
 
     <template #default="{ item }">
-      <div class="course">
-        <img :src="item.logo || defaultImage" class="logo" />
-        <h3 class="course-title">{{ item.title }}</h3>
-        <p class="course-info">{{ item.intro }}</p>
+      <div class="paper p1">
+        <img :src="item.cover || defaultImage" class="paper-image" />
+        <h3 class="paper-title">{{ item.title }}</h3>
+        <p class="paper-info">{{ item.intro }}</p>
         <div class="course-ops">
           <el-button size="small" type="primary" @click="hEdit(item)">
             编辑
@@ -65,7 +65,7 @@
   import paperCart from './components/paper-cart.vue'
   import { getSelectOptionCode } from '@/utils'
   import { CONST_EX_TYPE, CONST_LEVEL } from '~/src/constant'
-  import { getList as getExerciseList, doDelete } from '@/api/exercise'
+  import { getList, doDelete } from '@/api/paper'
   import { gp } from '@gp'
   import MyRadio from '~/src/components/my-radio.vue'
   import MyKnowledges from '~/src/components/my-knowledges.vue'
@@ -77,27 +77,8 @@
     level: 'medium',
     keyword: '', // 关键字
   })
-  const isShowMore = ref(false)
-  const toggle = () => {
-    isShowMore.value = !isShowMore.value
-  }
-  const cartList = ref([])
-  // 添加到试题篮
-  const hAddtoCart = (item) => {
-    item.inCart = true
-    cartList.value.push(item)
-  }
-  const hMoveout = (it) => {
-    const item = exerciseList.value.find((i) => i.id === it.id)
-    item.inCart = false
-
-    const idx = cartList.value.find((i) => i.id === it.id)
-    cartList.value.splice(idx, 1)
-  }
-  const hRemoveFromCart = (item) => {
-    item.inCart = false
-    cartList.value.splice(cartList.value.indexOf(item), 1)
-  }
+  const defaultImage =
+    'http://8.142.32.7:8888/assets/d1/57/d1576663f29233e326553db584e5520c.jpg'
 
   onMounted(() => {
     search()
@@ -106,8 +87,8 @@
   const search = async () => {
     // 查询条件
     const d = {}
-    const { data } = await getExerciseList(d)
-    exerciseList.value = data.list
+    const { data } = await getList(d)
+    paperList.value = data.list
   }
   // const hDel = (id) => {
   //   gp.$baseConfirm('你确定要删除当前项吗', null, async () => {
@@ -116,8 +97,7 @@
   //     search()
   //   })
   // }
-  const subjectList = ref<Subject[]>([])
-  const exerciseList = ref<Work[]>([])
+  const paperList = ref([])
 
   const hDel = (id) => {
     gp.$baseConfirm('你确定要删除当前项吗', null, async () => {
@@ -139,5 +119,8 @@
   .header {
     display: flex;
     align-items: center;
+  }
+  .paper-image {
+    width: 100%;
   }
 </style>

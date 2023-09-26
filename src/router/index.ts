@@ -364,16 +364,6 @@ export const asyncRoutes: VabRouteRecord[] = [
     },
     children: [
       {
-        path: 'type',
-        name: 'PaperTypeIndex',
-        component: () => import('@/views/paper-types/index.vue'),
-        meta: {
-          title: '试卷类型管理',
-          icon: 'shopping-cart-line',
-          // badge: 'Hot',
-        },
-      },
-      {
         path: '',
         name: 'PaperIndex',
         component: () => import('@/views/paper/index.vue'),
@@ -393,6 +383,17 @@ export const asyncRoutes: VabRouteRecord[] = [
           // badge: 'Hot',
         },
       },
+      {
+        path: 'type',
+        name: 'PaperTypeIndex',
+        component: () => import('@/views/paper-types/index.vue'),
+        meta: {
+          title: '试卷类型管理',
+          icon: 'shopping-cart-line',
+          // badge: 'Hot',
+        },
+      },
+
       {
         path: '/directive/:id',
         name: 'DirectiveDetail',
