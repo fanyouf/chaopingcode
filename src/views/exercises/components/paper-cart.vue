@@ -1,5 +1,5 @@
 <template>
-  <el-drawer v-model="isShow" size="70%" title="试题篮" destroy-on-close>
+  <el-drawer v-model="isShow" size="50%" title="试题篮" destroy-on-close>
     <div>
       <label>科目： {{ subject.title }}</label>
     </div>

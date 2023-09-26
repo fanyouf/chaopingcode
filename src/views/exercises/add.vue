@@ -113,12 +113,7 @@
       <my-directives v-model="data.directiveIDs" :subject="curSubject" />
 
       <el-form-item label="文本讲解" prop="explainText">
-        <el-input
-          v-model="data.explainText"
-          style="width: 500px"
-          type="textarea"
-          aria-placeholder="请输入文本讲解"
-        />
+        <my-wang-editor v-model="data.explainText" />
       </el-form-item>
 
       <el-form-item label="视频讲解" prop="explainVideo">

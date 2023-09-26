@@ -1,64 +1,63 @@
 <template>
-  <my-page
-    :list="paperList"
-    title="添加试卷"
-    :op-names="['del', 'update', 'view']"
-    @view-container="hViewCompetition"
-    @del-container="hDelCompetition"
-    @add-container="hAddCompetition"
-  >
-    <template #header>
-      <my-radio-subject v-model="formData.subject" />
+  <section class="section">
+    <el-row :gutter="20">
+      <el-col :span="24">
+        <vab-card class="page-header" shadow="never">
+          <my-radio-subject v-model="formData.subject" />
 
-      <my-radio-competition v-model="formData.subject" />
+          <my-radio-competition v-model="formData.subject" />
 
-      <div class="m1">
-        <label>难度</label>
-        <el-select v-model="formData.level" style="width: 100px">
-          <el-option label="全部" :value="null">全部</el-option>
-          <el-option label="简单" value="easy">简单</el-option>
-          <el-option label="中等" value="medium">中等</el-option>
-          <el-option label="困难" value="hard">困难</el-option>
-          <el-option label="挑战" value="challenge">挑战</el-option>
-        </el-select>
-        &nbsp;&nbsp;
+          <div class="m1">
+            <label class="mr5">难度:</label>
+            <el-select v-model="formData.level" style="width: 100px">
+              <el-option label="全部" :value="null">全部</el-option>
+              <el-option label="简单" value="easy">简单</el-option>
+              <el-option label="中等" value="medium">中等</el-option>
+              <el-option label="困难" value="hard">困难</el-option>
+              <el-option label="挑战" value="challenge">挑战</el-option>
+            </el-select>
+            &nbsp;&nbsp;
 
-        <label>类型</label>
-        <el-select v-model="formData.level" style="width: 100px">
-          <el-option label="全部" :value="null">全部</el-option>
-          <el-option label="简单" value="easy">简单</el-option>
-          <el-option label="中等" value="medium">中等</el-option>
-          <el-option label="困难" value="hard">困难</el-option>
-          <el-option label="挑战" value="challenge">挑战</el-option>
-        </el-select>
-        &nbsp;&nbsp;
+            <label class="mr5">类型:</label>
+            <my-select-papertype />
+            &nbsp;&nbsp;
+            <label class="mr5" for="">关键字:</label>
+            <el-input v-model="formData.keyword" style="width: 200px" />
+            &nbsp;&nbsp;
+            <el-button type="success" @click="search">查询</el-button>
+          </div>
+        </vab-card>
+      </el-col>
+      <el-col
+        v-for="item in paperList"
+        :key="item.id"
+        :lg="6"
+        :md="8"
+        :sm="8"
+        :xl="6"
+        :xs="24"
+      >
+        <vab-card
+          class="section-item"
+          :body-style="{ padding: '0px' }"
+          shadow="hover"
+        >
+          <div class="section-item-body">
+            <img
+              style="width: 100%; height: 186px"
+              :src="item.cover || defaultImage"
+            />
+            <h3>{{ item.title }}</h3>
 
-        <label for="">关键字:</label>
-        <el-input v-model="formData.keyword" style="width: 200px" />
-        &nbsp;&nbsp;
-        <el-button type="success" @click="search">查询</el-button>
-      </div>
-    </template>
-
-    <template #default="{ item }">
-      <div class="paper p1">
-        <img :src="item.cover || defaultImage" class="paper-image" />
-        <h3 class="paper-title">{{ item.title }}</h3>
-        <p class="paper-info">{{ item.intro }}</p>
-        <div class="course-ops">
-          <el-button size="small" type="primary" @click="hEdit(item)">
-            编辑
-          </el-button>
-          <el-button size="small" type="primary" @click="hDetail(item)">
-            查看详情
-          </el-button>
-          <el-button size="small" type="primary" @click="hDel(item)">
-            删除
-          </el-button>
-        </div>
-      </div>
-    </template>
-  </my-page>
+            <p class="section-item-body-intro">{{ item.intro }}</p>
+            <p>
+              <el-button type="danger" @click="hDel(item.id)">删除</el-button>
+            </p>
+          </div>
+        </vab-card>
+      </el-col>
+    </el-row>
+  </section>
 </template>
 <script setup lang="ts">
   import { Delete } from '@element-plus/icons-vue'
