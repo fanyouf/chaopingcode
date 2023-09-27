@@ -22,6 +22,14 @@ export const constantRoutes: VabRouteRecord[] = [
     },
   },
   {
+    path: '/paper/detail',
+    name: 'PaperDetail',
+    component: () => import('@/views/paper/detail.vue'),
+    meta: {
+      hidden: true,
+    },
+  },
+  {
     path: '/register',
     name: 'Register',
     component: () => import('@/views/register/index.vue'),

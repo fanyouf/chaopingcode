@@ -52,6 +52,9 @@
             <p class="section-item-body-intro">{{ item.intro }}</p>
             <p>
               <el-button type="danger" @click="hDel(item.id)">删除</el-button>
+              <el-button type="primary" @click="hViewDetail(item.id)">
+                详情
+              </el-button>
             </p>
           </div>
         </vab-card>
@@ -105,6 +108,10 @@
       gp.$baseMessage('删除成功', 'success')
       search()
     })
+  }
+
+  const hViewDetail = (id) => {
+    window.open(`/#/paper/detail?id=${id}`)
   }
 </script>
 <style lang="scss" scoped>
