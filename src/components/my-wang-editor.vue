@@ -21,6 +21,7 @@
   import '@wangeditor/editor/dist/css/style.css'
   import { IDomEditor, DomEditor, IToolbarConfig } from '@wangeditor/editor'
   import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+  import { fi } from 'element-plus/es/locale'
 
   const props = defineProps<{
     modelValue: string
@@ -76,12 +77,24 @@
   const editorConfig = ref({
     mode: 'simple',
     placeholder: '请输入内容...',
+
     MENU_CONF: {
       uploadImage: {
-        server: '', // 你的服务器地址，注意：当前接口格式特殊与其他vab接口不同，请查看vip文档
-        fieldName: 'vab-file-name',
+        server: 'http://8.142.32.7:8888/file/upload-image', // 你的服务器地址，注意：当前接口格式特殊与其他vab接口不同，请查看vip文档
+        fieldName: 'file',
         allowedFileTypes: ['image/*'],
         headers: {}, // 如需传递token请写到在这里
+        customInsert(res, insertFn) {
+          // TS 语法
+          // customInsert(res, insertFn) {                  // JS 语法
+          // res 即服务端的返回结果
+          console.log(res)
+          if (res.code === 0) {
+            insertFn(res.data.url, 'alt', res.data.url)
+          }
+
+          // 从 res 中找到 url alt href ，然后插入图片
+        },
       },
     },
   })
