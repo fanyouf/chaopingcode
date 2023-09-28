@@ -153,7 +153,6 @@
 
   const data = reactive({
     // id: '',
-    subjectID: '',
     title: '习题名称11', // 习题名称
     no: `zj00${Math.random()}`,
     intro: '习题介绍',
@@ -181,8 +180,8 @@
       answer: 'yes',
     },
 
-    knowledgeIDs: '',
-    directiveIDs: '',
+    knowledgeIDs: [],
+    directiveIDs: [],
     selectAns: 1,
     selectOptions: [],
     selectOptionsMultiple: [],
@@ -230,9 +229,9 @@
 
   const doSave = async () => {
     const d = {
-      subjectID: curSubject.id,
       ...data,
       ...data.competition,
+      subjectID: curSubject.value.id,
       contentSelect: {},
     }
     // 判断题

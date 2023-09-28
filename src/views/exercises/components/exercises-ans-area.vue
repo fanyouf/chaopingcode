@@ -64,6 +64,7 @@
       emit('update:modelValue', ansList.value)
     },
     {
+      immediate: true,
       deep: true,
     }
   )
