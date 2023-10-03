@@ -75,7 +75,12 @@
     </div>
   </el-drawer>
 
-  <paper-dialog ref="refDialog" :list="list" :list-detail="listDetail" />
+  <paper-dialog
+    ref="refDialog"
+    :list="list"
+    :list-detail="listDetail"
+    @add-paper-ok="hAddPaperOK"
+  />
 
   <el-button
     type="primary"
@@ -110,10 +115,16 @@
   const showDialog = () => {
     refDialog.value.showDialog()
   }
-  const emit = defineEmits(['moveout'])
+  const emit = defineEmits(['moveout', 'moveoutall'])
 
   const isShow = ref(false)
   const totalMark = ref(0)
+
+  // 添加试卷成功
+  const hAddPaperOK = () => {
+    isShow.value = false
+    emit('moveoutall')
+  }
 
   const listDetail = computed(() => {
     const res = []

@@ -269,7 +269,6 @@
     delete d.answer
     delete d.selectOptions
     delete d.selectAns
-    debugger
     await doAdd(d)
     $baseMessage('添加成功', 'success', 'vab-hey-message-success')
   }

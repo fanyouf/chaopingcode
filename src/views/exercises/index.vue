@@ -66,6 +66,7 @@
       :cart-list="cartList"
       :subject="formData.subject"
       @moveout="hMoveout"
+      @moveoutall="hMoveoutAll"
     />
     <vab-card
       v-for="item in exerciseList"
@@ -205,6 +206,13 @@
   const hAddtoCart = (item) => {
     item.inCart = true
     cartList.value.push(item)
+  }
+  const hMoveoutAll = () => {
+    cartList.value.forEach((it, idx) => {
+      const item = exerciseList.value.find((i) => i.id === it.id)
+      item.inCart = false
+    })
+    cartList.value = []
   }
   const hMoveout = (it) => {
     const item = exerciseList.value.find((i) => i.id === it.id)

@@ -67,16 +67,14 @@
 <script setup lang="ts">
   import { doAdd } from '@/api/paper'
   import ExercisesCompetitionSelect from './exercises-competition-select.vue'
+  import { gp } from '@gp'
 
-  import ExercisesKnowledges from './exercises-knowledges.vue'
   const props = defineProps<{
     list: object
     listDetail: any[]
   }>()
 
-  const $baseMessage = inject('$baseMessage')
-
-  const emit = defineEmits(['change-step'])
+  const emit = defineEmits(['add-paper-ok'])
   const visible = ref(false)
   const showDialog = () => {
     visible.value = true
@@ -108,7 +106,7 @@
   }
 
   const doSave = async () => {
-    await doAdd({
+    const res = await doAdd({
       title: data.title,
       intro: data.intro,
       cover: data.cover,
@@ -130,6 +128,14 @@
           }),
         }
       }),
+    })
+    gp.$baseMessage('添加试卷成功', 'success')
+    visible.value = false
+    emit('add-paper-ok')
+
+    gp.$baseConfirm('要看看试卷的详情吗?', null, () => {
+      // http://localhost:15000/#/paper/detail?id=1
+      window.open(`/#/paper/detail?id=${res.data.id}`)
     })
   }
 
