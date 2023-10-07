@@ -14,22 +14,45 @@
     <div class="container">
       <div class="sidebar">
         <h4>试题分布</h4>
-        <div>一、单选题（共5题，共50分）</div>
-        <ul class="items">
-          <li class="item">1</li>
-          <li class="item">2</li>
-          <li class="item">3</li>
-          <li class="item">3</li>
-          <li class="item">3</li>
-          <li class="item">3</li>
-          <li class="item">3</li>
-        </ul>
+        <div v-for="(item, idx) in birefInfo" :key="idx" class="m1">
+          <div>
+            {{ idx + 1 }}、{{ item.title }}（共{{ item.num }}题，共{{
+              item.score
+            }}分）
+          </div>
+          <ul class="items">
+            <li v-for="i in item.num" :key="i" class="item">{{ i }}</li>
+          </ul>
+        </div>
       </div>
-      <div class="main">
-        <div class="subject">
-          <div class="sub-title">题目说明</div>
-          <div class="sub-title">题干</div>
-          <div>选项</div>
+      <div v-if="data.paperQuestionGroups" class="main">
+        <div
+          v-for="(item, idx) in data.paperQuestionGroups"
+          :key="idx"
+          class="subjects"
+        >
+          <div
+            v-for="it in item.paperQuestions"
+            :key="it.questionID"
+            class="subject"
+          >
+            <div v-if="it.question.type === 'single' || 'multi'">
+              <div class="sub-title">
+                {{ it.no }} {{ it.question.intro }}-{{ it.question.title }}
+              </div>
+              <div v-html="it.question.contentSelect.body"></div>
+              <div class="options">
+                A.
+                <div v-html="it.question.contentSelect.optionA"></div>
+                B.
+                <div v-html="it.question.contentSelect.optionB"></div>
+                C.
+                <div v-html="it.question.contentSelect.optionC"></div>
+                D.
+                <div v-html="it.question.contentSelect.optionD"></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -41,6 +64,21 @@
   const route = useRoute()
 
   const data = ref(null)
+  const birefInfo = computed(() => {
+    if (data.value) {
+      return Object.values(data.value.paperQuestionGroups).map((it) => {
+        const arr = it.paperQuestions
+        return {
+          title: it.title,
+          num: arr.length,
+          score: arr.reduce((acc, cur) => {
+            return acc + cur.score
+          }, 0),
+        }
+      })
+    }
+    return []
+  })
 
   onMounted(async () => {
     const res = await getList({ id: route.query.id })
