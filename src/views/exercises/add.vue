@@ -81,6 +81,21 @@
           <el-radio :label="8">D</el-radio>
         </el-radio-group>
       </el-form-item>
+
+      <el-form-item v-if="visibles['编程']" label="基础代码" prop="codeBaseUrl">
+        <my-upload-file v-model="data.contentCode.codeBasic" :accept="accept" />
+      </el-form-item>
+      <el-form-item
+        v-if="visibles['编程']"
+        label="参考代码"
+        prop="codeFinishedUrl"
+      >
+        <my-upload-file
+          v-model="data.contentCode.codeReference"
+          :accept="accept"
+        />
+      </el-form-item>
+
       <el-form-item
         v-if="visibles['多选']"
         label="多选答案"
@@ -174,12 +189,13 @@
     contentCode: {
       body: '编码题题干',
       answer: '问答题答案',
+      codeBasic: '',
+      codeReference: '',
     },
     contentJudge: {
       body: '判断题题干',
       answer: 'yes',
     },
-
     knowledgeIDs: [],
     directiveIDs: [],
     selectAns: 1,
@@ -188,7 +204,19 @@
     state: true, // boolean
   })
 
-  const curSubject = ref<{ id: number }>({})
+  const accept = computed(() => {
+    const label = curSubject.value.title
+    if (label.toLowerCase().includes('python')) {
+      return '.py'
+    } else if (label.toLowerCase().includes('c++')) {
+      return '.cpp'
+    } else if (label.toLowerCase().includes('scratch')) {
+      return '.sb3'
+    }
+    return '.py,.cpp,.sb3'
+  })
+
+  const curSubject = ref<{ id: number; title: '' }>({})
   onMounted(() => {
     if (route.params.id) {
       getExerice({
@@ -218,6 +246,8 @@
       return { 判断: true }
     } else if (data.type === 'answer') {
       return { 简答: true }
+    } else if (data.type === 'code') {
+      return { 编程: true }
     } else {
       return {}
     }
@@ -262,6 +292,8 @@
         }, 0)
       }
       d.contentSelect = contentSelect
+    } else if (data.type === 'code') {
+      d.contentCode.body = data.body
     }
 
     delete d.competition
