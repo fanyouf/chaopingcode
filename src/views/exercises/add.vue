@@ -232,6 +232,8 @@
         data.intro = res.data.intro
         data.title = res.data.title
 
+        curSubject.value.id = res.data.subjectID
+
         // data.subjectID = res.data.id
       })
     }

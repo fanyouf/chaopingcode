@@ -31,26 +31,40 @@
           :key="idx"
           class="subjects"
         >
+          <div>{{ idx + 1 }} {{ item.title }}</div>
           <div
             v-for="it in item.paperQuestions"
             :key="it.questionID"
             class="subject"
           >
-            <div v-if="it.question.type === 'single' || 'multi'">
+            <div v-if="['single', 'multi'].includes(it.question.type)">
               <div class="sub-title">
                 {{ it.no }} {{ it.question.intro }}-{{ it.question.title }}
               </div>
-              <div v-html="it.question.contentSelect.body"></div>
+              <!-- {{ it.question?.contentSelect?.body }} -->
+              <!-- <div v-html="it.question?.contentSelect?.body"></div> -->
               <div class="options">
                 A.
-                <div v-html="it.question.contentSelect.optionA"></div>
+                <div v-html="it.question?.contentSelect?.optionA"></div>
                 B.
-                <div v-html="it.question.contentSelect.optionB"></div>
+                <div v-html="it.question?.contentSelect?.optionB"></div>
                 C.
-                <div v-html="it.question.contentSelect.optionC"></div>
+                <div v-html="it.question?.contentSelect?.optionC"></div>
                 D.
-                <div v-html="it.question.contentSelect.optionD"></div>
+                <div v-html="it.question?.contentSelect?.optionD"></div>
               </div>
+            </div>
+            <div v-else-if="it.question.type === 'judge'">
+              <div class="sub-title">
+                {{ it.no }} {{ it.question.intro }}-{{ it.question.title }}
+              </div>
+              <div v-html="it.question.contentJudge.body"></div>
+            </div>
+            <div v-else-if="it.question.type === 'code'">
+              <div class="sub-title">
+                {{ it.no }} {{ it.question.intro }}-{{ it.question.title }}
+              </div>
+              <div v-html="it.question.contentCode.body"></div>
             </div>
           </div>
         </div>
