@@ -284,16 +284,6 @@ export const asyncRoutes: VabRouteRecord[] = [
     },
     children: [
       {
-        path: '',
-        name: 'WorkIndex',
-        component: () => import('@/views/work/index.vue'),
-        meta: {
-          title: '作品库',
-          icon: 'shopping-cart-line',
-          // badge: 'Hot',
-        },
-      },
-      {
         path: 'cate',
         name: 'WorkCate',
         component: () => import('@/views/work/cate.vue'),
@@ -301,6 +291,15 @@ export const asyncRoutes: VabRouteRecord[] = [
           title: '作品分类',
           // meta: { title: 'Params id=1' },
           // dynamicNewTab: true,
+        },
+      },
+      {
+        path: '',
+        name: 'WorkIndex',
+        component: () => import('@/views/work/index.vue'),
+        meta: {
+          title: '作品库',
+          icon: 'shopping-cart-line',
         },
       },
       {
@@ -382,16 +381,6 @@ export const asyncRoutes: VabRouteRecord[] = [
         },
       },
       {
-        path: 'add',
-        name: 'PaperAddIndex',
-        component: () => import('@/views/paper/add.vue'),
-        meta: {
-          title: '试卷添加',
-          // icon: 'shopping-cart-line',
-          // badge: 'Hot',
-        },
-      },
-      {
         path: 'type',
         name: 'PaperTypeIndex',
         component: () => import('@/views/paper-types/index.vue'),
@@ -416,8 +405,8 @@ export const asyncRoutes: VabRouteRecord[] = [
     ],
   },
   {
-    path: '/lession',
-    name: 'Lession',
+    path: '/lesson',
+    name: 'lesson',
     component: Layout,
     meta: {
       title: '教学单元',
@@ -427,22 +416,33 @@ export const asyncRoutes: VabRouteRecord[] = [
     },
     children: [
       {
-        path: '',
-        name: 'LessionIndex',
-        component: () => import('@/views/lession/index.vue'),
+        path: 'group',
+        name: 'lessonGroup',
+        component: () => import('@/views/lesson/group.vue'),
         meta: {
-          title: '教学单元管理',
+          title: '教学单元分类',
+          icon: 'shopping-cart-line',
+          // badge: 'Hot',
+        },
+      },
+      {
+        path: '',
+        name: 'lessonIndex',
+        component: () => import('@/views/lesson/index.vue'),
+        meta: {
+          title: '教学单元库',
           icon: 'shopping-cart-line',
           // badge: 'Hot',
         },
       },
       {
         path: 'add',
-        name: 'LessionAddIndex',
-        component: () => import('@/views/lession/add.vue'),
+        name: 'lessonAddIndex',
+        component: () => import('@/views/lesson/add.vue'),
         meta: {
           title: '教学单元添加',
           icon: 'shopping-cart-line',
+          hidden: true,
           // badge: 'Hot',
         },
       },

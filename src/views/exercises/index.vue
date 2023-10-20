@@ -75,9 +75,8 @@
       :body-style="{ padding: '0px' }"
       shadow="never"
     >
-      <div class="header flex">
-        <h3>{{ item.title }}</h3>
-        <label>
+      <div class="header">
+        <label style="margin-right: 20px">
           <el-tag size="small" type="success">
             {{ CONST_LEVEL[item.level] }}
           </el-tag>
@@ -85,6 +84,7 @@
             {{ CONST_EX_TYPE[item.type] }}
           </el-tag>
         </label>
+        <div>{{ item.title }}</div>
       </div>
 
       <div
@@ -92,8 +92,8 @@
         class="section-item-body"
       >
         <div v-html="item.contentSelect.body"></div>
-        <div v-for="i in item.contentSelect.optionLen" :key="i">
-          {{ String.fromCharCode(64 + i) }}.
+        <div v-for="i in item.contentSelect.optionLen" :key="i" class="flex1">
+          <label>{{ String.fromCharCode(64 + i) }}.</label>
           <div
             v-html="item.contentSelect['option' + String.fromCharCode(64 + i)]"
           ></div>
@@ -103,7 +103,7 @@
           {{ getSelectOptionCode(item.contentSelect.answer) }}
         </div>
       </div>
-      <div v-if="item.type === 'answer'" class="section-item-body">
+      <div v-else-if="item.type === 'answer'" class="section-item-body">
         <div v-html="item.contentAnswer.body"></div>
         <el-collapse>
           <el-collapse-item title="答案" name="1">
@@ -113,8 +113,11 @@
           </el-collapse-item>
         </el-collapse>
       </div>
-      <div v-if="item.type === 'judge'" class="section-item-body">
+      <div v-else-if="item.type === 'judge'" class="section-item-body">
         <div v-html="item.contentJudge.body"></div>
+      </div>
+      <div v-else-if="item.type === 'code'" class="section-item-body">
+        <div v-html="item.contentCode.body"></div>
       </div>
       <div class="m1">
         <el-button
@@ -122,9 +125,7 @@
           :icon="Edit"
           type="primary"
           @click="hEdit(item.id)"
-        >
-          修改
-        </el-button>
+        />
         <el-button
           size="small"
           :icon="Delete"
@@ -136,10 +137,9 @@
           v-if="!item.inCart"
           size="small"
           type="primary"
+          :icon="Plus"
           @click="hAddtoCart(item)"
-        >
-          加试题篮
-        </el-button>
+        />
         <el-button
           v-else
           size="small"
@@ -166,7 +166,7 @@
   </section>
 </template>
 <script setup lang="ts">
-  import { Delete, Edit } from '@element-plus/icons-vue'
+  import { Delete, Edit, Plus } from '@element-plus/icons-vue'
   import paperCart from './components/paper-cart.vue'
   import { getSelectOptionCode } from '@/utils'
   import { CONST_EX_TYPE, CONST_LEVEL } from '~/src/constant'

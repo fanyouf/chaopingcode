@@ -2,34 +2,35 @@
   <div>
     <my-page
       :list="state.list"
-      item-type="知识点"
-      @add-container="hAddKnowledgeGroup"
-      @add-item="hAddKnowledge"
-      @edit-container="hEditKnowledgeGroup"
+      :op-names="['add', 'del', 'edit']"
+      title="教学单元分类"
+      @add-container="hAddLessonGroup"
+      @add-item="hAddLesson"
+      @edit-container="hEditLessonGroup"
     >
       <template #header>
-        <h3>选择科目，当前科目是{{ curCourse }}</h3>
+        <h3>选择科目，当前科目是{{ curCourse.title }}</h3>
         <my-subject v-model="curCourse" />
       </template>
-      <template #default="{ item }">
-        <div class="knowledge-group">
+      <!-- <template #default="{ item }">
+        <div class="lesson-group">
           <el-tag
             v-for="it in item.children"
             :key="it.id"
-            class="knowledge-group-item"
+            class="lesson-group-item"
             closable
-            @close="hDelKnowledge(it)"
+            @close="hDelLesson(it)"
           >
             <span
               title="点击查看"
               style="cursor: pointer"
-              @click="hEditKnowledge(it)"
+              @click="hEditLesson(it)"
             >
               {{ it.title }}
             </span>
           </el-tag>
         </div>
-      </template>
+      </template> -->
     </my-page>
     <my-dialog ref="editRef" @fetch-data="fetchData" />
   </div>
@@ -38,7 +39,7 @@
 <script setup lang="ts">
   // import { OPObject } from '../../types/data'
   defineOptions({
-    name: 'KnowledgeIndex',
+    name: 'LessonIndex',
   })
   // import myPage from '~/src/components/my-page.vue'
   // import myCourse from '~/src/components/my-course.vue'
@@ -46,9 +47,10 @@
   // import { Plus } from '@element-plus/icons-vue'
 
   import { getList } from '@/api/knowledge'
-  import MyDialog from '@/components/my-dialog.vue'
+  import MyDialog from './lesson-dialog.vue'
+  import router from '~/src/router'
 
-  const curCourse = ref('Python')
+  const curCourse = ref({})
   // const $baseConfirm = inject('$baseConfirm')
   // const $baseMessage = inject('$baseMessage')
   const subject = ref('c++')
@@ -69,23 +71,23 @@
     state.list = res.data.list
     state.listLoading = false
   }
-  const hAddKnowledgeGroup = () => {
-    editRef.value.showDialog('目录', '添加', null)
+  const hAddLessonGroup = () => {
+    editRef.value.showDialog('单元分类', '添加', {
+      subjectID: curCourse.value.id,
+      subjectTitle: curCourse.value.title,
+    })
   }
-  const hAddKnowledge = (knowledgeGroup) => {
-    editRef.value.showDialog('知识点', '添加', knowledgeGroup)
-  }
-  const hEditKnowledge = (knowledge) => {
-    editRef.value.showDialog('知识点', '修改', knowledge)
+  const hAddLesson = (lessonGroup) => {
+    router.push('/lesson/add')
   }
 
-  const hDelKnowledge = (knowledge) => {
+  const hDelLesson = (lesson) => {
     alert(1)
-    console.log('knowledge')
+    console.log('lesson')
   }
 
-  const hEditKnowledgeGroup = (knowledgeGroup) => {
-    editRef.value.showDialog('目录', '修改', knowledgeGroup)
+  const hEditLessonGroup = (lessonGroup) => {
+    editRef.value.showDialog('教学单元', '修改', lessonGroup)
   }
   // const hDel = (typeName, row) => {
   //   $baseConfirm('你确定要删除当前项吗', null, async () => {
@@ -116,19 +118,19 @@
     background: $base-color-background !important;
     padding: 0;
   }
-  .knowledges {
+  .lessons {
     padding: 10px 5px;
     background-color: $base-color-background;
   }
-  .knowledge-group {
+  .lesson-group {
     background-color: #fff;
     border-radius: 5px;
     padding: 15px;
   }
-  .knowledge-group-item {
+  .lesson-group-item {
     margin: 5px !important;
   }
-  .knowledge-group.empty {
+  .lesson-group.empty {
     cursor: pointer;
     padding: 0;
     display: flex;

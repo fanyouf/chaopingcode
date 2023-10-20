@@ -1,7 +1,7 @@
 <template>
   <div class="p1">
-    <el-button type="primary" @click="add">添加</el-button>
-    <el-table :data="state.list">
+    <el-button class="m1" type="primary" @click="add">添加</el-button>
+    <el-table border :data="state.list">
       <el-table-column prop="title" label="类型名称" />
       <el-table-column prop="intro" label="类型简介" />
       <el-table-column prop="order" label="显示顺序" />

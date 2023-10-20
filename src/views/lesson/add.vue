@@ -20,8 +20,8 @@
       <el-form-item label="封面图片" prop="logo">
         <my-upload-image v-model="data.logo" />
       </el-form-item>
-      <el-form-item label="教学单元目标">
-        <el-tabs type="border-card">
+      <el-form-item label="教学目标">
+        <el-tabs type="card">
           <el-tab-pane label="知识与技能">
             <my-wang-editor />
           </el-tab-pane>
@@ -56,7 +56,7 @@
         <el-input-number v-model="data.time" :step="1" />
       </el-form-item>
       <el-form-item label="教学流程">
-        <el-tabs type="border-card">
+        <el-tabs type="card">
           <el-tab-pane label="1.情景引入">
             <my-wang-editor />
           </el-tab-pane>
