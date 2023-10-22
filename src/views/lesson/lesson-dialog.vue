@@ -28,7 +28,7 @@
       </el-form-item>
 
       <el-form-item :label="state.objectName + '图片'" prop="image">
-        <my-upload-image v-model="data.logo" />
+        <my-upload-image v-model="data.cover" />
       </el-form-item>
 
       <el-form-item label="显示排序" prop="order">
@@ -48,9 +48,9 @@
 <script setup lang="ts">
   import { objUnit } from '@/utils'
   import {
-    add as doAddDirectiveGroup,
-    put as doUpdateDirectiveGroup,
-  } from '@/api/directiveGroup'
+    add as doAddLessonType,
+    put as doUpdateLessonType,
+  } from '@/api/lessonType'
   import { gp } from '@gp'
   import {
     add as doAddDirective,
@@ -61,16 +61,14 @@
 
   const data = reactive({
     id: '',
-    subjectTitle: '',
-    directiveGroupID: -1,
     title: '',
-    subjectID: -1,
     intro: '', // 介绍
-    type: 'image', // image or text
-    logo: '', // 指令的图片
+    cover: '', // 图片
+    remark: '备注', // 备注
     order: 1,
     state: false,
-    remark: '备注', // 备注
+    subjectTitle: '',
+    subjectID: -1,
   })
 
   const rules = {
@@ -91,58 +89,26 @@
     state.objectName = objectName
     state.opName = opName
 
-    if (opName === '添加' && objectName === '指令分类') {
+    if (opName === '添加' && objectName === '单元分类') {
       data.id = null
-      data.directiveGroupID = null
       data.title = ''
       data.intro = ''
-      data.type = 'image'
       data.remark = ''
       data.order = 1
       data.state = true
       data.subjectID = row.subjectID
       data.subjectTitle = row.subjectTitle
-    } else if (opName === '添加' && objectName === '指令') {
-      data.subjectID = null
-      data.id = null
-
-      data.type = row.type
-
-      data.title = ''
-      data.intro = ''
-      data.logo = data.type === 'image' ? '' : null
-      data.remark = ''
-      data.order = 1
-      data.state = true
-      data.directiveGroupID = row.id
-    } else if (opName === '修改' && objectName === '指令') {
+    } else if (opName === '修改' && objectName === '单元分类') {
       data.subjectID = null
 
       data.id = row.id
-      data.type = row.type
 
       data.title = row.title
       data.intro = row.intro
-      data.logo = row.image
-      data.type = row.type
+      data.cover = row.cover
       data.remark = row.remark
       data.order = row.order
       data.state = true
-      data.directiveGroupID = row.directiveGroupID
-    } else if (opName === '修改' && objectName === '指令分类') {
-      data.subjectID = row.subject
-      data.id = row.id
-      data.type = row.type
-
-      data.title = row.title
-      data.intro = row.intro
-      data.logo = row.image
-      data.type = row.type
-      data.remark = row.remark
-      data.order = row.order
-      data.state = true
-      data.subjectTitle = row.subjectTitle
-      data.directiveGroupID = row.directiveGroupID
     }
 
     cTitle.value = `${state.objectName}-${state.opName}`
@@ -153,18 +119,15 @@
     visible.value = false
   }
   const doSave = async (data) => {
-    if (state.objectName === '指令分类' && state.opName === '添加') {
-      await doAddDirectiveGroup(data)
+    if (state.objectName === '单元分类' && state.opName === '添加') {
+      await doAddLessonType(data)
       emit('fetch-data')
     } else if (state.objectName === '指令' && state.opName === '添加') {
       await doAddDirective(data)
       // 让页面跳转到详情页
       emit('view-directives', { id: data.directiveGroupID, title: data.title })
-    } else if (state.objectName === '指令' && state.opName === '修改') {
-      await doUpdateDirective(data)
-      emit('fetch-data')
-    } else if (state.objectName === '指令分类' && state.opName === '修改') {
-      await doUpdateDirectiveGroup(data)
+    } else if (state.objectName === '单元分类' && state.opName === '修改') {
+      await doUpdateLessonType(data)
       emit('fetch-data')
     }
     gp.$baseMessage(

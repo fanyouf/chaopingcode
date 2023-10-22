@@ -4,9 +4,10 @@
       :list="state.list"
       :op-names="['add', 'del', 'edit']"
       title="教学单元分类"
-      @add-container="hAddLessonGroup"
+      @add-container="hAddLessonType"
       @add-item="hAddLesson"
-      @edit-container="hEditLessonGroup"
+      @edit-container="hEditLessonType"
+      @del-container="hDelLessonType"
     >
       <template #header>
         <h3>选择科目，当前科目是{{ curCourse.title }}</h3>
@@ -46,9 +47,11 @@
   // import { onActivated, onDeactivated } from 'vue'
   // import { Plus } from '@element-plus/icons-vue'
 
-  import { getList } from '@/api/knowledge'
+  import { getList, del } from '@/api/lessonType'
   import MyDialog from './lesson-dialog.vue'
   import router from '~/src/router'
+
+  import { gp } from '@gp'
 
   const curCourse = ref({})
   // const $baseConfirm = inject('$baseConfirm')
@@ -71,7 +74,7 @@
     state.list = res.data.list
     state.listLoading = false
   }
-  const hAddLessonGroup = () => {
+  const hAddLessonType = () => {
     editRef.value.showDialog('单元分类', '添加', {
       subjectID: curCourse.value.id,
       subjectTitle: curCourse.value.title,
@@ -81,13 +84,16 @@
     router.push('/lesson/add')
   }
 
-  const hDelLesson = (lesson) => {
-    alert(1)
-    console.log('lesson')
+  const hDelLessonType = async ({ id }) => {
+    console.log('lesson', id)
+    await del(id)
+    gp.$baseMessage('删除成功', 'success', 'vab-hey-message-success')
+
+    fetchData()
   }
 
-  const hEditLessonGroup = (lessonGroup) => {
-    editRef.value.showDialog('教学单元', '修改', lessonGroup)
+  const hEditLessonType = (lessonGroup) => {
+    editRef.value.showDialog('单元分类', '修改', lessonGroup)
   }
   // const hDel = (typeName, row) => {
   //   $baseConfirm('你确定要删除当前项吗', null, async () => {
