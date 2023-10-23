@@ -38,14 +38,9 @@
 </template>
 
 <script setup lang="ts">
-  // import { OPObject } from '../../types/data'
   defineOptions({
-    name: 'LessonIndex',
+    name: 'LessonGroup',
   })
-  // import myPage from '~/src/components/my-page.vue'
-  // import myCourse from '~/src/components/my-course.vue'
-  // import { onActivated, onDeactivated } from 'vue'
-  // import { Plus } from '@element-plus/icons-vue'
 
   import { getList, del } from '@/api/lessonType'
   import MyDialog from './lesson-dialog.vue'
@@ -53,10 +48,13 @@
 
   import { gp } from '@gp'
 
-  const curCourse = ref({})
+  const curCourse = ref({ id: -1, title: '' })
+  watch(curCourse, () => {
+    console.log('1', curCourse)
+    fetchData()
+  })
   // const $baseConfirm = inject('$baseConfirm')
   // const $baseMessage = inject('$baseMessage')
-  const subject = ref('c++')
   const editRef = ref<InstanceType<typeof MyDialog>>(null)
   // const hChangeCourse = () => {}
   const state = reactive({
@@ -69,7 +67,9 @@
 
   const fetchData = async () => {
     state.listLoading = true
-    const res = await getList({})
+    const res = await getList({
+      subjectID: curCourse.value.id,
+    })
     console.log(res)
     state.list = res.data.list
     state.listLoading = false
@@ -102,15 +102,6 @@
   //     await fetchData()
   //   })
   // }
-
-  watch(
-    subject,
-    () => {
-      console.log('1', subject)
-      fetchData()
-    },
-    { immediate: true }
-  )
 
   // onActivated(() => {
   //   console.log('onActived')
