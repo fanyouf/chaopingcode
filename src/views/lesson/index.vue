@@ -75,7 +75,7 @@
 <script setup lang="ts">
   import { getList } from '@/api/course'
   import { SUBJECT } from '@/constant'
-  import { getList as getWorks, del as delWork } from '@/api/work'
+  import { getList as getWorks, del as delWork } from '@/api/lesson'
   import { gp } from '@gp'
   import MyRadio from '~/src/components/my-radio.vue'
 

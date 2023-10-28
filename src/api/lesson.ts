@@ -7,22 +7,22 @@ export function getList(params: any) {
     subject: Subject
     total: number
   }>({
-    url: 'http://8.142.32.7:8888/lessonType',
+    url: 'http://8.142.32.7:8888/lesson',
     method: 'get',
     params,
   })
 }
 
-export function add(data: KnowledgeGroup) {
+export function add(data: any) {
   return request({
-    url: 'http://8.142.32.7:8888/lessonType',
+    url: 'http://8.142.32.7:8888/lesson',
     method: 'post',
     data,
   })
 }
 export function put(data: KnowledgeGroup) {
   return request({
-    url: 'http://8.142.32.7:8888/lessonType',
+    url: 'http://8.142.32.7:8888/lesson',
     method: 'put',
     data,
   })

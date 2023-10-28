@@ -1,6 +1,5 @@
 <template>
   <div>
-    {{ accept }}
     <el-upload
       :accept="accept"
       action="#"
@@ -18,7 +17,7 @@
 
       <template #tip>
         <div class="el-upload__tip">
-          只能上传 .sb3, .cpp, .py 文件，且不超过 2M
+          {{ tip }}
         </div>
       </template>
     </el-upload>
@@ -38,6 +37,10 @@
     accept: {
       type: String,
       default: '.py,.sb3,.cpp',
+    },
+    tip: {
+      type: String,
+      default: '只能上传 .sb3, .cpp, .py 文件，且不超过 2M',
     },
   })
 

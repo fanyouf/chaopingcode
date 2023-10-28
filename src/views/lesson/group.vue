@@ -81,7 +81,7 @@
     })
   }
   const hAddLesson = (lessonGroup) => {
-    router.push('/lesson/add')
+    router.push(`/lesson/add?id=${lessonGroup.id}`)
   }
 
   const hDelLessonType = async ({ id }) => {
