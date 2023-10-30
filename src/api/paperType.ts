@@ -18,8 +18,8 @@ export function doAdd(data?: any) {
 
 export function doEdit(data: any) {
   return request({
-    url: '/area/doEdit',
-    method: 'post',
+    url: 'http://8.142.32.7:8888/paperType',
+    method: 'put',
     data,
   })
 }

@@ -2,17 +2,37 @@
   <div class="p1">
     <el-button class="m1" type="primary" @click="add">添加</el-button>
     <el-table border :data="state.list">
+      <el-table-column prop="title" type="index" />
       <el-table-column prop="title" label="类型名称" />
       <el-table-column prop="intro" label="类型简介" />
-      <el-table-column prop="order" label="显示顺序" />
+      <el-table-column prop="order" width="90" label="显示顺序" />
       <el-table-column prop="remark" label="备注" />
+      <el-table-column label="操作">
+        <template #default="{ row }">
+          <el-button
+            size="small"
+            type="success"
+            :icon="Edit"
+            @click="edit(row)"
+          />
+          <el-button
+            size="small"
+            type="danger"
+            :icon="Delete"
+            @click="del(row)"
+          />
+        </template>
+      </el-table-column>
     </el-table>
     <PaperTypeDialog ref="refDialog" @fetch-data="fetchData" />
   </div>
 </template>
 
 <script setup lang="ts">
-  import { getList } from '@/api/paperType'
+  import { gp } from '@gp'
+  import { Delete, Edit } from '@element-plus/icons-vue'
+
+  import { getList, doDelete } from '@/api/paperType'
 
   import PaperTypeDialog from './paper-type-dialog'
 
@@ -21,6 +41,17 @@
     refDialog.value.showDialog()
   }
 
+  const edit = (row) => {
+    refDialog.value.showDialog('修改', row)
+  }
+
+  const del = (row) => {
+    gp.$baseConfirm('你确定要删除当前项吗', null, async () => {
+      await doDelete(row.id)
+      gp.$baseMessage('删除成功', 'success')
+      fetchData()
+    })
+  }
   const state = reactive({
     list: [],
     listLoading: true,

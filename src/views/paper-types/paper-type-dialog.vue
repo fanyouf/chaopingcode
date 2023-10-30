@@ -65,6 +65,8 @@
     if (opName === '添加') {
       data.id = null
     } else if (opName === '修改') {
+      console.log(row)
+
       data.id = row.id
       data.title = row.title
       data.intro = row.intro
