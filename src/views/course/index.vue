@@ -2,13 +2,13 @@
   <div>
     <my-page
       :list="list"
-      title="添加科目"
+      title="添加课程"
       :has-op="false"
       @add-container="hAddCourse"
     >
       <template #header>
-        <h3>科目列表</h3>
-        <p>当前一共有{{ list.length }}个科目</p>
+        <h3>课程列表</h3>
+        <p>当前一共有{{ list.length }}个课程</p>
       </template>
 
       <template #default="{ item }">

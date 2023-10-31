@@ -1,15 +1,13 @@
 <template>
-  <el-form-item label="相关作品" prop="works">
-    <el-cascader
-      v-model="knowledgeIDs"
-      popper-class="last-check"
-      :options="works"
-      clearable
-      style="width: 500px"
-      :show-all-levels="false"
-      :props="{ emitPath: false, multiple: true }"
-    />
-  </el-form-item>
+  <el-cascader
+    v-model="knowledgeIDs"
+    popper-class="last-check"
+    :options="works"
+    clearable
+    style="width: 500px"
+    :show-all-levels="false"
+    :props="{ emitPath: false, multiple: true }"
+  />
 </template>
 
 <script setup lang="ts">

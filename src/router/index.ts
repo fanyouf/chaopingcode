@@ -481,13 +481,11 @@ export const asyncRoutes: VabRouteRecord[] = [
         },
       },
       {
-        path: '/directive/:id',
-        name: 'DirectiveDetail',
-        component: () => import('@/views/directive/group.vue'),
+        path: '/course/type',
+        name: 'CourseType',
+        component: () => import('@/views/course-types/index.vue'),
         meta: {
-          hidden: true,
-          title: '指令列表',
-          // meta: { title: 'Params id=1' },
+          title: '课程类型',
           dynamicNewTab: true,
         },
       },
