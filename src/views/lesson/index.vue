@@ -3,11 +3,7 @@
     <el-row :gutter="20">
       <el-col :span="24">
         <vab-card class="page-header" shadow="never">
-          <my-radio
-            v-model="formData.subjectId"
-            label="所属科目"
-            :list="subjectList"
-          />
+          <my-radio-subject v-model="formData.subject" />
 
           <my-radio
             v-model="formData.productGroupID"
@@ -64,20 +60,80 @@
 
             <p class="section-item-body-intro">{{ item.intro }}</p>
             <p>
-              <el-button type="danger" @click="hDel(item.id)">删除</el-button>
+              <el-button size="small" type="danger" @click="hDel(item.id)">
+                删除
+              </el-button>
+
+              <el-button
+                v-if="!item.inCart"
+                size="small"
+                type="primary"
+                :icon="Plus"
+                @click="hAddtoCart(item)"
+              />
+              <el-button
+                v-else
+                size="small"
+                type="success"
+                :icon="RemoveFilled"
+                title="移出试题篮"
+                @click="hRemoveFromCart(item)"
+              />
             </p>
           </div>
         </vab-card>
       </el-col>
     </el-row>
+    <CourseCart
+      :cart-list="cartList"
+      :subject="formData.subject"
+      @moveout="hMoveout"
+      @moveoutall="hMoveoutAll"
+    />
   </section>
 </template>
 <script setup lang="ts">
+  import { RemoveFilled, Edit, Plus } from '@element-plus/icons-vue'
+
+  import CourseCart from './components/course-cart.vue'
+
   import { getList } from '@/api/course'
   import { SUBJECT } from '@/constant'
   import { getList as getWorks, del as delWork } from '@/api/lesson'
   import { gp } from '@gp'
   import MyRadio from '~/src/components/my-radio.vue'
+
+  const cartList = ref([])
+  // 添加到试题篮
+  const hAddtoCart = (item) => {
+    item.inCart = true
+    cartList.value.push(item)
+  }
+  const hRemoveFromCart = (item) => {
+    item.inCart = false
+    cartList.value.splice(cartList.value.indexOf(item), 1)
+  }
+  // const hMoveoutAll = () => {
+  //   cartList.value.forEach((it, idx) => {
+  //     const item = exerciseList.value.find((i) => i.id === it.id)
+  //     item.inCart = false
+  //   })
+  //   cartList.value = []
+  // }
+  // const hMoveoutAll = () => {
+  //   cartList.value.forEach((it, idx) => {
+  //     const item = exerciseList.value.find((i) => i.id === it.id)
+  //     item.inCart = false
+  //   })
+  //   cartList.value = []
+  // }
+  // const hMoveout = (it) => {
+  //   const item = exerciseList.value.find((i) => i.id === it.id)
+  //   item.inCart = false
+
+  //   const idx = cartList.value.find((i) => i.id === it.id)
+  //   cartList.value.splice(idx, 1)
+  // }
 
   const subjects = SUBJECT.map((it) => ({
     id: it.value,
@@ -87,7 +143,7 @@
   subjects.unshift({ id: null, title: '全部' })
 
   const formData = reactive({
-    subjectId: null,
+    subject: { id: null, title: '' },
     productGroupID: null,
     courses: null, // 默认学科是 全部 。表示不用传过去
     level: 'medium',
