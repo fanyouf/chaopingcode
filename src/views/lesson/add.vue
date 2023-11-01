@@ -9,6 +9,9 @@
           aria-placeholder="请输入教学单元名称"
         />
       </el-form-item>
+      <el-form-item label="难度" prop="level">
+        <my-level v-model="data.level" />
+      </el-form-item>
       <el-form-item label="单元描述" prop="intro">
         <el-input
           v-model="data.intro"
@@ -130,6 +133,7 @@
 
   const data = reactive({
     // id: '',
+    level: 'medium',
     title: '教学单元标题1', // 标题
     intro: '教学单元的内容是这样的', // 介绍
     cover: '', // 封面

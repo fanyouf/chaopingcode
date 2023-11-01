@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-  import { doAdd, doEdit } from '@/api/courseType'
+  import { add as doAdd, put as doEdit } from '@/api/lessonGroupType'
   import { gp } from '@gp'
 
   const emit = defineEmits(['fetch-data'])

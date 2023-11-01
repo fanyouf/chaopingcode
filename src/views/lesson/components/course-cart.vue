@@ -62,6 +62,7 @@
     单元篮{{ cartList.length }}
   </el-button>
 </template>
+
 <script setup lang="ts">
   import CourseDialog from './course-dialog.vue'
   import { CONST_EX_TYPE } from '@/constant'
@@ -75,6 +76,7 @@
       required: true,
     },
   })
+
   const refDialog = ref<InstanceType<typeof CourseDialog>>(null)
 
   const showDialog = () => {

@@ -37,7 +37,7 @@
         <el-input-number v-model="data.duration" :step="1" />
       </el-form-item>
       <el-form-item label="课程类型" prop="knowledges">
-        <my-select-papertype v-model="data.paperType" />
+        <my-select-coursetype v-model="data.lessontype" />
       </el-form-item>
 
       <el-form-item label="显示顺序" prop="order">
@@ -62,7 +62,7 @@
 </template>
 
 <script setup lang="ts">
-  import { doAdd } from '@/api/paper'
+  import { add } from '@/api/lessonGroup'
   import { gp } from '@gp'
 
   const props = defineProps<{
@@ -79,14 +79,11 @@
     // id: '',
     paperType: { id: 1 },
     subject: { id: 1 },
-    title: '第一份试卷', // 标题
-    code: '',
-    level: 'easy',
-    intro: '第一份试卷', // 介绍
-    cover: '', //
+    title: '常规班', // 标题
+    intro: '按年的48课时的常规班', // 介绍
+    lessontype: -1,
+    cover: '', // 封面
     remark: '备注', // 备注
-    competition: {},
-    duration: 90,
     order: 1,
   })
 
@@ -101,7 +98,7 @@
   }
 
   const doSave = async () => {
-    const res = await doAdd({
+    const res = await add({
       title: data.title,
       intro: data.intro,
       cover: data.cover,

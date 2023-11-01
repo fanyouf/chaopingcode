@@ -70,14 +70,19 @@
                 :src="item.logo"
               />
               <img
-                v-if="item.cover"
+                v-else-if="item.cover"
                 style="width: 100%; height: 186px"
                 :src="item.cover"
               />
               <img
-                v-if="item.image"
+                v-else-if="item.image"
                 style="width: 100%; height: 186px"
                 :src="item.image"
+              />
+              <img
+                v-else
+                style="width: 100%; height: 186px"
+                src="http://8.142.32.7:8888/assets/d1/57/d1576663f29233e326553db584e5520c.jpg"
               />
               <p class="section-item-body-intro">{{ item.intro }}</p>
 

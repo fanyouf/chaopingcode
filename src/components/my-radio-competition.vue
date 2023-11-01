@@ -3,6 +3,7 @@
     v-model="formData.competionID"
     label="所属赛事"
     :list="competitionList"
+    prop-name="title"
   />
   <my-radio
     v-for="(item, idx) in tableData"

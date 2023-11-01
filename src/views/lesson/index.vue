@@ -139,7 +139,6 @@
     id: it.value,
     title: it.label,
   }))
-
   subjects.unshift({ id: null, title: '全部' })
 
   const formData = reactive({
@@ -151,16 +150,13 @@
   })
   const search = async () => {
     const d = {
-      withKnowledge: true,
-      withProductGroup: true,
-      course: formData.courses,
+      // withKnowledge: true,
+      // withProductGroup: true,
+      // course: formData.courses,
       // formData.courses === '-1'
       // ? subjects.filter((it) => it.id !== '-1').map((it) => it.id)
       // : formData.courses,
-      productGroupID:
-        formData.productGroupID === -1
-          ? cateList.value.filter((it) => it.id !== -1).map((it) => it.id)
-          : formData.productGroupID,
+      // product,
     }
     const { data } = await getWorks(d)
     console.log('查询结果', data)
@@ -176,7 +172,7 @@
   const subjectList = ref<Subject[]>([])
   const workList = ref<Work[]>([])
   onMounted(async () => {
-    const { data } = await getList({ withProductGroup: true })
+    const { data } = await getList({ withLessonType: true })
     console.log(data)
     if (data.list.length) {
       subjectList.value = data.list
@@ -187,12 +183,11 @@
 
   const cateList = computed(() => {
     const t = subjectList.value.find((item) => {
-      console.log(item.id, formData.subjectId)
-      return item.id === formData.subjectId
+      return item.id === formData.subject.id
     })
     const res = [{ title: '全部', id: -1 }]
-    if (t && t.productGroups) {
-      res.push(...t.productGroups)
+    if (t && t.lessonTypes) {
+      res.push(...t.lessonTypes)
     }
     return res
   })

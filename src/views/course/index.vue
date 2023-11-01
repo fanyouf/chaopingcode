@@ -3,7 +3,7 @@
     <my-page
       :list="list"
       title="添加课程"
-      :has-op="false"
+      :op-names="['del', 'add', 'edit']"
       @add-container="hAddCourse"
     >
       <template #header>
@@ -11,7 +11,7 @@
         <p>当前一共有{{ list.length }}个课程</p>
       </template>
 
-      <template #default="{ item }">
+      <!-- <template #default="{ item }">
         <div class="course">
           <img :src="item.logo || defaultImage" class="logo" />
           <h3 class="course-title">{{ item.title }}</h3>
@@ -28,15 +28,14 @@
             </el-button>
           </div>
         </div>
-      </template>
+      </template> -->
     </my-page>
-    <my-dialog ref="editRef" @fetch-data="fetchData" />
+    <!-- <my-dialog ref="editRef" @fetch-data="fetchData" /> -->
   </div>
 </template>
 
 <script setup lang="ts">
-  import useCourse from '@/hooks/useCourse'
-  import { doDelete, getList } from '@/api/course'
+  import { del, getList } from '@/api/lessonGroup'
   import MyDialog from '~/src/components/my-dialog.vue'
 
   defineOptions({
@@ -51,7 +50,8 @@
 
   const editRef = ref<InstanceType<typeof MyDialog>>(null)
   const hAddCourse = () => {
-    editRef.value.showDialog('科目', '添加', null)
+    alert('回到教学单元')
+    // editRef.value.showDialog('科目', '添加', null)
   }
   const hDetail = (item: Subject) => {
     router.push(`/course/${item.id}`)
@@ -134,13 +134,16 @@
   // }
   const hDel = (row) => {
     $baseConfirm('你确定要删除当前项吗', null, async () => {
-      await doDelete(row.id)
+      await del(row.id)
       $baseMessage('OK', 'success', 'vab-hey-message-success')
       fetchData()
     })
   }
-
-  const { list, isLoading } = useCourse()
+  const isLoading = ref(false)
+  const list = ref([])
+  onMounted(() => {
+    fetchData()
+  })
 
   const fetchData = async () => {
     isLoading.value = true

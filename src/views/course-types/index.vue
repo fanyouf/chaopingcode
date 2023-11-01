@@ -37,7 +37,7 @@
   import { gp } from '@gp'
   import { Delete, Edit } from '@element-plus/icons-vue'
 
-  import { getList, doDelete } from '@/api/courseType'
+  import { getList, doDelete } from '@/api/lessonGroupType'
 
   import PaperTypeDialog from './course-type-dialog'
 

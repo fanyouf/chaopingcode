@@ -1,5 +1,10 @@
 <template>
-  <my-radio v-model="subjectId" label="选择科目" :list="subjectList" />
+  <my-radio
+    v-model="subjectId"
+    label="选择科目"
+    prop-name="title"
+    :list="subjectList"
+  />
 </template>
 <script setup>
   import { getList } from '@/api/subject'
@@ -13,6 +18,7 @@
   const subjectId = ref('')
   watch(subjectId, (newValue) => {
     const t = subjectList.value.find((item) => item.id === newValue)
+    console.log(t)
     emit('update:modelValue', t)
   })
   const subjectList = ref([])
