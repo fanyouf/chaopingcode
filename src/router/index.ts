@@ -446,17 +446,6 @@ export const asyncRoutes: VabRouteRecord[] = [
           // badge: 'Hot',
         },
       },
-      {
-        path: '/directive/:id',
-        name: 'DirectiveDetail',
-        component: () => import('@/views/directive/group.vue'),
-        meta: {
-          hidden: true,
-          title: '指令列表',
-          // meta: { title: 'Params id=1' },
-          dynamicNewTab: true,
-        },
-      },
     ],
   },
   {
