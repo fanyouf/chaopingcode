@@ -43,6 +43,7 @@
 
   <course-dialog
     ref="refDialog"
+    :lesson-group-id="lessonGroupId"
     :list-detail="list"
     @add-paper-ok="hAddPaperOK"
   />
@@ -69,6 +70,10 @@
   const props = defineProps({
     subject: {
       type: Object,
+      required: true,
+    },
+    lessonGroupId: {
+      type: String || Number,
       required: true,
     },
     cartList: {

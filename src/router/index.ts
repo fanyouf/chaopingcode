@@ -489,6 +489,17 @@ export const asyncRoutes: VabRouteRecord[] = [
           dynamicNewTab: true,
         },
       },
+      {
+        path: 'detail',
+        name: 'lessonDetailIndex',
+        component: () => import('@/views/course/detail.vue'),
+        meta: {
+          title: '课程详情',
+          icon: 'shopping-cart-line',
+          hidden: true,
+          // badge: 'Hot',
+        },
+      },
     ],
   },
   {

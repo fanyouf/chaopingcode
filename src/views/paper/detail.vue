@@ -73,8 +73,8 @@
   </section>
 </template>
 <script setup lang="ts">
-  import { useRoute } from 'vue-router'
   import { getList } from '@/api/paper'
+  import { useRoute } from 'vue-router'
   const route = useRoute()
 
   const data = ref(null)

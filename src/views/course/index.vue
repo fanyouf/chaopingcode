@@ -4,7 +4,9 @@
       :list="list"
       title="添加课程"
       :op-names="['del', 'add', 'edit']"
+      @del-container="hDel"
       @add-container="hAddCourse"
+      @edit-container="hViewDetail"
     >
       <template #header>
         <h3>课程列表</h3>
@@ -132,12 +134,10 @@
   // const hShowDialog = (typeName, opName, row = null) => {
   //   editRef.value.showDialog(typeName, opName, row)
   // }
-  const hDel = (row) => {
-    $baseConfirm('你确定要删除当前项吗', null, async () => {
-      await del(row.id)
-      $baseMessage('OK', 'success', 'vab-hey-message-success')
-      fetchData()
-    })
+  const hDel = async (row) => {
+    await del(row.id)
+    $baseMessage('OK', 'success', 'vab-hey-message-success')
+    fetchData()
   }
   const isLoading = ref(false)
   const list = ref([])
@@ -147,9 +147,13 @@
 
   const fetchData = async () => {
     isLoading.value = true
-    const { data } = await getList()
+    const { data } = await getList({ withLessons: true })
     list.value = data.list
     isLoading.value = false
+  }
+
+  const hViewDetail = ({ id }) => {
+    window.open(`/#/course/detail?id=${id}`)
   }
 </script>
 <style scoped lang="scss">

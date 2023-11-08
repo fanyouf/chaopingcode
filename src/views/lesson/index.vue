@@ -6,7 +6,7 @@
           <my-radio-subject v-model="formData.subject" />
 
           <my-radio
-            v-model="formData.productGroupID"
+            v-model="formData.lessonGroupID"
             label="所属分类"
             :list="cateList"
           />
@@ -85,6 +85,7 @@
       </el-col>
     </el-row>
     <CourseCart
+      :lesson-group-id="formData.lessonGroupID"
       :cart-list="cartList"
       :subject="formData.subject"
       @moveout="hMoveout"
@@ -143,20 +144,22 @@
 
   const formData = reactive({
     subject: { id: null, title: '' },
-    productGroupID: null,
+    lessonGroupID: null,
     courses: null, // 默认学科是 全部 。表示不用传过去
     level: 'medium',
     keyword: '', // 关键字
   })
   const search = async () => {
     const d = {
+      withLessonType: true,
+      withLessons: true,
       // withKnowledge: true,
       // withProductGroup: true,
       // course: formData.courses,
       // formData.courses === '-1'
       // ? subjects.filter((it) => it.id !== '-1').map((it) => it.id)
       // : formData.courses,
-      // product,
+      // lesson,
     }
     const { data } = await getWorks(d)
     console.log('查询结果', data)
@@ -172,7 +175,7 @@
   const subjectList = ref<Subject[]>([])
   const workList = ref<Work[]>([])
   onMounted(async () => {
-    const { data } = await getList({ withLessonType: true })
+    const { data } = await getList()
     console.log(data)
     if (data.list.length) {
       subjectList.value = data.list

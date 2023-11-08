@@ -29,6 +29,8 @@
     // isLoading.value = false
     if (data.list.length) {
       papertypeList.value = data.list
+
+      emit('update:modelValue', data.list[0])
     }
   })
 </script>

@@ -37,7 +37,7 @@
         <el-input-number v-model="data.duration" :step="1" />
       </el-form-item>
       <el-form-item label="课程类型" prop="knowledges">
-        <my-select-coursetype v-model="data.lessontype" />
+        <my-select-coursetype v-model="data.lessonGroupType" />
       </el-form-item>
 
       <el-form-item label="显示顺序" prop="order">
@@ -67,6 +67,7 @@
 
   const props = defineProps<{
     listDetail: any[]
+    lessonGroupId: string | number
   }>()
 
   const emit = defineEmits(['add-paper-ok'])
@@ -81,7 +82,8 @@
     subject: { id: 1 },
     title: '常规班', // 标题
     intro: '按年的48课时的常规班', // 介绍
-    lessontype: -1,
+    lessonGroupType: { id: -1 },
+    duration: 100,
     cover: '', // 封面
     remark: '备注', // 备注
     order: 1,
@@ -99,6 +101,9 @@
 
   const doSave = async () => {
     const res = await add({
+      lessonIDs: props.listDetail.map((it) => it.id),
+      // lessonGroupId: props.lessonGroupId,
+      lessonGroupTypeID: data.lessonGroupType.id,
       title: data.title,
       intro: data.intro,
       cover: data.cover,
@@ -107,14 +112,14 @@
       order: data.order,
       remark: data.remark,
       subjectID: data.subject.id,
+      withLessons: true,
     })
     gp.$baseMessage('添加试卷成功', 'success')
     visible.value = false
     emit('add-paper-ok')
 
-    gp.$baseConfirm('要看看试卷的详情吗?', null, () => {
-      // http://localhost:15000/#/paper/detail?id=1
-      window.open(`/#/paper/detail?id=${res.data.id}`)
+    gp.$baseConfirm('要看看课程的详情吗?', null, () => {
+      window.open(`/#/course/detail?id=${res.data.id}`)
     })
   }
 
