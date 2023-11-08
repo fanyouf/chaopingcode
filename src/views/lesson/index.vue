@@ -63,6 +63,9 @@
               <el-button size="small" type="danger" @click="hDel(item.id)">
                 删除
               </el-button>
+              <el-button size="small" type="success" @click="hEdit(item.id)">
+                编辑
+              </el-button>
 
               <el-button
                 v-if="!item.inCart"
@@ -103,6 +106,8 @@
   import { getList as getWorks, del as delWork } from '@/api/lesson'
   import { gp } from '@gp'
   import MyRadio from '~/src/components/my-radio.vue'
+  import { routeLocationKey } from 'vue-router'
+  import router from '~/src/router'
 
   const cartList = ref([])
   // 添加到试题篮
@@ -171,6 +176,10 @@
       gp.$baseMessage('删除成功')
       search()
     })
+  }
+
+  const hEdit = (id) => {
+    router.push(`/lesson/edit/${id}`)
   }
   const subjectList = ref<Subject[]>([])
   const workList = ref<Work[]>([])

@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    课程详情 {{ $route.query.id }}
     <p>
       <label for="">课程名称：</label>
       {{ data.title }}
@@ -12,7 +11,10 @@
     <p>教学单元：</p>
     <ol>
       <li v-for="(item, idx) in data.lessons" :key="item.id">
-        {{ idx + 1 }}. {{ item.title }}
+        {{ idx + 1 }}.
+        <router-link :to="'/lesson/edit/' + item.id">
+          {{ item.title }}
+        </router-link>
       </li>
     </ol>
   </div>

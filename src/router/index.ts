@@ -446,6 +446,16 @@ export const asyncRoutes: VabRouteRecord[] = [
           // badge: 'Hot',
         },
       },
+      {
+        path: 'edit/:id',
+        name: 'lessonEditIndex',
+        component: () => import('@/views/lesson/edit.vue'),
+        meta: {
+          title: '教学单元编辑',
+          icon: 'shopping-cart-line',
+          hidden: true,
+        },
+      },
     ],
   },
   {
