@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="section">
     <my-page
       :list="state.list"
       item-type="知识点"
-      has-op-top
+      :has-op-top="false"
       :op-names="['add', 'del', 'view']"
       @add-container="hAddKnowledgeGroup"
       @del-container="hDelKnowledgeGroup"
@@ -35,18 +35,18 @@
       </template>
     </my-page>
     <my-dialog ref="editRef" @fetch-data="fetchData" />
-  </div>
-  <div class="m1">
-    <el-pagination
-      v-model:current-page="cond.pageIndex"
-      v-model:page-size="cond.pageSize"
-      :page-sizes="[20, 30, 50, 100]"
-      background
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="cond.total"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-    />
+    <div class="m1">
+      <el-pagination
+        v-model:current-page="cond.pageIndex"
+        v-model:page-size="cond.pageSize"
+        :page-sizes="[20, 30, 50, 100]"
+        background
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="cond.total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
+    </div>
   </div>
 </template>
 
@@ -143,7 +143,7 @@
 <style lang="scss">
   .section {
     background: $base-color-background !important;
-    padding: 0;
+    padding: 20px 0;
   }
   .knowledges {
     padding: 10px 5px;

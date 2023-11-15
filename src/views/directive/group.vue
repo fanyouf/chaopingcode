@@ -23,7 +23,7 @@
             style="
               display: block;
               width: 100%;
-              height: 180px;
+              height: 50px;
               object-fit: contain;
               margin: 5px auto;
             "
@@ -44,7 +44,6 @@
   defineOptions({
     name: 'Group',
   })
-
   import { getList } from '@/api/directiveGroup'
   import { del as delDirective } from '@/api/directive'
   import myDialog from './directive-dialog.vue'

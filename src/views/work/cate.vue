@@ -2,6 +2,7 @@
   <div>
     <my-page
       title="作品分类"
+      :has-op="false"
       has-op-top
       :op-names="['del', 'edit']"
       :list="state.list"
@@ -13,11 +14,11 @@
         <h3>选择科目，当前科目是:{{ curSubject.title }}</h3>
         <my-subject v-model="curSubject" />
       </template>
-      <template #default="{ item }">
+      <!-- <template #default="{ item }">
         <div class="Work-group">
           <p>{{ item.intro }}</p>
         </div>
-      </template>
+      </template> -->
     </my-page>
     <my-dialog ref="editRef" @fetch-data="fetchData" />
   </div>
