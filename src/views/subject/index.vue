@@ -62,11 +62,14 @@
     fetchData()
   }
 
-  const { list, isLoading } = useSubject()
+  const { list, isLoading } = useSubject({
+    sortField: 'order',
+    sortOrder: 'asc',
+  })
 
   const fetchData = async () => {
     isLoading.value = true
-    const { data } = await getList()
+    const { data } = await getList({ sortField: 'order', sortOrder: 'asc' })
     list.value = data.list
     isLoading.value = false
   }

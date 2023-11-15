@@ -3,8 +3,8 @@
     <my-page
       :list="state.list"
       title="添加赛事"
-      :op-names="['del', 'update', 'view']"
-      @view-container="hViewCompetition"
+      :op-names="['del', 'edit']"
+      @edit-container="hEditCompetition"
       @del-container="hDelCompetition"
       @add-container="hAddCompetition"
     >
@@ -65,7 +65,7 @@
   const hAddCompetition = () => {
     router.push('/competition/add')
   }
-  const hViewCompetition = (obj) => {
+  const hEditCompetition = (obj) => {
     router.push(`/competition/edit/${obj.id}`)
   }
   const hDetail = (item: Competition) => {
