@@ -4,7 +4,7 @@ export function getList(params?: any) {
   return request({
     url: 'http://8.142.32.7:8888/lessonGroup',
     method: 'get',
-    params,
+    params: { sortField: 'order', sortOrder: 'asc', ...params },
   })
 }
 

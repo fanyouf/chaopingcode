@@ -9,7 +9,7 @@ export function getList(params: any) {
   }>({
     url: 'http://8.142.32.7:8888/label',
     method: 'get',
-    params,
+    params: { sortField: 'order', sortOrder: 'asc', ...params },
   })
 }
 
