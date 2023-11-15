@@ -1,16 +1,13 @@
 <template>
-  <el-tabs
-    class="competitionList"
-    :model-value="modelValue.title"
-    @tab-click="click"
-  >
-    <el-tab-pane
-      v-for="item in competitionList"
+  <el-radio-group :model-value="modelValue.title">
+    <el-radio-button
+      v-for="(item, index) in competitionList"
       :key="item.id"
       :label="item.title"
       :name="item.title"
+      @click="click({ index })"
     />
-  </el-tabs>
+  </el-radio-group>
 </template>
 <script setup>
   import { getList } from '@/api/competition'
