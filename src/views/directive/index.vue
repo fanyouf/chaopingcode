@@ -23,7 +23,7 @@
           <img
             v-if="item.type === 'image'"
             :src="item.image"
-            style="display: block; margin: 5px auto"
+            style="display: block; margin: 5px auto; width: 100%; height: 186px"
           />
           <p>{{ item.intro }}</p>
           <p>

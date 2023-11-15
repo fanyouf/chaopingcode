@@ -100,7 +100,7 @@
   }
   const doEdit = async (data) => {
     await doEditCompetition(data)
-    gp.$baseMessage('添加成功', 'success', 'vab-hey-message-success')
+    gp.$baseMessage('修改成功', 'success', 'vab-hey-message-success')
   }
   const save = () => {
     formRef.value.validate(async (valid) => {
