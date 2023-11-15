@@ -60,7 +60,6 @@
 </template>
 
 <script setup lang="ts">
-  import { objUnit } from '@/utils'
   import {
     add as doAddDirectiveGroup,
     put as doUpdateDirectiveGroup,
@@ -81,7 +80,8 @@
     subjectID: -1,
     intro: '', // 介绍
     type: 'image', // image or text
-    image: '', // 指令的图片
+    image: '', // 指令分类使用的是image字段
+    logo: '', // 指令 使用的是logo字段
     order: 1,
     state: false,
     remark: '备注', // 备注
@@ -131,13 +131,12 @@
       data.directiveGroupID = row.id
     } else if (opName === '修改' && objectName === '指令') {
       data.subjectID = null
-
       data.id = row.id
       data.type = row.type
 
       data.title = row.title
       data.intro = row.intro
-      data.logo = row.image
+      data.image = row.logo
       data.type = row.type
       data.remark = row.remark
       data.order = row.order
@@ -150,7 +149,7 @@
 
       data.title = row.title
       data.intro = row.intro
-      data.logo = row.image
+      data.image = row.image
       data.type = row.type
       data.remark = row.remark
       data.order = row.order
@@ -171,10 +170,13 @@
       await doAddDirectiveGroup(data)
       emit('fetch-data')
     } else if (state.objectName === '指令' && state.opName === '添加') {
+      data.logo = data.image
       await doAddDirective(data)
       // 让页面跳转到详情页
-      emit('view-directives', { id: data.directiveGroupID, title: data.title })
+      // emit('view-directives', { id: data.directiveGroupID, title: data.title })
+      emit('fetch-data')
     } else if (state.objectName === '指令' && state.opName === '修改') {
+      data.logo = data.image
       await doUpdateDirective(data)
       emit('fetch-data')
     } else if (state.objectName === '指令分类' && state.opName === '修改') {
