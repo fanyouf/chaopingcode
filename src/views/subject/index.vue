@@ -58,7 +58,8 @@
   // 删除科目
   const hDel = async (row) => {
     await doDelete(row.id)
-    gp.$baseMessage('OK', 'success', 'vab-hey-message-success')
+    gp.$baseMessage('删除成功', 'success', 'vab-hey-message-success')
+    fetchData()
   }
 
   const { list, isLoading } = useSubject()
