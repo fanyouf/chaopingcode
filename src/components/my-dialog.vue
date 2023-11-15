@@ -22,7 +22,11 @@
         </el-select>
       </el-form-item>
       <el-form-item :label="state.objectName + '描述'" prop="intro">
-        <el-input v-model="data.intro" aria-placeholder="请输入" />
+        <el-input
+          v-model="data.intro"
+          type="textarea"
+          aria-placeholder="请输入"
+        />
       </el-form-item>
       <el-form-item
         v-if="cHasImage"

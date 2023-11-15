@@ -179,6 +179,7 @@ export const asyncRoutes: VabRouteRecord[] = [
           title: '赛事添加',
           icon: 'shopping-cart-line',
           badge: 'Hot',
+          hidden: true,
         },
       },
       {

@@ -3,7 +3,7 @@
     <my-page
       :list="list"
       title="添加科目"
-      :op-names="['del', 'add', 'edit']"
+      :op-names="['del', 'edit']"
       @del-container="hDel"
       @add-container="hAddSubject"
       @edit-container="hEditSubject"

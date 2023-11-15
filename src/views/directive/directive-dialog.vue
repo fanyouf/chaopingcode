@@ -42,7 +42,7 @@
         :label="state.objectName + '图片'"
         prop="image"
       >
-        <my-upload-image v-model="data.logo" />
+        <my-upload-image v-model="data.image" />
       </el-form-item>
 
       <el-form-item label="显示排序" prop="order">
@@ -81,7 +81,7 @@
     subjectID: -1,
     intro: '', // 介绍
     type: 'image', // image or text
-    logo: '', // 指令的图片
+    image: '', // 指令的图片
     order: 1,
     state: false,
     remark: '备注', // 备注
@@ -124,7 +124,7 @@
 
       data.title = ''
       data.intro = ''
-      data.logo = data.type === 'image' ? '' : null
+      data.image = data.type === 'image' ? '' : null
       data.remark = ''
       data.order = 1
       data.state = true
