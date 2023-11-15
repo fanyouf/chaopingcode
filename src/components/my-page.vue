@@ -84,7 +84,7 @@
                 style="width: 100%; height: 186px"
                 src="http://8.142.32.7:8888/assets/d1/57/d1576663f29233e326553db584e5520c.jpg"
               />
-              <p class="section-item-body-intro">{{ item.intro }}</p>
+              <div class="section-item-body-intro">{{ item.intro }}</div>
 
               <div v-if="hasOp" class="header-ops">
                 <vab-icon
@@ -118,6 +118,7 @@
               </div>
             </div>
           </slot>
+          <slot name="extro" :item="item"></slot>
         </vab-card>
       </el-col>
 
@@ -222,7 +223,8 @@
       // padding: 20px;
     }
     .section-item-body-intro {
-      height: 3em;
+      height: 4em;
+      line-height: 1.5;
       overflow: hidden;
       padding: 10px;
     }

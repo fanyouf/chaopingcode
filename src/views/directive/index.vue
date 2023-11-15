@@ -17,13 +17,12 @@
         <my-subject v-model="curSubject" />
       </template>
 
-      <template #default="{ item }">
-        <!-- {{ item }} -->
-        <div style="padding: 10px">
+      <!-- <template #default="{ item }">
+        <div style="padding: 0px">
           <img
             v-if="item.type === 'image'"
             :src="item.image"
-            style="display: block; margin: 5px auto; width: 100%; height: 186px"
+            style="display: block; width: 100%; height: 186px"
           />
           <p>{{ item.intro }}</p>
           <p>
@@ -32,6 +31,14 @@
               查看
             </el-button>
           </p>
+        </div>
+      </template> -->
+      <template #extro="{ item }">
+        <div style="padding: 10px">
+          指令数量： {{ item.directives?.length }} 个
+          <el-button type="text" @click="hViewDirectiveGroup(item)">
+            查看
+          </el-button>
         </div>
       </template>
     </my-page>

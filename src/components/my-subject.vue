@@ -1,5 +1,5 @@
 <template>
-  <el-tabs
+  <!-- <el-tabs
     class="courseList"
     :model-value="modelValue.title"
     @tab-click="click"
@@ -10,7 +10,17 @@
       :label="item.title"
       :name="item.title"
     />
-  </el-tabs>
+  </el-tabs> -->
+
+  <el-radio-group :model-value="modelValue.title">
+    <el-radio-button
+      v-for="(item, index) in courseList"
+      :key="item.id"
+      :label="item.title"
+      :name="item.title"
+      @click="click({ index })"
+    />
+  </el-radio-group>
 </template>
 <script setup>
   import { getList } from '@/api/subject'
