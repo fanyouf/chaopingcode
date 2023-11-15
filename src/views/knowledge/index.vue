@@ -65,6 +65,7 @@
     const res = await getList({
       subjectID: curSubject.value.id,
       withKnowledge: true,
+      pageSize: -1,
     })
     console.log(res)
     state.list = res.data.list
