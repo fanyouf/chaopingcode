@@ -36,6 +36,18 @@
     </my-page>
     <my-dialog ref="editRef" @fetch-data="fetchData" />
   </div>
+  <div class="m1">
+    <el-pagination
+      v-model:current-page="cond.pageIndex"
+      v-model:page-size="cond.pageSize"
+      :page-sizes="[20, 30, 50, 100]"
+      background
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="cond.total"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -47,6 +59,19 @@
   import { del as delKnowledge } from '@/api/knowledge'
   import MyDialog from '@/components/my-dialog.vue'
 
+  const cond = reactive({
+    pageIndex: 1,
+    pageSize: 10,
+    total: 0,
+  })
+  const handleSizeChange = (val: number) => {
+    cond.pageSize = val
+    fetchData()
+  }
+  const handleCurrentChange = (val: number) => {
+    cond.pageIndex = val
+    fetchData()
+  }
   const curSubject = ref<Subject>({} as Subject)
   const $baseConfirm = inject('$baseConfirm')
   // const $baseMessage = inject('$baseMessage')
@@ -65,9 +90,10 @@
     const res = await getList({
       subjectID: curSubject.value.id,
       withKnowledge: true,
-      pageSize: -1,
+      pageSize: cond.pageSize,
+      pageIndex: cond.pageIndex,
     })
-    console.log(res)
+    cond.total = res.data.total
     state.list = res.data.list
     state.listLoading = false
   }

@@ -17,10 +17,16 @@
           {{ $route.query.groupTitle }}
         </h3>
       </template>
-      <!-- <template #default="{ item }">
-        <div style="padding: 10px">
+      <template #default="{ item }">
+        <div style="padding: 20px">
           <img
-            style="display: block; margin: 5px auto"
+            style="
+              display: block;
+              width: 100%;
+              height: 180px;
+              object-fit: contain;
+              margin: 5px auto;
+            "
             :src="item.logo"
             alt=""
           />
@@ -28,7 +34,7 @@
             {{ item.intro }}
           </p>
         </div>
-      </template> -->
+      </template>
     </my-page>
     <my-dialog ref="editRef" @fetch-data="fetchData" />
   </div>
