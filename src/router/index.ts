@@ -285,6 +285,15 @@ export const asyncRoutes: VabRouteRecord[] = [
     },
     children: [
       {
+        path: '',
+        name: 'WorkIndex',
+        component: () => import('@/views/work/index.vue'),
+        meta: {
+          title: '作品库',
+          icon: 'shopping-cart-line',
+        },
+      },
+      {
         path: 'cate',
         name: 'WorkCate',
         component: () => import('@/views/work/cate.vue'),
@@ -292,15 +301,6 @@ export const asyncRoutes: VabRouteRecord[] = [
           title: '作品分类',
           // meta: { title: 'Params id=1' },
           // dynamicNewTab: true,
-        },
-      },
-      {
-        path: '',
-        name: 'WorkIndex',
-        component: () => import('@/views/work/index.vue'),
-        meta: {
-          title: '作品库',
-          icon: 'shopping-cart-line',
         },
       },
       {
