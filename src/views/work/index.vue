@@ -1,5 +1,54 @@
 <template>
-  <section class="section">
+  <my-page
+    :list="workList"
+    title="添加作品"
+    :op-names="['del', 'edit']"
+    @del-container="hDel"
+    @add-container="hAddWork"
+    @edit-container="hViewDetail"
+  >
+    <template #header>
+      <my-radio
+        v-model="formData.subjectId"
+        label="所属科目"
+        prop-name="title"
+        :list="subjectList"
+      />
+
+      <my-radio
+        v-model="formData.productGroupID"
+        label="所属分类"
+        prop-name="title"
+        :list="cateList"
+      />
+
+      <my-radio
+        v-model="formData.courses"
+        label="涉及学科"
+        prop-name="title"
+        :list="subjects"
+      />
+
+      <hr />
+      <div class="items-container">
+        <label for="">关键字:</label>
+        <el-input v-model="formData.keyword" style="width: 200px" />
+        &nbsp; &nbsp;
+        <label for="">难度:</label>
+        <el-select v-model="formData.level">
+          <el-option label="全部" :value="null">全部</el-option>
+          <el-option label="简单" value="easy">简单</el-option>
+          <el-option label="中等" value="medium">中等</el-option>
+          <el-option label="困难" value="hard">困难</el-option>
+          <el-option label="挑战" value="challenge">挑战</el-option>
+        </el-select>
+        &nbsp; &nbsp;
+        <el-button type="success" @click="search">搜索</el-button>
+      </div>
+    </template>
+  </my-page>
+
+  <!-- <section class="section">
     <el-row :gutter="20">
       <el-col :span="24">
         <vab-card class="page-header" shadow="never">
@@ -70,14 +119,17 @@
         </vab-card>
       </el-col>
     </el-row>
-  </section>
+  </section> -->
 </template>
 <script setup lang="ts">
   import { getList } from '@/api/course'
   import { SUBJECT } from '@/constant'
   import { getList as getWorks, del as delWork } from '@/api/work'
   import { gp } from '@gp'
+  import { useRouter } from 'vue-router'
   import MyRadio from '~/src/components/my-radio.vue'
+
+  const router = useRouter()
 
   const subjects = SUBJECT.map((it) => ({
     id: it.value,
@@ -110,6 +162,10 @@
     console.log('查询结果', data)
     workList.value = data.list
   }
+  const hAddWork = () => {
+    router.push('/work/add')
+  }
+  const hViewDetail = () => {}
   const hDel = (id) => {
     gp.$baseConfirm('你确定要删除当前项吗', null, async () => {
       await delWork(id)
