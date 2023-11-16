@@ -178,8 +178,8 @@
         (it) => it.value === data.productGroupIDs[0]
       )
       curSubject.value = {
-        value: curCourse.value,
-        label: curCourse.label,
+        id: curCourse.value,
+        title: curCourse.label,
       }
     }
   )
@@ -188,12 +188,12 @@
     if (data.productGroupIDs && data.productGroupIDs.length > 0) {
       const couId = data.productGroupIDs[0]
       const t = courseAndWorkgroup.value.find((it) => it.value === couId)
-      const label = t.label
-      if (label.toLowerCase().includes('python')) {
+      const label = t.label.toLowerCase()
+      if (label.includes('python')) {
         return '.py'
-      } else if (label.toLowerCase().includes('c++')) {
+      } else if (label.includes('c++')) {
         return '.cpp'
-      } else if (label.toLowerCase().includes('scratch')) {
+      } else if (label.includes('scratch')) {
         return '.sb3'
       }
     }
