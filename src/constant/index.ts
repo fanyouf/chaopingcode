@@ -5,6 +5,9 @@ export const SUBJECT = [
   { value: 'physics', label: '体育' },
   { value: 'creature', label: '生物' },
   { value: 'chemistry', label: '化学' },
+  { value: 'wuli', label: '物理' },
+  { value: 'yishu', label: '艺术' },
+  { value: 'dili', label: '地理' },
 ]
 
 export const CONST_LEVEL = {
