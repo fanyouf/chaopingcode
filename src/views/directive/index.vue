@@ -4,43 +4,17 @@
       :list="state.list"
       title="添加指令分类"
       item-type="指令"
-      :has-op="false"
-      has-op-top
-      @view-container="hViewDirectiveGroup"
+      :op-names="['add', 'del', 'view', 'edit']"
       @add-container="hAddDirectiveGroup"
-      @del-container="hDelDirectiveGroup"
+      @view-item="hViewDirectiveGroup"
+      @del-item="hDelDirectiveGroup"
       @add-item="hAddDirective"
-      @edit-container="hEditDirectiveGroup"
+      @edit-item="hEditDirectiveGroup"
     >
       <template #header>
         <h3>选择科目，当前科目是:{{ curSubject.title }}</h3>
         <my-subject v-model="curSubject" />
       </template>
-
-      <!-- <template #default="{ item }">
-        <div style="padding: 0px">
-          <img
-            v-if="item.type === 'image'"
-            :src="item.image"
-            style="display: block; width: 100%; height: 186px"
-          />
-          <p>{{ item.intro }}</p>
-          <p>
-            指令数量： {{ item.directives?.length }} 个
-            <el-button type="text" @click="hViewDirectiveGroup(item)">
-              查看
-            </el-button>
-          </p>
-        </div>
-      </template> -->
-      <!-- <template #extro="{ item }">
-        <div style="padding: 10px">
-          指令数量： {{ item.directives?.length }} 个
-          <el-button type="text" @click="hViewDirectiveGroup(item)">
-            查看
-          </el-button>
-        </div>
-      </template> -->
     </my-page>
     <my-dialog
       ref="editRef"

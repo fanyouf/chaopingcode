@@ -3,9 +3,9 @@
     :list="workList"
     title="添加作品"
     :op-names="['del', 'edit']"
-    @del-container="hDel"
     @add-container="hAddWork"
-    @edit-container="hViewDetail"
+    @del-item="hDel"
+    @edit-item="hViewDetail"
   >
     <template #header>
       <my-radio

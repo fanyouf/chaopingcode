@@ -23,7 +23,7 @@
         >
           <template #header>
             <div>
-              <div v-if="hasOpTop" style="float: right" class="header-ops">
+              <!-- <div v-if="hasOpTop" style="float: right" class="header-ops">
                 <vab-icon
                   v-if="opNames.includes('add')"
                   class="icon"
@@ -52,7 +52,7 @@
                   class="icon"
                   @click="hDel(item)"
                 />
-              </div>
+              </div> -->
               <h3 class="section-item-title">
                 {{ item.title }}
                 <el-badge
@@ -62,8 +62,8 @@
               </h3>
             </div>
           </template>
-          <slot :item="item">
-            <div class="section-item-body">
+          <div class="section-item-body">
+            <slot :item="item">
               <img
                 v-if="item.logo"
                 style="width: 100%; height: 186px"
@@ -85,43 +85,42 @@
                 src="http://8.142.32.7:8888/assets/d1/57/d1576663f29233e326553db584e5520c.jpg"
               />
               <div class="section-item-body-intro">{{ item.intro }}</div>
+            </slot>
 
-              <div v-if="hasOp" class="header-ops">
-                <vab-icon
-                  v-if="opNames.includes('add')"
-                  class="icon"
-                  icon="add-box-fill"
-                  style="color: rgb(54, 203, 203)"
-                  @click="emit('add-item', item)"
-                />
-                <vab-icon
-                  v-if="opNames.includes('edit')"
-                  class="icon"
-                  icon="edit-box-fill"
-                  style="color: rgb(151, 95, 229)"
-                  @click="emit('edit-container', item)"
-                />
-                <vab-icon
-                  v-if="opNames.includes('view')"
-                  class="icon"
-                  icon="eye-fill"
-                  style="color: rgb(251, 212, 55)"
-                  @click="emit('view-container', item)"
-                />
-                <vab-icon
-                  v-if="opNames.includes('del')"
-                  icon="delete-bin-5-line"
-                  style="color: rgb(24, 144, 255)"
-                  class="icon"
-                  @click="hDel(item)"
-                />
-              </div>
+            <div v-if="opNames.length > 0" class="header-ops">
+              <vab-icon
+                v-if="opNames.includes('add')"
+                class="icon"
+                icon="add-box-fill"
+                style="color: rgb(54, 203, 203)"
+                @click="emit('add-item', item)"
+              />
+              <vab-icon
+                v-if="opNames.includes('edit')"
+                class="icon"
+                icon="edit-box-fill"
+                style="color: rgb(151, 95, 229)"
+                @click="emit('edit-item', item)"
+              />
+              <vab-icon
+                v-if="opNames.includes('view')"
+                class="icon"
+                icon="eye-fill"
+                style="color: rgb(251, 212, 55)"
+                @click="emit('view-item', item)"
+              />
+              <vab-icon
+                v-if="opNames.includes('del')"
+                icon="delete-bin-5-line"
+                style="color: rgb(24, 144, 255)"
+                class="icon"
+                @click="hDel(item)"
+              />
             </div>
-          </slot>
+          </div>
           <slot name="extro" :item="item"></slot>
         </vab-card>
       </el-col>
-
       <el-col :lg="6" :md="8" :sm="8" :xl="6" :xs="24">
         <vab-card
           class="section-item"
@@ -149,18 +148,11 @@
   const $baseMessage = inject('$baseMessage')
 
   defineProps({
-    hasOpTop: {
-      type: Boolean,
-      default: false,
-    },
     opNames: {
       type: Array,
       default: () => ['add', 'del', 'edit', 'view'],
     },
-    hasOp: {
-      type: Boolean,
-      default: true,
-    },
+
     itemType: {
       type: String,
       default: '知识点',
@@ -175,12 +167,11 @@
     },
   })
   const emit = defineEmits([
-    'add-container', // 外层 card-header表示的内容
-    'del-container', //
-    'add-item', // 外层 card-body表示的内容
+    'add-container',
+    'add-item',
     'edit-item',
     'del-item',
-    'view',
+    'view-item',
   ])
 
   const hDel = (item) => {
@@ -194,7 +185,7 @@
     }
 
     $baseConfirm('你确定要删除当前项吗', null, () => {
-      emit('del-container', item)
+      emit('del-item', item)
     })
   }
 </script>

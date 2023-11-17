@@ -3,36 +3,16 @@
     <my-page
       :list="list"
       title="添加课程"
-      :op-names="['del', 'add', 'edit']"
-      @del-container="hDel"
+      :op-names="['del', 'edit']"
       @add-container="hAddCourse"
-      @edit-container="hViewDetail"
+      @del-item="hDel"
+      @edit-item="hViewDetail"
     >
       <template #header>
         <h3>课程列表</h3>
         <p>当前一共有{{ list.length }}个课程</p>
       </template>
-
-      <!-- <template #default="{ item }">
-        <div class="course">
-          <img :src="item.logo || defaultImage" class="logo" />
-          <h3 class="course-title">{{ item.title }}</h3>
-          <p class="course-info">{{ item.intro }}</p>
-          <div class="course-ops">
-            <el-button size="small" type="primary" @click="hEdit(item)">
-              编辑
-            </el-button>
-            <el-button size="small" type="primary" @click="hDetail(item)">
-              查看详情
-            </el-button>
-            <el-button size="small" type="primary" @click="hDel(item)">
-              删除
-            </el-button>
-          </div>
-        </div>
-      </template> -->
     </my-page>
-    <!-- <my-dialog ref="editRef" @fetch-data="fetchData" /> -->
   </div>
 </template>
 

@@ -6,32 +6,13 @@
       title="教学单元分类"
       @add-container="hAddLessonType"
       @add-item="hAddLesson"
-      @edit-container="hEditLessonType"
-      @del-container="hDelLessonType"
+      @edit-item="hEditLessonType"
+      @del-item="hDelLessonType"
     >
       <template #header>
         <h3>选择科目，当前科目是{{ curCourse.title }}</h3>
         <my-subject v-model="curCourse" />
       </template>
-      <!-- <template #default="{ item }">
-        <div class="lesson-group">
-          <el-tag
-            v-for="it in item.children"
-            :key="it.id"
-            class="lesson-group-item"
-            closable
-            @close="hDelLesson(it)"
-          >
-            <span
-              title="点击查看"
-              style="cursor: pointer"
-              @click="hEditLesson(it)"
-            >
-              {{ it.title }}
-            </span>
-          </el-tag>
-        </div>
-      </template> -->
     </my-page>
     <my-dialog ref="editRef" @fetch-data="fetchData" />
   </div>
@@ -53,10 +34,9 @@
     console.log('1', curCourse)
     fetchData()
   })
-  // const $baseConfirm = inject('$baseConfirm')
-  // const $baseMessage = inject('$baseMessage')
+
   const editRef = ref<InstanceType<typeof MyDialog>>(null)
-  // const hChangeCourse = () => {}
+
   const state = reactive({
     list: [],
     listLoading: true,
@@ -95,20 +75,6 @@
   const hEditLessonType = (lessonGroup) => {
     editRef.value.showDialog('单元分类', '修改', lessonGroup)
   }
-  // const hDel = (typeName, row) => {
-  //   $baseConfirm('你确定要删除当前项吗', null, async () => {
-  //     const { msg } = await doDelete({ ids: row.id })
-  //     $baseMessage(msg, 'success', 'vab-hey-message-success')
-  //     await fetchData()
-  //   })
-  // }
-
-  // onActivated(() => {
-  //   console.log('onActived')
-  //   // 调用时机为首次挂载
-  //   // 以及每次从缓存中被重新插入时
-  //   fetchData()
-  // })
 </script>
 <style lang="scss">
   .section {

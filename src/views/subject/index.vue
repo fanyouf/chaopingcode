@@ -4,33 +4,14 @@
       :list="list"
       title="添加科目"
       :op-names="['del', 'edit']"
-      @del-container="hDel"
+      @del-item="hDel"
       @add-container="hAddSubject"
-      @edit-container="hEditSubject"
+      @edit-item="hEditSubject"
     >
       <template #header>
         <h3>科目列表</h3>
         <p>当前一共有{{ list.length }}个科目</p>
       </template>
-
-      <!-- <template #default="{ item }">
-        <div class="course">
-          <img :src="item.logo || defaultImage" class="logo" />
-          <h3 class="course-title">{{ item.title }}</h3>
-          <p class="course-info">{{ item.intro }}</p>
-          <div class="course-ops">
-            <el-button size="small" type="primary" @click="hEdit(item)">
-              编辑
-            </el-button>
-            <el-button size="small" type="primary" @click="hDetail(item)">
-              查看详情
-            </el-button>
-            <el-button size="small" type="primary" @click="hDel(item)">
-              删除
-            </el-button>
-          </div>
-        </div>
-      </template> -->
     </my-page>
     <my-dialog ref="editRef" @fetch-data="fetchData" />
   </div>

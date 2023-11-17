@@ -72,29 +72,7 @@
         </el-input>
       </el-form-item>
       <my-knowledges v-model="data.knowledgeIDs" :subject="curSubject" />
-      <!-- <el-form-item label="相关知识点" prop="knowledges">
-        <el-cascader
-          v-model="data.knowledgeIDs"
-          popper-class="last-check"
-          :options="knowledges"
-          clearable
-          style="width: 500px"
-          :props="{ multiple: true, checkStrictly: true }"
-        />
-      </el-form-item> -->
       <my-directives v-model="data.directiveIDs" :subject="curSubject" />
-
-      <!-- <el-form-item label="相关指令" prop="directives">
-        
-        <el-cascader
-          v-model="data.directiveIDs"
-          :options="directives"
-          clearable
-          style="width: 500px"
-          :props="{ multiple: true }"
-        />
-      </el-form-item> -->
-
       <el-form-item label="涉及学科" prop="subject">
         <el-checkbox-group v-model="data.courses">
           <el-checkbox
@@ -117,13 +95,20 @@
       </el-form-item>
 
       <el-form-item label="注意事项" prop="subjectContent">
-        <ExercisesInput v-model="data.note" />
+        <el-input
+          v-model="data.note"
+          type="textarea"
+          :autosize="{ minRows: 3, maxRows: 5 }"
+          style="width: 500px"
+          aria-placeholder="请输入作品注意事项"
+        />
       </el-form-item>
 
       <el-form-item label="作品备注" prop="remark">
         <el-input
           v-model="data.remark"
           type="textarea"
+          :autosize="{ minRows: 2, maxRows: 5 }"
           style="width: 500px"
           aria-placeholder="请输入作品备注"
         />
@@ -160,7 +145,7 @@
     courses: ['mathematics'], // 学科
     order: 1,
     level: 'medium', // 难度
-    note: '1', // 注意事项
+    note: '请输入注意事项', // 注意事项
     remark: '备注', // 备注
   })
 

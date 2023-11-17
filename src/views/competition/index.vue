@@ -4,8 +4,8 @@
       :list="state.list"
       title="添加赛事"
       :op-names="['del', 'edit']"
-      @edit-container="hEditCompetition"
-      @del-container="hDelCompetition"
+      @edit-item="hEditCompetition"
+      @del-item="hDelCompetition"
       @add-container="hAddCompetition"
     >
       <template #header>
