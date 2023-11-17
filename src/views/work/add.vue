@@ -232,9 +232,10 @@
     const d = {
       ...data,
       courses: data.courses.join(','),
-      productGroupIDs: [data.productGroupIDs.pop()],
+      productGroupIDs: [data.productGroupIDs[1]],
       directiveIDs: data.directiveIDs,
       knowledgeIDs: data.knowledgeIDs,
+      subjectIDs: [data.productGroupIDs[0]],
     }
     await doAddWork(d)
     gp.$baseMessage('添加成功', 'success', 'vab-hey-message-success')
@@ -250,40 +251,6 @@
       }
     })
   }
-
-  // const buildKnowledge = async (subjectID: number) => {
-  //   // 获取对应的知识点
-  //   const { data } = await getKnowledge({
-  //     subjectID,
-  //     withKnowledge: true,
-  //   })
-
-  //   debugger
-  //   const curCourse = courseAndWorkgroup.value.find(
-  //     (it) => it.value === subjectID
-  //   )
-
-  //   const res = [
-  //     {
-  //       value: curCourse.value,
-  //       label: curCourse.label,
-  //       children: data.list.map((item) => {
-  //         return {
-  //           value: item.id,
-  //           label: item.title,
-  //           children: item.knowledge.map((item) => {
-  //             return {
-  //               value: item.id,
-  //               label: item.title,
-  //             }
-  //           }),
-  //         }
-  //       }),
-  //     },
-  //   ]
-
-  //   knowledges.value = res
-  // }
 </script>
 
 <style lang="scss" scoped>
