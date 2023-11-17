@@ -93,7 +93,7 @@
     router.push('/work/add')
   }
   const hViewDetail = () => {}
-  const hDel = async (id) => {
+  const hDel = async ({ id }) => {
     await delWork(id)
     gp.$baseMessage('删除成功')
     search()
