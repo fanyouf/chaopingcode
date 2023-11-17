@@ -32,6 +32,7 @@
           v-model="data.intro"
           type="textarea"
           style="width: 500px"
+          :autosize="{ minRows: 5, maxRows: 6 }"
           aria-placeholder="请输入作品简介"
         />
       </el-form-item>
@@ -39,6 +40,7 @@
         <el-input
           v-model="data.highlight"
           type="textarea"
+          :autosize="{ minRows: 5, maxRows: 6 }"
           style="width: 500px"
           aria-placeholder="请输入作品亮点"
         />
@@ -98,7 +100,7 @@
         <el-input
           v-model="data.note"
           type="textarea"
-          :autosize="{ minRows: 3, maxRows: 5 }"
+          :autosize="{ minRows: 5, maxRows: 6 }"
           style="width: 500px"
           aria-placeholder="请输入作品注意事项"
         />
@@ -108,7 +110,7 @@
         <el-input
           v-model="data.remark"
           type="textarea"
-          :autosize="{ minRows: 2, maxRows: 5 }"
+          :autosize="{ minRows: 5, maxRows: 6 }"
           style="width: 500px"
           aria-placeholder="请输入作品备注"
         />

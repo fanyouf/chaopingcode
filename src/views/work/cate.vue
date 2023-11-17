@@ -7,8 +7,8 @@
       :op-names="['del', 'edit']"
       :list="state.list"
       @add-container="hAddWorkGroup"
-      @del-container="hDelWorkGroup"
-      @edit-container="hEditWorkGroup"
+      @del-item="hDelWorkGroup"
+      @edit-item="hEditWorkGroup"
     >
       <template #header>
         <h3>选择科目，当前科目是:{{ curSubject.title }}</h3>
