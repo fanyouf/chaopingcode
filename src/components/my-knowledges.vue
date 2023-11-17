@@ -34,24 +34,18 @@
       withKnowledge: true,
     })
 
-    const res = [
-      {
-        value: props.subject.id,
-        label: props.subject.title,
-        children: data.list.map((item) => {
+    const res = data.list.map((item) => {
+      return {
+        value: item.id,
+        label: item.title,
+        children: item.knowledge.map((item) => {
           return {
             value: item.id,
             label: item.title,
-            children: item.knowledge.map((item) => {
-              return {
-                value: item.id,
-                label: item.title,
-              }
-            }),
           }
         }),
-      },
-    ]
+      }
+    })
 
     console.log(res)
 
@@ -68,6 +62,12 @@
         // 用户清空了选择项
         knowledges.value = []
       }
+    }
+  )
+  watch(
+    () => props.modelValue,
+    () => {
+      knowledgeIDs.value = props.modelValue
     }
   )
   watch(knowledgeIDs, () => {

@@ -309,8 +309,15 @@ export const asyncRoutes: VabRouteRecord[] = [
         component: () => import('@/views/work/add.vue'),
         meta: {
           title: '作品添加',
-          // icon: 'shopping-cart-line',
-          // badge: 'Hot',
+        },
+      },
+      {
+        path: 'edit/:id',
+        name: 'WorkEditIndex',
+        component: () => import('@/views/work/add.vue'),
+        meta: {
+          title: '作品编辑',
+          hidden: true,
         },
       },
     ],

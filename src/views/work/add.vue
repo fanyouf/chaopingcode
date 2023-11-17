@@ -1,6 +1,6 @@
 <template>
   <section class="competition-add-container">
-    <h3>添加作品</h3>
+    <h3>{{ route.params.id ? '编辑' : '添加' }}作品</h3>
     <el-form ref="formRef" label-width="80px" :model="data" :rules="rules">
       <el-form-item label="作品名称" prop="title">
         <el-input
@@ -16,14 +16,18 @@
           aria-placeholder="请输入作品统一编号"
         />
       </el-form-item>
-
-      <el-form-item label="科目与分类" prop="productGroupIDs">
+      <el-form-item label="选择科目" prop="subjectID">
+        <my-select-subject v-model="data.subject" />
+      </el-form-item>
+      <el-form-item label="选择分类" prop="productGroupIDs">
         <!--  -->
         <el-cascader
           v-model="data.productGroupIDs"
-          :options="courseAndWorkgroup"
+          :options="workGroup"
           clearable
           style="width: 500px"
+          :show-all-levels="false"
+          :props="{ emitPath: false, multiple: true }"
         />
       </el-form-item>
 
@@ -73,8 +77,8 @@
           <template #prepend>Http://</template>
         </el-input>
       </el-form-item>
-      <my-knowledges v-model="data.knowledgeIDs" :subject="curSubject" />
-      <my-directives v-model="data.directiveIDs" :subject="curSubject" />
+      <my-knowledges v-model="data.knowledgeIDs" :subject="data.subject" />
+      <my-directives v-model="data.directiveIDs" :subject="data.subject" />
       <el-form-item label="涉及学科" prop="subject">
         <el-checkbox-group v-model="data.courses">
           <el-checkbox
@@ -116,19 +120,22 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="save">确 定</el-button>
+        <el-button type="primary" @click="save">
+          {{ route.params.id ? '保存修改' : '确定添加' }}
+        </el-button>
       </el-form-item>
     </el-form>
   </section>
 </template>
 
 <script setup lang="ts">
-  import ExercisesInput from './components/exercises-input.vue'
-  import { add as doAddWork } from '@/api/work'
+  import { add as doAddWork, getList, put as doSaveWork } from '@/api/work'
   import { gp } from '@gp'
 
   import { getList as getCourseAndWorkgroup } from '@/api/course'
   import { SUBJECT } from '@/constant'
+  import { useRoute } from 'vue-router'
+  const route = useRoute()
   const data = reactive({
     // id: '',
     title: '飞机大战', // 标题
@@ -142,7 +149,7 @@
     demoAddress: 'www.baidu.com', // 效果演示地址
     productGroupIDs: [], // 作品分类
     knowledgeIDs: [], // 知识点
-    subjectIDs: [], // 科目
+    subject: { id: '', title: '' }, // 科目
     directiveIDs: [], // 相关指令
     courses: ['mathematics'], // 学科
     order: 1,
@@ -152,40 +159,58 @@
   })
 
   const courseAndWorkgroup = ref([])
-  const curSubject = ref({})
-  watch(
-    () => data.productGroupIDs,
-    (val) => {
-      if (!val) {
-        curSubject.value = {}
-        return
-      }
-
-      const curCourse = courseAndWorkgroup.value.find(
-        (it) => it.value === data.productGroupIDs[0]
-      )
-      curSubject.value = {
-        id: curCourse.value,
-        title: curCourse.label,
-      }
-    }
-  )
+  const workGroup = computed(() => {
+    const rs = courseAndWorkgroup.value.find(
+      (it) => it.value === data.subject.id
+    )
+    return rs ? rs.children : []
+  })
 
   const accept = computed(() => {
-    if (data.productGroupIDs && data.productGroupIDs.length > 0) {
-      const couId = data.productGroupIDs[0]
-      const t = courseAndWorkgroup.value.find((it) => it.value === couId)
-      const label = t.label.toLowerCase()
-      if (label.includes('python')) {
-        return '.py'
-      } else if (label.includes('c++')) {
-        return '.cpp'
-      } else if (label.includes('scratch')) {
-        return '.sb3'
-      }
+    const couId = data.subject.id
+    const t = courseAndWorkgroup.value.find((it) => it.value === couId)
+    const label = t.label.toLowerCase()
+    if (label.includes('python')) {
+      return '.py'
+    } else if (label.includes('c++')) {
+      return '.cpp'
+    } else if (label.includes('scratch')) {
+      return '.sb3'
     }
+
     return '.py,.cpp,.sb3'
   })
+
+  onMounted(async () => {
+    const id = route.params.id
+    if (!id) return
+    const { data: rs } = await getList({
+      id,
+      withProductGroup: true,
+      withKnowledge: true,
+      withDirective: true,
+    })
+    console.log(rs)
+    data.title = rs.title // 标题
+    data.no = rs.no // 作品编号
+    data.intro = rs.intro // 作品介绍
+    data.highlight = rs.highlight // 作品亮点
+    data.cover = rs.cover // 作品图片
+    data.codeBasic = rs.codeBasic // 作品基础代码
+    data.codeReference = rs.codeReference // 作品完成代码
+    data.codeLineNum = rs.codeLineNum // 代码行数
+    data.demoAddress = rs.demoAddress // 效果演示地址
+    data.productGroupIDs = rs.productGroups.map((r) => r.id) // 作品分类
+    data.knowledgeIDs = rs.knowledges.map((r) => r.id) // 知识点
+    data.subject = { id: rs.productGroups[0].subjectID, title: '' } // 科目
+    data.directiveIDs = rs.directiveIDs || [] // 相关指令
+    data.courses = rs.courses.split() // 学科
+    data.order = rs.order
+    data.level = rs.level // 难度
+    data.note = rs.note // 注意事项
+    data.remark = rs.remark // 备注
+  })
+
   onMounted(async () => {
     // 获取到课程和作品分组
     const { data } = await getCourseAndWorkgroup({ withProductGroup: true })
@@ -219,12 +244,20 @@
     const d = {
       ...data,
       courses: data.courses.join(','),
-      productGroupIDs: [data.productGroupIDs[1]],
+      productGroupIDs: data.productGroupIDs,
       directiveIDs: data.directiveIDs,
       knowledgeIDs: data.knowledgeIDs,
-      subjectIDs: [data.productGroupIDs[0]],
+      subjectIDs: [data.subject.id],
     }
-    await doAddWork(d)
+    delete d.subject
+
+    if (route.params.id) {
+      d.id = route.params.id * 1
+      await doSaveWork(d)
+    } else {
+      await doAddWork(d)
+    }
+
     gp.$baseMessage('添加成功', 'success', 'vab-hey-message-success')
     // emit('fetch-data')
   }

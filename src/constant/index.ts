@@ -17,6 +17,12 @@ export const CONST_LEVEL = {
   challenge: '挑战',
 }
 
+export const CONST_LEVEL_LIST = [
+  { id: 'easy', title: '简单' },
+  { id: 'medium', title: '中等' },
+  { id: 'hard', title: '困难' },
+  { id: 'challenge', title: '挑战' },
+]
 export const CONST_SELECTION = {
   1: 'A',
   2: 'B',

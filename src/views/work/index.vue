@@ -28,21 +28,12 @@
         prop-name="title"
         :list="subjects"
       />
-
-      <hr />
+      <my-radio-level v-model="formData.level" all />
       <div class="items-container">
         <label for="">关键字:</label>
+        &nbsp;&nbsp;
         <el-input v-model="formData.keyword" style="width: 200px" />
-        &nbsp; &nbsp;
-        <label for="">难度:</label>
-        <el-select v-model="formData.level">
-          <el-option label="全部" :value="null">全部</el-option>
-          <el-option label="简单" value="easy">简单</el-option>
-          <el-option label="中等" value="medium">中等</el-option>
-          <el-option label="困难" value="hard">困难</el-option>
-          <el-option label="挑战" value="challenge">挑战</el-option>
-        </el-select>
-        &nbsp; &nbsp;
+        &nbsp;&nbsp;
         <el-button type="success" @click="search">搜索</el-button>
       </div>
     </template>
@@ -74,6 +65,7 @@
   })
   const search = async () => {
     const d = {
+      level: formData.level === 'ALL' ? null : formData.level,
       withKnowledge: true,
       withProductGroup: true,
       course: formData.courses,
@@ -92,7 +84,9 @@
   const hAddWork = () => {
     router.push('/work/add')
   }
-  const hViewDetail = () => {}
+  const hViewDetail = ({ id }) => {
+    router.push(`/work/edit/${id}`)
+  }
   const hDel = async ({ id }) => {
     await delWork(id)
     gp.$baseMessage('删除成功')
