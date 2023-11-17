@@ -23,36 +23,6 @@
         >
           <template #header>
             <div>
-              <!-- <div v-if="hasOpTop" style="float: right" class="header-ops">
-                <vab-icon
-                  v-if="opNames.includes('add')"
-                  class="icon"
-                  icon="add-box-fill"
-                  style="color: rgb(54, 203, 203)"
-                  @click="emit('add-item', item)"
-                />
-                <vab-icon
-                  v-if="opNames.includes('edit')"
-                  class="icon"
-                  icon="edit-box-fill"
-                  style="color: rgb(151, 95, 229)"
-                  @click="emit('edit-container', item)"
-                />
-                <vab-icon
-                  v-if="opNames.includes('view')"
-                  class="icon"
-                  icon="eye-fill"
-                  style="color: rgb(251, 212, 55)"
-                  @click="emit('view-container', item)"
-                />
-                <vab-icon
-                  v-if="opNames.includes('del')"
-                  icon="delete-bin-5-line"
-                  style="color: rgb(24, 144, 255)"
-                  class="icon"
-                  @click="hDel(item)"
-                />
-              </div> -->
               <h3 class="section-item-title">
                 {{ item.title }}
                 <el-badge
@@ -216,8 +186,13 @@
     .section-item-body-intro {
       height: 4em;
       line-height: 1.5;
-      overflow: hidden;
+      // overflow: hidden;
       padding: 10px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
   .header-ops {
