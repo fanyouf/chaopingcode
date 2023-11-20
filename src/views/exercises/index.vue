@@ -38,28 +38,18 @@
           },
         ]"
       />
-      <el-divider>
-        <i class="el-icon-mobile-phone"></i>
-        <button @click="toggle">更多</button>
-      </el-divider>
 
-      <div v-show="isShowMore">
-        <div class="m1">
-          <label for="">关键字:</label>
-          <el-input v-model="formData.keyword" style="width: 200px" />
-          &nbsp; &nbsp; 难度:
-          <el-select v-model="formData.level" style="width: 100px">
-            <el-option label="全部" :value="null">全部</el-option>
-            <el-option label="简单" value="easy">简单</el-option>
-            <el-option label="中等" value="medium">中等</el-option>
-            <el-option label="困难" value="hard">困难</el-option>
-            <el-option label="挑战" value="challenge">挑战</el-option>
-          </el-select>
-        </div>
-        <my-knowledges :subject="formData.subject" />
-        <my-directives :subject="formData.subject" />
+      <my-radio-level v-model="formData.level" all />
+
+      <my-knowledges :subject="formData.subject" />
+      <my-directives :subject="formData.subject" />
+      <div class="m1">
+        <label for="">关键字:</label>
+        &nbsp;&nbsp;
+        <el-input v-model="formData.keyword" style="width: 200px" />
+        &nbsp;&nbsp;
+        <el-button type="success" @click="search">搜索</el-button>
       </div>
-      <el-button type="success" @click="search">搜索</el-button>
     </vab-card>
 
     <paperCart
@@ -85,41 +75,7 @@
           </el-tag>
         </label>
         <div>{{ item.title }}</div>
-      </div>
-
-      <div
-        v-if="item.type === 'single' || item.type === 'multi'"
-        class="section-item-body"
-      >
-        <div v-html="item.contentSelect.body"></div>
-        <div v-for="i in item.contentSelect.optionLen" :key="i" class="flex1">
-          <label>{{ String.fromCharCode(64 + i) }}.</label>
-          <div
-            v-html="item.contentSelect['option' + String.fromCharCode(64 + i)]"
-          ></div>
-        </div>
-        <div>
-          <label>答案</label>
-          {{ getSelectOptionCode(item.contentSelect.answer) }}
-        </div>
-      </div>
-      <div v-else-if="item.type === 'answer'" class="section-item-body">
-        <div v-html="item.contentAnswer.body"></div>
-        <el-collapse>
-          <el-collapse-item title="答案" name="1">
-            <div>
-              {{ item.contentAnswer.ans }}
-            </div>
-          </el-collapse-item>
-        </el-collapse>
-      </div>
-      <div v-else-if="item.type === 'judge'" class="section-item-body">
-        <div v-html="item.contentJudge.body"></div>
-      </div>
-      <div v-else-if="item.type === 'code'" class="section-item-body">
-        <div v-html="item.contentCode.body"></div>
-      </div>
-      <div class="m1">
+        <!-- &nbsp; &nbsp;
         <el-button
           size="small"
           :icon="Edit"
@@ -132,7 +88,68 @@
           type="danger"
           @click="hDel(item.id)"
         />
-        <!-- <el-button type="danger" >删除</el-button> -->
+        <el-button
+          v-if="!item.inCart"
+          size="small"
+          type="primary"
+          :icon="Plus"
+          @click="hAddtoCart(item)"
+        />
+        <el-button
+          v-else
+          size="small"
+          type="success"
+          @click="hRemoveFromCart(item)"
+        >
+          移出试题篮
+        </el-button> -->
+      </div>
+      <exercisesContentBody>
+        <div v-if="item.type === 'single' || item.type === 'multi'">
+          <contentBody :content="item.contentSelect.body" />
+          <div v-for="i in item.contentSelect.optionLen" :key="i" class="flex1">
+            <label>{{ String.fromCharCode(64 + i) }}.</label>
+            <div
+              v-html="
+                item.contentSelect['option' + String.fromCharCode(64 + i)]
+              "
+            ></div>
+          </div>
+          <div>
+            <label>答案</label>
+            {{ getSelectOptionCode(item.contentSelect.answer) }}
+          </div>
+        </div>
+        <div v-else-if="item.type === 'answer'">
+          <div v-html="item.contentAnswer.body"></div>
+          <el-collapse>
+            <el-collapse-item title="答案" name="1">
+              <div>
+                {{ item.contentAnswer.ans }}
+              </div>
+            </el-collapse-item>
+          </el-collapse>
+        </div>
+        <div v-else-if="item.type === 'judge'">
+          <div v-html="item.contentJudge.body"></div>
+        </div>
+        <div v-else-if="item.type === 'code'">
+          <div v-html="item.contentCode.body"></div>
+        </div>
+      </exercisesContentBody>
+      <div class="m-top1">
+        <el-button
+          size="small"
+          :icon="Edit"
+          type="primary"
+          @click="hEdit(item.id)"
+        />
+        <el-button
+          size="small"
+          :icon="Delete"
+          type="danger"
+          @click="hDel(item.id)"
+        />
         <el-button
           v-if="!item.inCart"
           size="small"
@@ -165,7 +182,7 @@
   import { gp } from '@gp'
   import MyRadio from '~/src/components/my-radio.vue'
   import MyKnowledges from '~/src/components/my-knowledges.vue'
-
+  import exercisesContentBody from './components/exercises-content-body.vue'
   import { useRouter } from 'vue-router'
   const router = useRouter()
   const formData = reactive({

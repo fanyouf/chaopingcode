@@ -38,19 +38,17 @@
         (item) => item.id === formData.competionID
       ).labels
     }
-    t.forEach((item) => item.labelValues.unshift({ id: null, val: '全部' }))
+    t.forEach((item) => {
+      if (item.labelValues[0].id !== 'all')
+        item.labelValues.unshift({ id: 'all', val: '全部' })
+    })
 
     console.log(t)
     return t
   })
   onMounted(async () => {
     const { data } = await getList({ withLabel: true, withLabelValue: true })
-    competitionList.value = [{ id: null, title: '全部' }, ...data.list]
-    // isLoading.value = false
-    // if (data.list.length) {
-    //   console.log(competitionList.value[0])
-    //   emit('update:modelValue', competitionList.value[0])
-    // }
+    competitionList.value = [{ id: 'all', title: '全部' }, ...data.list]
   })
 </script>
 <style scoped lang="scss">

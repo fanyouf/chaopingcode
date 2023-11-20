@@ -61,7 +61,7 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="题干部分" prop="body">
-        <ExercisesInput v-model="data.body" />
+        <my-wang-editor v-model="data.body" />
       </el-form-item>
       <el-form-item
         v-if="visibles['选择项']"
