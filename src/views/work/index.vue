@@ -38,6 +38,9 @@
       </div>
     </template>
   </my-page>
+  <div class="m1">
+    <my-pagination v-model="cond" :fetch-data="search" />
+  </div>
 </template>
 <script setup lang="ts">
   import { getList } from '@/api/course'
@@ -53,8 +56,13 @@
     id: it.value,
     title: it.label,
   }))
+  const cond = ref({
+    pageIndex: 1,
+    pageSize: 10,
+    total: 0,
+  })
 
-  subjects.unshift({ id: null, title: '全部' })
+  subjects.unshift({ id: 'all', title: '全部' })
 
   const formData = reactive({
     subjectId: null,
@@ -65,6 +73,7 @@
   })
   const search = async () => {
     const d = {
+      ...cond.value,
       level: formData.level === 'ALL' ? null : formData.level,
       withKnowledge: true,
       withProductGroup: true,
@@ -80,6 +89,7 @@
     const { data } = await getWorks(d)
     console.log('查询结果', data)
     workList.value = data.list
+    cond.value.total = data.total
   }
   const hAddWork = () => {
     router.push('/work/add')

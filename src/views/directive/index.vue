@@ -22,6 +22,9 @@
       @fetch-data="fetchData"
       @view-directives="hViewDirectiveGroup"
     />
+    <div class="m1">
+      <my-pagination v-model="cond" :fetch-data="fetchData" />
+    </div>
   </div>
 </template>
 
@@ -43,17 +46,21 @@
   const state = reactive({
     list: [],
     listLoading: true,
-    layout: 'total, sizes, prev, pager, next, jumper',
+  })
+  const cond = ref({
+    pageIndex: 1,
+    pageSize: 2,
     total: 0,
-    selectRows: '',
   })
 
   const fetchData = async () => {
     state.listLoading = true
     const res = await getList({
+      ...cond.value,
       subjectID: curSubject.value.id,
       withDirective: true,
     })
+    cond.value.total = res.data.total
     state.list = res.data.list
     state.listLoading = false
   }

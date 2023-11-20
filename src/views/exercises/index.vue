@@ -152,16 +152,7 @@
     </vab-card>
 
     <div class="m1">
-      <el-pagination
-        v-model:current-page="cond.pageIndex"
-        v-model:page-size="cond.pageSize"
-        :page-sizes="[20, 30, 50, 100]"
-        background
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="cond.total"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-      />
+      <my-pagination v-model="cond" :fetch-data="search" />
     </div>
   </section>
 </template>
@@ -184,19 +175,12 @@
     level: 'medium',
     keyword: '', // 关键字
   })
-  const cond = reactive({
+  const cond = ref({
     pageIndex: 1,
     pageSize: 10,
     total: 0,
   })
-  const handleSizeChange = (val: number) => {
-    cond.pageSize = val
-    search()
-  }
-  const handleCurrentChange = (val: number) => {
-    cond.pageIndex = val
-    search()
-  }
+
   const isShowMore = ref(false)
   const toggle = () => {
     isShowMore.value = !isShowMore.value
@@ -232,13 +216,12 @@
 
   const search = async () => {
     // 查询条件
-    const d = {
-      pageIndex: cond.pageIndex,
-      pageSize: cond.pageSize,
-    }
-    const { data } = await getExerciseList(d)
+
+    const { data } = await getExerciseList({
+      ...cond.value,
+    })
     exerciseList.value = data.list
-    cond.total = data.total
+    cond.value.total = data.total
   }
   // const hDel = (id) => {
   //   gp.$baseConfirm('你确定要删除当前项吗', null, async () => {
