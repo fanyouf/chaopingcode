@@ -1,5 +1,5 @@
 <template>
-  <el-form-item label="核心指令" prop="directives">
+  <el-form-item label="核心指令:" prop="directives">
     <el-cascader
       v-model="knowledgeIDs"
       popper-class="last-check"

@@ -1,5 +1,5 @@
 <template>
-  <el-form-item label="核心知识点" prop="knowledges">
+  <el-form-item label="核心知识点:" prop="knowledges">
     <el-cascader
       v-model="knowledgeIDs"
       popper-class="last-check"

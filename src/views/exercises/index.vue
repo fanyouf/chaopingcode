@@ -41,8 +41,8 @@
 
       <my-radio-level v-model="formData.level" all />
 
-      <my-knowledges :subject="formData.subject" />
-      <my-directives :subject="formData.subject" />
+      <my-knowledges class="form" :subject="formData.subject" />
+      <my-directives class="form" :subject="formData.subject" />
       <div class="m1">
         <label for="">关键字:</label>
         &nbsp;&nbsp;
@@ -263,9 +263,15 @@
     router.push(`/exercises/edit/${id}`)
   }
 </script>
-<style lang="scss" scoped>
+<style scoped>
   .section {
     background-color: #f6f8f9;
+  }
+  .form {
+    margin-bottom: 10px !important;
+  }
+  .form >>> .el-form-item__label {
+    color: var(--el-text-color-primary);
   }
   .section-item {
     padding: 1em;
