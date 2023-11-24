@@ -8,8 +8,8 @@
       :has-op="false"
       has-op-top
       @add-container="hAddDirective"
-      @del-container="hDelDirective"
-      @edit-container="hEditDirective"
+      @del-item="hDelDirective"
+      @edit-item="hEditDirective"
     >
       <template #header>
         <h3>

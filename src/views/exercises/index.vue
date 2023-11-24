@@ -106,7 +106,7 @@
       </div>
       <exercisesContentBody>
         <div v-if="item.type === 'single' || item.type === 'multi'">
-          <contentBody :content="item.contentSelect.body" />
+          <div v-html="item.contentSelect.body"></div>
           <div v-for="i in item.contentSelect.optionLen" :key="i" class="flex1">
             <label>{{ String.fromCharCode(64 + i) }}.</label>
             <div
