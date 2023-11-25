@@ -80,7 +80,8 @@
     subjectID: -1,
     intro: '', // 介绍
     type: 'image', // image or text
-    image: '', // 指令分类使用的是image字段
+    image:
+      'http://8.142.32.7:8888/assets/26/5f/265ff10d718a21212d24980f6149ff26.png', // 指令分类使用的是image字段
     logo: '', // 指令 使用的是logo字段
     order: 1,
     state: false,

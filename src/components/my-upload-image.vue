@@ -46,9 +46,15 @@
 
   import { ElMessage } from 'element-plus'
 
-  defineProps<{
-    modelValue: string
-  }>()
+  withDefaults(
+    defineProps<{
+      modelValue: string
+    }>(),
+    {
+      modelValue:
+        'http://8.142.32.7:8888/assets/26/5f/265ff10d718a21212d24980f6149ff26.png',
+    }
+  )
   const option = {
     info: true, // 裁剪框的大小信息
     outputSize: 0.8, // 裁剪生成图片的质量

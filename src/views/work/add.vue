@@ -142,7 +142,8 @@
     no: 'xz001', // 作品编号
     intro: '用100个积木块实现一个飞机大战的游戏', // 作品介绍
     highlight: '游戏非常的好玩~~', // 作品亮点
-    cover: '', // 作品图片
+    cover:
+      'http://8.142.32.7:8888/assets/26/5f/265ff10d718a21212d24980f6149ff26.png', // 作品图片
     codeBasic: '1', // 作品基础代码
     codeReference: '1', // 作品完成代码
     codeLineNum: 10, // 代码行数
