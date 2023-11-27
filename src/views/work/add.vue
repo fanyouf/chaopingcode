@@ -204,7 +204,7 @@
     data.productGroupIDs = rs.productGroups.map((r) => r.id) // 作品分类
     data.knowledgeIDs = rs.knowledges.map((r) => r.id) // 知识点
     data.subject = { id: rs.productGroups[0].subjectID, title: '' } // 科目
-    data.directiveIDs = rs.directiveIDs || [] // 相关指令
+    data.directiveIDs = rs.directives.map((r) => r.id) || [] // 相关指令
     data.courses = rs.courses.split() // 学科
     data.order = rs.order
     data.level = rs.level // 难度
@@ -242,6 +242,7 @@
     return `${state.objectName}-${state.opName}`
   })
   const doSave = async () => {
+    debugger
     const d = {
       ...data,
       courses: data.courses.join(','),
@@ -255,11 +256,12 @@
     if (route.params.id) {
       d.id = route.params.id * 1
       await doSaveWork(d)
+      gp.$baseMessage('修改成功', 'success', 'vab-hey-message-success')
     } else {
       await doAddWork(d)
+      gp.$baseMessage('添加成功', 'success', 'vab-hey-message-success')
     }
 
-    gp.$baseMessage('添加成功', 'success', 'vab-hey-message-success')
     // emit('fetch-data')
   }
   const save = () => {
@@ -268,7 +270,6 @@
         await doSave()
         // $baseMessage(msg, 'success', 'vab-hey-message-success')
         // emit('fetch-data')
-        close()
       }
     })
   }

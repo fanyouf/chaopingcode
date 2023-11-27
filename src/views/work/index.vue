@@ -77,6 +77,7 @@
       level: formData.level === 'ALL' ? null : formData.level,
       withKnowledge: true,
       withProductGroup: true,
+      withDirective: true,
       course: formData.courses,
       // formData.courses === '-1'
       // ? subjects.filter((it) => it.id !== '-1').map((it) => it.id)
