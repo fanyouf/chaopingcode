@@ -1,45 +1,47 @@
 <template>
-  <my-page
-    :list="workList"
-    title="添加作品"
-    :op-names="['del', 'edit']"
-    @add-container="hAddWork"
-    @del-item="hDel"
-    @edit-item="hViewDetail"
-  >
-    <template #header>
-      <my-radio
-        v-model="formData.subjectId"
-        label="所属科目"
-        prop-name="title"
-        :list="subjectList"
-      />
+  <div>
+    <my-page
+      :list="workList"
+      title="添加作品"
+      :op-names="['del', 'edit']"
+      @add-container="hAddWork"
+      @del-item="hDel"
+      @edit-item="hViewDetail"
+    >
+      <template #header>
+        <my-radio
+          v-model="formData.subjectId"
+          label="所属科目"
+          prop-name="title"
+          :list="subjectList"
+        />
 
-      <my-radio
-        v-model="formData.productGroupID"
-        label="所属分类"
-        prop-name="title"
-        :list="cateList"
-      />
+        <my-radio
+          v-model="formData.productGroupID"
+          label="所属分类"
+          prop-name="title"
+          :list="cateList"
+        />
 
-      <my-radio
-        v-model="formData.courses"
-        label="涉及学科"
-        prop-name="title"
-        :list="subjects"
-      />
-      <my-radio-level v-model="formData.level" all />
-      <div class="items-container">
-        <label for="">关键字:</label>
-        &nbsp;&nbsp;
-        <el-input v-model="formData.keyword" style="width: 200px" />
-        &nbsp;&nbsp;
-        <el-button type="success" @click="search">搜索</el-button>
-      </div>
-    </template>
-  </my-page>
-  <div class="m1">
-    <my-pagination v-model="cond" :fetch-data="search" />
+        <my-radio
+          v-model="formData.courses"
+          label="涉及学科"
+          prop-name="title"
+          :list="subjects"
+        />
+        <my-radio-level v-model="formData.level" all />
+        <div class="items-container">
+          <label for="">关键字:</label>
+          &nbsp;&nbsp;
+          <el-input v-model="formData.keyword" style="width: 200px" />
+          &nbsp;&nbsp;
+          <el-button type="success" @click="search">搜索</el-button>
+        </div>
+      </template>
+    </my-page>
+    <div class="m1">
+      <my-pagination v-model="cond" :fetch-data="search" />
+    </div>
   </div>
 </template>
 <script setup lang="ts">

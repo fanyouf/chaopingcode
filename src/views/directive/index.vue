@@ -49,7 +49,7 @@
   })
   const cond = ref({
     pageIndex: 1,
-    pageSize: 2,
+    pageSize: 10,
     total: 0,
   })
 
@@ -64,6 +64,7 @@
     state.list = res.data.list
     state.listLoading = false
   }
+
   // 监听来自
   bus.on(() => fetchData())
 
